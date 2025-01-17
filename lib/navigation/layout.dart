@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kaist_map/kakaomap/kakao_map_widget.dart';
 
 class KMapNavigation extends StatefulWidget {
   const KMapNavigation({super.key});
@@ -49,7 +50,7 @@ class _KMapNavigationState extends State<KMapNavigation> {
   Widget _getSelectedWidget(int index) {
     switch (index) {
       case 0:
-        return const Text('팀색 페이지');
+        return const KakaoMapWidget();
       case 1:
         return const Text('즐겨찾기');
       case 2:
