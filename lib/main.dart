@@ -4,6 +4,8 @@ import 'package:kaist_map/constant/colors.dart';
 import 'package:kaist_map/navigation/layout.dart';
 
 Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   await dotenv.load(fileName: '.env');
 
   runApp(const KMapMain());
