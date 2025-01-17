@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>KakaoMap</title>
+    <style>
+      #map {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+    <script>
+      function initializeMap(apiKey, initialLatitude, initialLongitude, initialLevel) {
+        var script = document.createElement('script');
+        script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${apiKey}`;
+        script.onload = function () {
+          var mapContainer = document.getElementById('map');
+          var mapOption = {
+            center: new kakao.maps.LatLng(initialLatitude, initialLongitude),
+            level: initialLevel
+          };
+          var map = new kakao.maps.Map(mapContainer, mapOption);
+
+          kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
+            var lat = mouseEvent.latLng.getLat();
+            var lng = mouseEvent.latLng.getLng();
+            if (window.flutter_inappwebview) {
+              window.flutter_inappwebview.postMessage(JSON.stringify({
+                method: "onClick",
+                data: {
+                  lat: lat,
+                  lng: lng
+                }
+              }));
+            } else if (window.flutter) {
+              window.flutter.postMessage(JSON.stringify({
+                method: "onClick",
+                data: {
+                  lat: lat,
+                  lng: lng
+                }
+              }));
+            }
+          });
+
+          kakao.maps.event.addListener(map, 'dragend', function () {
+            var center = map.getCenter();
+            var lat = center.getLat();
+            var lng = center.getLng();
+            if (window.flutter_inappwebview) {
+              window.flutter_inappwebview.postMessage(JSON.stringify({
+                method: "onDragEnd",
+                data: {
+                  lat: lat,
+                  lng: lng
+                }
+              }));
+            } else if (window.flutter) {
+              window.flutter.postMessage(JSON.stringify({
+                method: "onDragEnd",
+                data: {
+                  lat: lat,
+                  lng: lng
+                }
+              }));
+            }
+          });
+        };
+        document.head.appendChild(script);
+      }
+    </script>
+  </head>
+  <body>
+    <div id="map"></div>
+  </body>
+</html>
