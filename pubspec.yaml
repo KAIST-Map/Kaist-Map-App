@@ -9,9 +9,9 @@ environment:
 dependencies:
   provider: ^6.1.2
   flutter_dotenv: ^5.2.1
-  webview_flutter: ^4.10.0
   flutter:
     sdk: flutter
+  google_maps_flutter: ^2.10.0
 
 dev_dependencies:
   flutter_test:

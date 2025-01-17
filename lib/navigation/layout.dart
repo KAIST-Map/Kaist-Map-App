@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kaist_map/kakaomap/kakao_map_widget.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class KMapNavigation extends StatefulWidget {
   const KMapNavigation({super.key});
@@ -50,7 +50,7 @@ class _KMapNavigationState extends State<KMapNavigation> {
   Widget _getSelectedWidget(int index) {
     switch (index) {
       case 0:
-        return const KakaoMapWidget();
+        return const GoogleMap(initialCameraPosition: CameraPosition(target: LatLng(45.521563, -122.677433), zoom: 11.0));
       case 1:
         return const Text('즐겨찾기');
       case 2:
