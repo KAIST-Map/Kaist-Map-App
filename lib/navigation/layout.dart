@@ -1,31 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:kaist_map/navigation/explore/widget.dart';
+import 'package:kaist_map/navigation/google_map/map_context.dart';
+import 'package:kaist_map/navigation/google_map/widget.dart';
+import 'package:provider/provider.dart';
 
-class KMapNavigation extends StatefulWidget {
+class KMapNavigation extends StatelessWidget {
   const KMapNavigation({super.key});
 
   @override
-  State<KMapNavigation> createState() => _KMapNavigationState();
-}
-
-class _KMapNavigationState extends State<KMapNavigation> {
-  int _selectedIndex = 0;
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final mapContext = context.watch<MapContext>();
+
     return Scaffold(
-      body: Center(
-        child: _getSelectedWidget(_selectedIndex),
+      body: Stack(
+        children: <Widget>[
+          const KMapGoogleMap(),
+          _getSelectedWidget(mapContext.selectedIndex),
+        ],
       ),
       bottomNavigationBar: NavigationBar(
-        onDestinationSelected: _onItemTapped,
-        selectedIndex: _selectedIndex,
+        onDestinationSelected: mapContext.setSelectedIndex,
+        selectedIndex: mapContext.selectedIndex,
         destinations: const <Widget>[
           NavigationDestination(
             selectedIcon: Icon(Icons.location_on),
@@ -50,13 +45,13 @@ class _KMapNavigationState extends State<KMapNavigation> {
   Widget _getSelectedWidget(int index) {
     switch (index) {
       case 0:
-        return const GoogleMap(initialCameraPosition: CameraPosition(target: LatLng(45.521563, -122.677433), zoom: 11.0));
+        return const Center(child: KMapExplore());
       case 1:
-        return const Text('즐겨찾기');
+        return const Center(child: Text('즐겨찾기'));
       case 2:
-        return const Text('설정 페이지');
+        return const Center(child: Text('설정 페이지'));
       default:
-        return const Text('탐색 페이지');
+        return const Center(child: Text('탐색 페이지'));
     }
   }
 }
