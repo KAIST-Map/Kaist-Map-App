@@ -1,14 +1,14 @@
-abstract class ApiLoader<T> {
+abstract class ApiFetcher<T> {
   static const bool mock = true;
 
-  Future<T> load() async {
+  Future<T> fetch() async {
     if (mock) {
-      return await _loadMock();
+      return await fetchMock();
     } else {
-      return await _loadReal();
+      return await fetchReal();
     }
   }
 
-  Future<T> _loadMock();
-  Future<T> _loadReal();
+  Future<T> fetchMock();
+  Future<T> fetchReal();
 }

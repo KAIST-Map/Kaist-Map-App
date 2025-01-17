@@ -1,7 +1,19 @@
+enum BuildingCategory {
+  lecture,
+  dormitory,
+}
+
 class BuildingData {
   final int id;
   final String name;
-  final List<int> nodeIds;
+  final double latitude;
+  final double longitude;
+  BuildingCategory? category;
 
-  BuildingData({required this.id, required this.name, required this.nodeIds});
+  BuildingData(
+      {required this.id,
+      required this.name,
+      required this.latitude,
+      required this.longitude,
+      this.category});
 }

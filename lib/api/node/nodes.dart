@@ -1,12 +1,12 @@
 import 'package:kaist_map/api/api_loader.dart';
 import 'package:kaist_map/api/node/data.dart';
 
-class NodesLoader extends ApiLoader<List<NodeData>> {
+class NodesLoader extends ApiFetcher<List<NodeData>> {
   final List<int> ids;
 
   NodesLoader(this.ids);
 
-  Future<List<NodeData>> _loadMock() async {
+  Future<List<NodeData>> fetchMock() async {
     return [
       NodeData(
         id: 1,
@@ -18,8 +18,9 @@ class NodesLoader extends ApiLoader<List<NodeData>> {
       )
     ];
   }
-
-  Future<List<NodeData>> _loadReal() {
+  
+  @override
+  Future<List<NodeData>> fetchReal() {
     throw UnimplementedError();
   }
 }
