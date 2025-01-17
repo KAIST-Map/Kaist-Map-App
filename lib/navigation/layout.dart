@@ -27,19 +27,19 @@ class _KMapNavigationState extends State<KMapNavigation> {
         selectedIndex: _selectedIndex,
         destinations: const <Widget>[
           NavigationDestination(
-            selectedIcon: Icon(Icons.home),
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
+            selectedIcon: Icon(Icons.location_on),
+            icon: Icon(Icons.location_on_outlined),
+            label: '탐색',
           ),
           NavigationDestination(
-            selectedIcon: Icon(Icons.search),
-            icon: Icon(Icons.search_outlined),
-            label: 'Search',
+            selectedIcon: Icon(Icons.bookmark),
+            icon: Icon(Icons.bookmark_outline),
+            label: '즐겨찾기',
           ),
           NavigationDestination(
             selectedIcon: Icon(Icons.settings),
             icon: Icon(Icons.settings_outlined),
-            label: 'Settings',
+            label: '설정',
           ),
         ],
       ),
@@ -49,13 +49,13 @@ class _KMapNavigationState extends State<KMapNavigation> {
   Widget _getSelectedWidget(int index) {
     switch (index) {
       case 0:
-        return Text('Home Page');
+        return const Text('팀색 페이지');
       case 1:
-        return Text('Search Page');
+        return const Text('즐겨찾기');
       case 2:
-        return Text('Settings Page');
+        return const Text('설정 페이지');
       default:
-        return Text('Home Page');
+        return const Text('탐색 페이지');
     }
   }
 }

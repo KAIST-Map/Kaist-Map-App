@@ -23,7 +23,7 @@ class KMapMain extends StatelessWidget {
           indicatorColor: primaryColor.shade700,
           surfaceTintColor: primaryColor.shade700,
           iconTheme: WidgetStateProperty.all(const IconThemeData(color: KMapColors.white)),
-          labelTextStyle: WidgetStateProperty.all(const TextStyle(color: KMapColors.white, fontSize: 12)),
+          labelTextStyle: WidgetStateProperty.all(const TextStyle(color: KMapColors.white, fontSize: 13, fontWeight: FontWeight.w500)),
         ),
       ),
       home: const Scaffold(
