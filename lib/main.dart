@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kaist_map/api/context/building.dart';
 import 'package:kaist_map/constant/colors.dart';
+import 'package:kaist_map/component/building_filter.dart';
 import 'package:kaist_map/navigation/google_map/map_context.dart';
 import 'package:kaist_map/navigation/layout.dart';
 import 'package:provider/provider.dart';
@@ -10,10 +11,14 @@ Future main() async {
 
   runApp(MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => BuildingContext()),
+        ChangeNotifierProvider(create: (_) => BuildingCategoryFilterContext()),
+        ChangeNotifierProvider(create: (_) => NavigationContext()),
+        ChangeNotifierProvider(create: (_) => ApiContext()),
         ChangeNotifierProvider(create: (_) => MapContext())
       ],
-      child: const KMapMain()));
+      builder: (context, child) {
+        return const KMapMain();
+      }));
 }
 
 class KMapMain extends StatelessWidget {
@@ -29,24 +34,40 @@ class KMapMain extends StatelessWidget {
         colorScheme: ColorScheme.fromSwatch(primarySwatch: primaryColor),
         fontFamily: 'Pretendard',
         navigationBarTheme: NavigationBarThemeData(
-          backgroundColor: KMapColors.lightBlue.shade100,
-          indicatorColor: KMapColors.lightBlue.shade200,
+          backgroundColor: KMapColors.darkBlue,
+          indicatorColor: KMapColors.lightBlue.withOpacity(0.2),
           iconTheme: WidgetStateProperty.resolveWith<IconThemeData>(
-            (Set<WidgetState> states) {
-              if (states.contains(WidgetState.selected)) {
-                return const IconThemeData(color: KMapColors.darkBlue);
-              }
-              return const IconThemeData(color: KMapColors.darkGray);
+              (Set<WidgetState> states) {
+            if (states.contains(WidgetState.selected)) {
+              return const IconThemeData(color: KMapColors.white);
             }
-          ),
+            return const IconThemeData(color: KMapColors.darkGray);
+          }),
           labelTextStyle: WidgetStateProperty.resolveWith<TextStyle>(
-            (Set<WidgetState> states) {
-              if (states.contains(WidgetState.selected)) {
-                return const TextStyle(fontWeight: FontWeight.bold);
-              }
-              return const TextStyle(fontWeight: FontWeight.normal);
+              (Set<WidgetState> states) {
+            if (states.contains(WidgetState.selected)) {
+              return const TextStyle(fontWeight: FontWeight.bold, color: KMapColors.white);
             }
-          ),
+            return const TextStyle(fontWeight: FontWeight.normal, color: KMapColors.darkGray);
+          }),
+        ),
+        searchBarTheme: SearchBarThemeData(
+          backgroundColor:
+              WidgetStateProperty.all(KMapColors.darkBlue.shade100),
+          elevation: const WidgetStatePropertyAll(0),
+          padding: WidgetStateProperty.all(
+              const EdgeInsets.symmetric(horizontal: 20.0)),
+        ),
+        progressIndicatorTheme: const ProgressIndicatorThemeData(
+          color: KMapColors.darkBlue,
+        ),
+        chipTheme: ChipThemeData(
+          backgroundColor: KMapColors.darkBlue.shade100,
+          selectedColor: KMapColors.darkBlue,
+          secondarySelectedColor: KMapColors.lightBlue,
+          brightness: Brightness.light,
+          elevation: 3.0,
+          pressElevation: 3.0,
         ),
       ),
       home: const Scaffold(

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:kaist_map/api/context/building.dart';
 import 'package:kaist_map/constant/map.dart';
 import 'package:kaist_map/navigation/google_map/map_context.dart';
 import 'package:provider/provider.dart';
@@ -11,7 +10,6 @@ class KMapGoogleMap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final MapContext mapContext = context.watch<MapContext>();
-    final BuildingContext buildingContext = context.watch<BuildingContext>();
 
     return GoogleMap(
       initialCameraPosition: const CameraPosition(
@@ -40,15 +38,6 @@ class KMapGoogleMap extends StatelessWidget {
       buildingsEnabled: true,
       trafficEnabled: false,
       indoorViewEnabled: false,
-      markers: buildingContext.buildings
-          .map((building) => Marker(
-                markerId: MarkerId(building.id.toString()),
-                position: LatLng(building.latitude, building.longitude),
-                infoWindow: InfoWindow(
-                  title: building.name,
-                ),
-              ))
-          .toSet(),
       style: '''[
         {
           "featureType": "poi",
@@ -65,6 +54,9 @@ class KMapGoogleMap extends StatelessWidget {
           ]
         }
       ]''',
+      markers: mapContext.markers,
+      onCameraMove: (position) => mapContext.setCameraPosition(position),
+      onTap: mapContext.onTap,
     );
   }
 }

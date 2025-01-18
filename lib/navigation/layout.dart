@@ -1,31 +1,47 @@
 import 'package:flutter/material.dart';
-import 'package:kaist_map/navigation/explore/widget.dart';
-import 'package:kaist_map/navigation/google_map/map_context.dart';
+import 'package:kaist_map/navigation/bookmarks/widget.dart';
+import 'package:kaist_map/navigation/map/widget.dart';
 import 'package:kaist_map/navigation/google_map/widget.dart';
+import 'package:kaist_map/navigation/my/widget.dart';
 import 'package:provider/provider.dart';
+
+class NavigationContext extends ChangeNotifier {
+  int _selectedIndex = 0;
+
+  int get selectedIndex => _selectedIndex;
+
+  void _setSelectedIndex(int index) {
+    _selectedIndex = index;
+    notifyListeners();
+  }
+}
 
 class KMapNavigation extends StatelessWidget {
   const KMapNavigation({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final mapContext = context.watch<MapContext>();
+    final navigationContext = context.watch<NavigationContext>();
+
+    if (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+    }
 
     return Scaffold(
       body: Stack(
         children: <Widget>[
           const KMapGoogleMap(),
-          _getSelectedWidget(mapContext.selectedIndex),
+          _getSelectedBodyWidget(navigationContext.selectedIndex),
         ],
       ),
       bottomNavigationBar: NavigationBar(
-        onDestinationSelected: mapContext.setSelectedIndex,
-        selectedIndex: mapContext.selectedIndex,
+        onDestinationSelected: navigationContext._setSelectedIndex,
+        selectedIndex: navigationContext.selectedIndex,
         destinations: const <Widget>[
           NavigationDestination(
-            selectedIcon: Icon(Icons.location_on),
-            icon: Icon(Icons.location_on_outlined),
-            label: '탐색',
+            selectedIcon: Icon(Icons.map),
+            icon: Icon(Icons.map_outlined),
+            label: '지도',
           ),
           NavigationDestination(
             selectedIcon: Icon(Icons.bookmark),
@@ -33,23 +49,23 @@ class KMapNavigation extends StatelessWidget {
             label: '즐겨찾기',
           ),
           NavigationDestination(
-            selectedIcon: Icon(Icons.settings),
-            icon: Icon(Icons.settings_outlined),
-            label: '설정',
+            selectedIcon: Icon(Icons.account_circle),
+            icon: Icon(Icons.account_circle_outlined),
+            label: '내 정보',
           ),
         ],
       ),
     );
   }
 
-  Widget _getSelectedWidget(int index) {
+  Widget _getSelectedBodyWidget(int index) {
     switch (index) {
       case 0:
-        return const Center(child: KMapExplore());
+        return const KMapMap();
       case 1:
-        return const Center(child: Text('즐겨찾기'));
+        return const KMapBookmarks();
       case 2:
-        return const Center(child: Text('설정 페이지'));
+        return const KMapMyPage();
       default:
         return const Center(child: Text('탐색 페이지'));
     }

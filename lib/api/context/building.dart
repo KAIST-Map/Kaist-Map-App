@@ -1,20 +1,27 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:kaist_map/api/building/all_building.dart';
 import 'package:kaist_map/api/building/data.dart';
+import 'package:kaist_map/api/local/bookmarks.dart';
 
-class BuildingContext extends ChangeNotifier {
-  BuildingContext() {
-    _loadBuildings();
+class ApiContext extends ChangeNotifier {
+  final Completer<List<BuildingData>> _buildings = Completer<List<BuildingData>>();
+  final Completer<List<BuildingData>> _bookmarks = Completer<List<BuildingData>>();
+
+  ApiContext() {
+    _initialize();
   }
 
-  List<BuildingData> _buildings = [];
-
-  List<BuildingData> get buildings => _buildings;
-
-  void _loadBuildings() {
-    AllBuildingLoader().fetch().then((buildings) {
-      _buildings = buildings;
-      notifyListeners();
-    });
+  void _initialize() async {
+    try {
+      _buildings.complete(await AllBuildingLoader().fetch());
+      _bookmarks.complete(await BookmarksLoader().fetch());
+    } catch (e) {
+      _buildings.completeError(e);
+    }
   }
+
+  Future<List<BuildingData>> get buildings => _buildings.future;
+  Future<List<BuildingData>> get bookmarks => _bookmarks.future;
 }
