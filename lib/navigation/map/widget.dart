@@ -29,7 +29,7 @@ class _KMapMapState extends State<KMapMap> {
 
     buildingContext.buildings.then((buildings) {
       final filteredBuildings = buildings.where((building) {
-        return filters.isEmpty || filters.contains(building.category);
+        return filters.isEmpty || filters.any((filter) => building.category.contains(filter));
       }).toList();
       mapContext.setMarkers(filteredBuildings
           .map((BuildingData e) => e.toMarker(onTap: () {
@@ -44,26 +44,28 @@ class _KMapMapState extends State<KMapMap> {
                             mainAxisSize: MainAxisSize.max,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  // Drag handle
-                                  Container(
-                                    margin: const EdgeInsets.symmetric(vertical: 8),
-                                    width: 40,
-                                    height: 4,
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[300],
-                                      borderRadius: BorderRadius.circular(2),
+                              Expanded(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    // Drag handle
+                                    Container(
+                                      margin: const EdgeInsets.symmetric(vertical: 8),
+                                      width: 40,
+                                      height: 4,
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey[300],
+                                        borderRadius: BorderRadius.circular(2),
+                                      ),
                                     ),
-                                  ),
-                                  Expanded(
-                                    child: SingleChildScrollView(
-                                      controller: scrollController,
-                                      child: BottomSheetContent(buildingData: e,),
+                                    Expanded(
+                                      child: SingleChildScrollView(
+                                        controller: scrollController,
+                                        child: BottomSheetContent(buildingData: e,),
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ],
                           );
