@@ -41,7 +41,7 @@ class BottomSheetContent extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Wrap(
-                      children: buildingData.category
+                      children: buildingData.categoryIds
                           .map((category) => category.icon)
                           .toList(),
                     ),
@@ -58,7 +58,7 @@ class BottomSheetContent extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(16),
                 child: Image.network(
-                  buildingData.imageUrl ??
+                  buildingData.imageUrl.elementAtOrNull(0) ??
                       "https://picsum.photos/$imageSize?image=9",
                   width: imageSize.toDouble(),
                   height: imageSize.toDouble(),

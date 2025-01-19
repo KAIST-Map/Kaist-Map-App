@@ -30,7 +30,7 @@ class _KMapMapState extends State<KMapMap> {
 
     buildingContext.buildings.then((buildings) {
       final filteredBuildings = buildings.where((building) {
-        return filters.isEmpty || filters.any((filter) => building.category.contains(filter));
+        return filters.isEmpty || filters.any((filter) => building.categoryIds.contains(filter));
       }).toList();
       mapContext.setMarkers(filteredBuildings
           .map((BuildingData e) => e.toMarker(onTap: () {

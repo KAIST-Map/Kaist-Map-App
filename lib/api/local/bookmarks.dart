@@ -1,5 +1,4 @@
-import 'package:kaist_map/api/api_loader.dart';
-import 'package:kaist_map/api/building/data.dart';
+import 'package:kaist_map/api/api_fetcher.dart';
 
 class BookmarksLoader extends ApiFetcher<List<int>> {
   @override

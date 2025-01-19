@@ -1,4 +1,4 @@
-import 'package:kaist_map/api/api_loader.dart';
+import 'package:kaist_map/api/api_fetcher.dart';
 import 'package:kaist_map/api/building/data.dart';
 
 class AllBuildingLoader extends ApiFetcher<List<BuildingData>> {
@@ -10,8 +10,9 @@ class AllBuildingLoader extends ApiFetcher<List<BuildingData>> {
         name: '창의학습관',
         latitude: 36.368,
         longitude: 127.363,
-        category: BuildingCategory.values,
+        categoryIds: BuildingCategory.values,
         importance: 1,
+        imageUrl: [],
         alias: ["창학", "창의관", "창학", "창의관", "창학", "창의관", "창학", "창의관", "창학", "창의관", "창학", "창의관", "창학", "창의관", "창학", "창의관", "창학", "창의관", "창학", "창의관", "창학", "창의관", "창학", "창의관", "창학", "창의관", "창학", "창의관", "창학", "창의관", "창학", "창의관", "창학", "창의관", "창학", "창의관", "창학", "창의관"],
       ),
       BuildingData(
@@ -19,8 +20,9 @@ class AllBuildingLoader extends ApiFetcher<List<BuildingData>> {
         name: '자연과학동',
         latitude: 36.369,
         longitude: 127.364,
-        category: [BuildingCategory.department],
+        categoryIds: [BuildingCategory.department],
         importance: 2,
+        imageUrl: [],
         alias: ["자과동"],
       ),
 
@@ -29,8 +31,9 @@ class AllBuildingLoader extends ApiFetcher<List<BuildingData>> {
         name: '소망관',
         latitude: 36.365,
         longitude: 127.365,
-        category: [BuildingCategory.dormitory],
+        categoryIds: [BuildingCategory.dormitory],
         importance: 3,
+        imageUrl: [],
         alias: [],
       ),
       BuildingData(
@@ -38,8 +41,9 @@ class AllBuildingLoader extends ApiFetcher<List<BuildingData>> {
         name: '사랑관',
         latitude: 36.366,
         longitude: 127.366,
-        category: [BuildingCategory.dormitory],
+        categoryIds: [BuildingCategory.dormitory],
         importance: 4,
+        imageUrl: [],
         alias: [],
       ),
 
@@ -48,8 +52,9 @@ class AllBuildingLoader extends ApiFetcher<List<BuildingData>> {
         name: '카이마루',
         latitude: 36.367,
         longitude: 127.367,
-        category: [BuildingCategory.restaurant],
+        categoryIds: [BuildingCategory.restaurant],
         importance: 5,
+        imageUrl: [],
         alias: ["카마"],
       ),
       BuildingData(
@@ -57,8 +62,9 @@ class AllBuildingLoader extends ApiFetcher<List<BuildingData>> {
         name: '태울관',
         latitude: 36.368,
         longitude: 127.368,
-        category: [BuildingCategory.restaurant],
+        categoryIds: [BuildingCategory.restaurant],
         importance: 6,
+        imageUrl: [],
         alias: [],
       ),
 
@@ -67,18 +73,20 @@ class AllBuildingLoader extends ApiFetcher<List<BuildingData>> {
         name: '학술문화관',
         latitude: 36.364,
         longitude: 127.364,
-        category: [BuildingCategory.library],
+        categoryIds: [BuildingCategory.library],
         importance: 7,
         alias: ["학술관"],
+        imageUrl: [],
       ),
       BuildingData(
         id: 8,
         name: '도서관2',
         latitude: 36.365,
         longitude: 127.363,
-        category: [BuildingCategory.library],
+        categoryIds: [BuildingCategory.library],
         importance: 8,
         alias: [],
+        imageUrl: [],
       ),
 
       BuildingData(
@@ -86,8 +94,9 @@ class AllBuildingLoader extends ApiFetcher<List<BuildingData>> {
         name: '카페1',
         latitude: 36.366,
         longitude: 127.362,
-        category: [BuildingCategory.cafe],
+        categoryIds: [BuildingCategory.cafe],
         importance: 9,
+        imageUrl: [],
         alias: [],
       ),
       BuildingData(
@@ -95,9 +104,10 @@ class AllBuildingLoader extends ApiFetcher<List<BuildingData>> {
         name: '카페2',
         latitude: 36.367,
         longitude: 127.361,
-        category: [BuildingCategory.cafe],
+        categoryIds: [BuildingCategory.cafe],
         importance: 10,
         alias: [],
+        imageUrl: [],
       ),
 
       BuildingData(
@@ -105,18 +115,20 @@ class AllBuildingLoader extends ApiFetcher<List<BuildingData>> {
         name: '동아리1',
         latitude: 36.368,
         longitude: 127.365,
-        category: [BuildingCategory.etc],
+        categoryIds: [BuildingCategory.etc],
         importance: 11,
         alias: [],
+        imageUrl: [],
       ),
       BuildingData(
         id: 12,
         name: '동아리2',
         latitude: 36.369,
         longitude: 127.366,
-        category: [BuildingCategory.etc],
+        categoryIds: [BuildingCategory.etc],
         importance: 12,
         alias: [],
+        imageUrl: [],
       ),
       BuildingData(
         id: 13,
@@ -124,7 +136,8 @@ class AllBuildingLoader extends ApiFetcher<List<BuildingData>> {
         latitude: 36.370,
         longitude: 127.367,
         importance: 13,
-        alias: [], category: [],
+        alias: [], categoryIds: [],
+        imageUrl: [],
       ),
       BuildingData(
         id: 13,
@@ -132,7 +145,8 @@ class AllBuildingLoader extends ApiFetcher<List<BuildingData>> {
         latitude: 36.370,
         longitude: 127.367,
         importance: 14,
-        alias: [], category: [],
+        alias: [], categoryIds: [],
+        imageUrl: [],
       ),
     ];
   }

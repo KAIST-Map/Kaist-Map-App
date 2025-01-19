@@ -4,7 +4,6 @@ class NodeData {
   final double latitude;
   final double longitude;
   final int? buildingId;
-  final String? imageUrl;
 
   NodeData({
     required this.id,
@@ -12,6 +11,12 @@ class NodeData {
     required this.latitude,
     required this.longitude,
     this.buildingId,
-    this.imageUrl,
   });
+
+  NodeData.fromJson(Map<String, dynamic> json):
+      id = json['id'],
+      name = json['name'],
+      latitude = json['latitude'],
+      longitude = json['longitude'],
+      buildingId = json['buildingId'];
 }

@@ -1,8 +1,9 @@
 abstract class ApiFetcher<T> {
-  static const bool mock = true;
+  static const bool _mock = true;
+  final String baseUrl = "http://localhost:3000";
 
-  Future<T> fetch() async {
-    if (mock) {
+  Future<T> fetch({bool mock = false}) async {
+    if (mock || _mock) {
       return await fetchMock();
     } else {
       return await fetchReal();
