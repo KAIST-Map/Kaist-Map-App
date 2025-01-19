@@ -31,6 +31,35 @@ class MapContext extends ChangeNotifier {
     notifyListeners();
   }
 
+  void showTwoLocations(LatLng location1, LatLng location2) {
+    if (_mapController == null) {
+      return;
+    }
+
+    final bounds = LatLngBounds(
+      southwest: LatLng(
+        (location1.latitude < location2.latitude
+            ? location1.latitude
+            : location2.latitude) - 0.003,
+        (location1.longitude < location2.longitude
+            ? location1.longitude
+            : location2.longitude) - 0.0004,
+      ),
+      northeast: LatLng(
+        (location1.latitude > location2.latitude
+            ? location1.latitude
+            : location2.latitude) + 0.003,
+        (location1.longitude > location2.longitude
+            ? location1.longitude
+            : location2.longitude) + 0.0004,
+      ),
+    );
+
+    _mapController!.animateCamera(
+      CameraUpdate.newLatLngBounds(bounds, 50.0)
+    );
+  }
+
   void Function(LatLng) onTap = (LatLng latLng) {};
 
   void setOnTap(void Function(LatLng) onTap) {
@@ -53,12 +82,9 @@ class MapContext extends ChangeNotifier {
           zoom: 18,
         ),
       ),
-    );    
+    );
 
     if (!markers.any((marker) => marker.markerId.value.split('-').last == building.id.toString())) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        onTap(LatLng(building.latitude, building.longitude));
-      });
       return;
     }
 

@@ -9,12 +9,14 @@ class SearchResult extends StatelessWidget {
   final BuildingData buildingData;
   final bool isHistory;
   final void Function() setState;
+  final void Function(BuildingData)? onTap;
 
   const SearchResult(
       {super.key,
       required this.buildingData,
       required this.isHistory,
-      required this.setState});
+      required this.setState,
+      this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,11 @@ class SearchResult extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
-          mapContext.lookAt(buildingData);
+          if (onTap != null) {
+            onTap!(buildingData);
+          } else {
+            mapContext.lookAt(buildingData);
+          }
           Navigator.of(context).pop();
         },
         child: ListTile(

@@ -10,7 +10,7 @@ class NavigationContext extends ChangeNotifier {
 
   int get selectedIndex => _selectedIndex;
 
-  void _setSelectedIndex(int index) {
+  void setSelectedIndex(int index) {
     _selectedIndex = index;
     notifyListeners();
   }
@@ -39,7 +39,7 @@ class KMapNavigation extends StatelessWidget {
         ],
       ),
       bottomNavigationBar: NavigationBar(
-        onDestinationSelected: navigationContext._setSelectedIndex,
+        onDestinationSelected: navigationContext.setSelectedIndex,
         selectedIndex: navigationContext.selectedIndex,
         destinations: const <Widget>[
           NavigationDestination(

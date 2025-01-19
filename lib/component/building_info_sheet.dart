@@ -3,6 +3,8 @@ import 'package:kaist_map/api/building/data.dart';
 import 'package:kaist_map/api/local/bookmarks.dart';
 import 'package:kaist_map/constant/colors.dart';
 import 'package:kaist_map/navigation/layout.dart';
+import 'package:kaist_map/navigation/routing/routing_context.dart';
+import 'package:kaist_map/utils/option.dart';
 import 'package:provider/provider.dart';
 
 class BuildingInfoSheet extends StatefulWidget {
@@ -27,6 +29,7 @@ class _BuildingInfoSheetState extends State<BuildingInfoSheet> {
         BookmarkChecker(buildingData.id).fetch(mock: false);
 
     final navigationContext = context.read<NavigationContext>();
+    final routingContext = context.read<RoutingContext>();
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -87,13 +90,27 @@ class _BuildingInfoSheetState extends State<BuildingInfoSheet> {
           Row(
             children: [
               FilledButton.icon(
-                  onPressed: () {},
+                  onPressed: () {
+                    routingContext.setStartBuildingData(const None());
+                    routingContext.setEndBuildingData(Some(buildingData));
+                    navigationContext.setSelectedIndex(2);
+                  },
                   icon: const Icon(Icons.directions),
                   label: const Text("길찾기")),
               const SizedBox(width: 8),
-              OutlinedButton(onPressed: () {}, child: const Text("출발")),
+              OutlinedButton(
+                  onPressed: () {
+                    routingContext.setStartBuildingData(Some(buildingData));
+                    navigationContext.setSelectedIndex(2);
+                  },
+                  child: const Text("출발")),
               const SizedBox(width: 8),
-              OutlinedButton(onPressed: () {}, child: const Text("도착")),
+              OutlinedButton(
+                  onPressed: () {
+                    routingContext.setEndBuildingData(Some(buildingData));
+                    navigationContext.setSelectedIndex(2);
+                  },
+                  child: const Text("도착")),
               const SizedBox(width: 8),
               const Spacer(),
               FutureBuilder<bool>(

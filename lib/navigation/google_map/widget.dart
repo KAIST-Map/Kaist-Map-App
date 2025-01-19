@@ -78,7 +78,7 @@ class _KMapGoogleMapState extends State<KMapGoogleMap> {
             {"visibility": "off"}
           ]
         }
-      ]''',
+              ]''',
           markers: mapContext.markers,
           onCameraMove: (position) => mapContext.setCameraPosition(position),
           onTap: mapContext.onTap,
@@ -87,14 +87,15 @@ class _KMapGoogleMapState extends State<KMapGoogleMap> {
           Container(
             alignment: Alignment.bottomRight,
             padding: const EdgeInsets.all(10),
-            child: FloatingActionButton.small(onPressed: () =>
-              Geolocator.getCurrentPosition().then((position) {
-                mapContext.mapController?.animateCamera(
-                  CameraUpdate.newLatLng(LatLng(position.latitude, position.longitude)),
-                );
-              }),
-              child: const Icon(Icons.my_location)
-                    ),
+            child: FloatingActionButton.small(
+                onPressed: () =>
+                    Geolocator.getCurrentPosition().then((position) {
+                      mapContext.mapController?.animateCamera(
+                        CameraUpdate.newLatLng(
+                            LatLng(position.latitude, position.longitude)),
+                      );
+                    }),
+                child: const Icon(Icons.my_location)),
           ),
       ],
     );

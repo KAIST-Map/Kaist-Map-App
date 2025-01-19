@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:kaist_map/api/building/data.dart';
 import 'package:kaist_map/api/context/building.dart';
+import 'package:kaist_map/component/building_sheet_frame.dart';
 import 'package:kaist_map/component/search/widget.dart';
 import 'package:kaist_map/component/building_filter.dart';
-import 'package:kaist_map/constant/colors.dart';
 import 'package:kaist_map/navigation/google_map/map_context.dart';
-import 'package:kaist_map/component/building_info_sheet.dart';
 import 'package:provider/provider.dart';
 
 class KMapMap extends StatefulWidget {
@@ -34,26 +33,13 @@ class _KMapMapState extends State<KMapMap> {
             filters.any((filter) => building.categoryIds.contains(filter));
       }).toList();
       mapContext.setMarkers(filteredBuildings
-          .map((BuildingData e) => e.toMarker(
+          .map((BuildingData buildingData) => buildingData.toMarker(
               pageName: "map",
               onTap: () {
-                Scaffold.of(context).showBottomSheet((context) => Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.symmetric(vertical: 8),
-                          width: 40,
-                          height: 4,
-                          decoration: BoxDecoration(
-                            color: KMapColors.darkGray.shade400,
-                            borderRadius: BorderRadius.circular(2),
-                          ),
-                        ),
-                        BuildingInfoSheet(
-                          buildingData: e,
-                        ),
-                      ],
-                    ));
+                Scaffold.of(context)
+                    .showBottomSheet((context) => BuildingSheetFrame(
+                          buildingData: buildingData,
+                        ));
               }))
           .toSet());
     });

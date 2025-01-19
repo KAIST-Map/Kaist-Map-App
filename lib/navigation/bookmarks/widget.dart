@@ -54,7 +54,7 @@ class KMapBookmarks extends StatelessWidget {
         } else {
           return const SafeArea(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+              padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
               child: BuildingCategoryFilter(),
             ),
           );
