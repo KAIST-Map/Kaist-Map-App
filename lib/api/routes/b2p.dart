@@ -3,17 +3,17 @@ import 'package:http/http.dart' as http;
 import 'package:kaist_map/api/api_fetcher.dart';
 import 'package:kaist_map/api/routes/data.dart';
 
-class P2BLoader extends ApiFetcher<PathData> {
-  final double startLatitude;
-  final double startLongitude;
-  final int endBuildingId;
+class B2PLoader extends ApiFetcher<PathData> {
+  final int startBuildingId;
+  final double endLatitude;
+  final double endLongitude;
   final bool wantFreeOfRain;
   final bool wantBeam;
 
-  P2BLoader({
-    required this.startLatitude,
-    required this.startLongitude,
-    required this.endBuildingId,
+  B2PLoader({
+    required this.startBuildingId,
+    required this.endLatitude,
+    required this.endLongitude,
     required this.wantFreeOfRain,
     required this.wantBeam,
   });
@@ -41,14 +41,14 @@ class P2BLoader extends ApiFetcher<PathData> {
   @override
   Future<PathData> fetchReal() async {
     final queryParameters = {
-      'startLatitude': startLatitude.toStringAsFixed(14),
-      'startLongitude': startLongitude.toStringAsFixed(14),
-      'endBuildingId': endBuildingId.toString(),
+      'startBuildingId': startBuildingId.toString(),
+      'endLatitude': endLatitude.toStringAsFixed(14),
+      'endLongitude': endLongitude.toStringAsFixed(14),
       'wantFreeOfRain': wantFreeOfRain.toString(),
       'wantBeam': wantBeam.toString(),
     };
 
-    final uri = Uri.parse('$baseUrl/node/routes/point-to-building').replace(
+    final uri = Uri.parse('$baseUrl/node/routes/building-to-point').replace(
       queryParameters: queryParameters,
     );
 

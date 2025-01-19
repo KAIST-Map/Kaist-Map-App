@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:kaist_map/api/api_fetcher.dart';
 import 'package:kaist_map/api/building/data.dart';
+import 'package:http/http.dart' as http;
 
 class AllBuildingLoader extends ApiFetcher<List<BuildingData>> {
   @override
@@ -152,7 +155,21 @@ class AllBuildingLoader extends ApiFetcher<List<BuildingData>> {
   }
 
   @override
-  Future<List<BuildingData>> fetchReal() {
-    throw UnimplementedError();
+  Future<List<BuildingData>> fetchReal() async {
+    final uri = Uri.parse('$baseUrl/building');
+
+    try {
+      final response = await http.get(uri);
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body)['buildings']
+            .map<BuildingData>((building) => BuildingData.fromJson(building))
+            .toList();
+      } else {
+        throw Exception('Failed to search buildings: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to search buildings: $e');
+    }
   }
 }
