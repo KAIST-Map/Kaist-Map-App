@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:kaist_map/api/api_fetcher.dart';
 import 'package:kaist_map/constant/colors.dart';
 
 enum BuildingCategory {
@@ -52,36 +53,36 @@ extension BuildingCategoryExtension on BuildingCategory {
     }
   }
 
-  Icon get icon {
+  Icon getIcon({MaterialColor color = KMapColors.darkGray, double size = 24}) {
     switch (this) {
       case BuildingCategory.department:
-      return const Icon(Icons.school, color: KMapColors.darkGray);
+        return Icon(Icons.school, color: color, size: size);
       case BuildingCategory.dormitory:
-      return const Icon(Icons.home, color: KMapColors.darkGray);
+        return Icon(Icons.home, color: color, size: size);
       case BuildingCategory.restaurant:
-      return const Icon(Icons.restaurant, color: KMapColors.darkGray);
+        return Icon(Icons.restaurant, color: color, size: size);
       case BuildingCategory.cafe:
-      return const Icon(Icons.local_cafe, color: KMapColors.darkGray);
+        return Icon(Icons.local_cafe, color: color, size: size);
       case BuildingCategory.bank:
-      return const Icon(Icons.account_balance, color: KMapColors.darkGray);
+        return Icon(Icons.account_balance, color: color, size: size);
       case BuildingCategory.atm:
-      return const Icon(Icons.atm, color: KMapColors.darkGray);
+        return Icon(Icons.atm, color: color, size: size);
       case BuildingCategory.convenience:
-      return const Icon(Icons.local_grocery_store, color: KMapColors.darkGray);
+        return Icon(Icons.local_grocery_store, color: color, size: size);
       case BuildingCategory.gym:
-      return const Icon(Icons.fitness_center, color: KMapColors.darkGray);
+        return Icon(Icons.fitness_center, color: color, size: size);
       case BuildingCategory.laundry:
-      return const Icon(Icons.local_laundry_service, color: KMapColors.darkGray);
+        return Icon(Icons.local_laundry_service, color: color, size: size);
       case BuildingCategory.printer:
-      return const Icon(Icons.print, color: KMapColors.darkGray);
+        return Icon(Icons.print, color: color, size: size);
       case BuildingCategory.building:
-      return const Icon(Icons.apartment, color: KMapColors.darkGray);
+        return Icon(Icons.apartment, color: color, size: size);
       case BuildingCategory.library:
-      return const Icon(Icons.menu_book, color: KMapColors.darkGray);
+        return Icon(Icons.menu_book, color: color, size: size);
       case BuildingCategory.etc:
-      return const Icon(Icons.more_horiz, color: KMapColors.darkGray);
+        return Icon(Icons.more_horiz, color: color, size: size);
       default:
-      return const Icon(Icons.more_horiz, color: KMapColors.darkGray);
+        return Icon(Icons.more_horiz, color: color, size: size);
     }
   }
 }
@@ -109,12 +110,12 @@ class BuildingData {
   BuildingData.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         name = json['name'],
-        categoryIds = (json['category'] as List<int>).map((value) => BuildingCategory.values[value]).toList(),
-        imageUrl = json['imageUrl'],
+        categoryIds = (json['categoryIds'] as List).map((value) => BuildingCategory.values[value]).toList(),
+        imageUrl = toList<String>(json['imageUrl']),
         importance = json['importance'],
         latitude = json['latitude'],
         longitude = json['longitude'],
-        alias = json['alias'];
+        alias = toList<String>(json['alias']);
       
   Marker toMarker({required String pageName, required VoidCallback onTap}) {
     return Marker(

@@ -51,12 +51,18 @@ class KMapMain extends StatelessWidget {
             return const TextStyle(fontWeight: FontWeight.normal, color: KMapColors.darkGray);
           }),
         ),
+        iconTheme: const IconThemeData(color: KMapColors.white),
         searchBarTheme: SearchBarThemeData(
           backgroundColor:
-              WidgetStateProperty.all(KMapColors.darkBlue.shade100),
-          elevation: const WidgetStatePropertyAll(0),
+              WidgetStateProperty.all(KMapColors.darkBlue),
           padding: WidgetStateProperty.all(
               const EdgeInsets.symmetric(horizontal: 20.0)),
+          hintStyle: WidgetStatePropertyAll(
+            TextStyle(color: KMapColors.white.shade300),
+          ),
+          textStyle: const WidgetStatePropertyAll(
+            TextStyle(color: KMapColors.white),
+          ),
         ),
         progressIndicatorTheme: const ProgressIndicatorThemeData(
           color: KMapColors.darkBlue,
@@ -94,6 +100,15 @@ class KMapMain extends StatelessWidget {
           space: 0,
           thickness: 1,
         ),
+        searchViewTheme: SearchViewThemeData(
+          backgroundColor: KMapColors.darkBlue,
+          headerHintStyle: TextStyle(color: KMapColors.white.shade300),
+          headerTextStyle: const TextStyle(color: KMapColors.white),
+        ),
+        textSelectionTheme: TextSelectionThemeData(
+          cursorColor: KMapColors.lightBlue,
+          selectionColor: KMapColors.lightBlue.withAlpha(150),
+        )
       ),
       home: const Scaffold(
         body: KMapNavigation(),

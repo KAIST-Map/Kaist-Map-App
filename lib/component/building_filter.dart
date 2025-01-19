@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kaist_map/api/building/data.dart';
-import 'package:kaist_map/constant/colors.dart';
+import 'package:kaist_map/component/chip.dart';
 import 'package:provider/provider.dart';
 
 class BuildingCategoryFilterContext extends ChangeNotifier {
@@ -28,26 +28,16 @@ class BuildingCategoryFilter extends StatelessWidget {
         children: BuildingCategory.values.map((category) {
           final selected = filters.contains(category);
           return Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: Hero(
-              tag: "category_filter_chip_${category.toString()}",
-              child: FilterChip(
-                side: BorderSide(
-                    color: selected
-                        ? KMapColors.darkBlue
-                        : KMapColors.darkBlue.shade100),
-                elevation: 2,
-                label: Text(category.name),
-                selected: selected,
-                onSelected: (selected) {
-                  if (selected) {
-                    filters.add(category);
-                  } else {
-                    filters.remove(category);
-                  }
-                  setFilters(filters);
-                },
-              ),
+            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+            child: KMapChip(
+              isSelected: selected,
+              onChange: (selected) {
+                if (selected) {
+                  setFilters([...filters, category]);
+                } else {
+                  setFilters(filters.where((e) => e != category).toList());
+                }
+              }, category: category,
             ),
           );
         }).toList(),

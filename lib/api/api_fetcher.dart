@@ -13,3 +13,7 @@ abstract class ApiFetcher<T> {
   Future<T> fetchMock();
   Future<T> fetchReal();
 }
+
+List<LT> toList<LT>(List data) {
+  return data.map((e) => e as LT).toList();
+}

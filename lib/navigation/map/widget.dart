@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kaist_map/api/building/data.dart';
 import 'package:kaist_map/api/context/building.dart';
-import 'package:kaist_map/component/search.dart';
+import 'package:kaist_map/component/search/widget.dart';
 import 'package:kaist_map/component/building_filter.dart';
 import 'package:kaist_map/constant/colors.dart';
 import 'package:kaist_map/navigation/google_map/map_context.dart';

@@ -48,7 +48,7 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
                     const SizedBox(height: 4),
                     Wrap(
                       children: widget.buildingData.categoryIds
-                          .map((category) => category.icon)
+                          .map((category) => category.getIcon())
                           .toList(),
                     ),
                     const SizedBox(height: 4),
