@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kaist_map/navigation/bookmarks/widget.dart';
 import 'package:kaist_map/navigation/map/widget.dart';
 import 'package:kaist_map/navigation/google_map/widget.dart';
-import 'package:kaist_map/navigation/navigation/widget.dart';
+import 'package:kaist_map/navigation/routing/widget.dart';
 import 'package:provider/provider.dart';
 
 class NavigationContext extends ChangeNotifier {
@@ -69,7 +69,7 @@ class KMapNavigation extends StatelessWidget {
       case 1:
         return const KMapBookmarks();
       case 2:
-        return const KMapNavigationPage();
+        return const KMapRoutingPage();
       default:
         return const Center(child: Text('올바르지 않은 요청입니다.'));
     }

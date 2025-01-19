@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class KMapNavigationPage extends StatelessWidget {
-  const KMapNavigationPage({super.key});
+class KMapRoutingPage extends StatelessWidget {
+  const KMapRoutingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
