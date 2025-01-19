@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kaist_map/api/building/data.dart';
 import 'package:kaist_map/api/context/building.dart';
+import 'package:kaist_map/api/local/bookmarks.dart';
 import 'package:kaist_map/navigation/google_map/map_context.dart';
 import 'package:provider/provider.dart';
 
@@ -9,16 +9,20 @@ class KMapBookmarks extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bookmarksContext = context.read<ApiContext>().bookmarks;
     final mapContext = context.read<MapContext>();
-
-    late final List<BuildingData> bookmarks;
+    final buildingContext = context.watch<BuildingContext>();
+    final Future<List<int>> bookmarks = BookmarksFetcher().fetch(mock: false);
 
     return FutureBuilder<void>(
-      future: bookmarksContext.then(
-        (bookmarksContext) {
-          bookmarks = bookmarksContext;
-          mapContext.setMarkers(bookmarksContext.map((building) => building.toMarker(onTap: () {})).toSet());
+      future: bookmarks.then(
+        (bookmarks) async {
+          final buildings = await buildingContext.buildings;
+          mapContext.setMarkers(
+            bookmarks.map((buildingId) => 
+                buildings.firstWhere((building) => building.id == buildingId).toMarker(
+                  pageName: "bookmarks",
+                  onTap: () {}))
+            .toSet());
         },
       ),
       builder: (context, snapshot) {
@@ -27,7 +31,7 @@ class KMapBookmarks extends StatelessWidget {
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else {
-          return Center(child: Text('Bookmarks: ${bookmarks.length}'));
+          return Container();
         }
       },
     );

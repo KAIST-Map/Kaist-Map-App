@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:kaist_map/api/building/data.dart';
-import 'package:kaist_map/api/context/building.dart';
+import 'package:kaist_map/api/local/bookmarks.dart';
 import 'package:kaist_map/constant/colors.dart';
-import 'package:provider/provider.dart';
 
-class BottomSheetContent extends StatelessWidget {
+class BottomSheetContent extends StatefulWidget {
   final BuildingData buildingData;
-  static const int imageSize = 100;
 
   const BottomSheetContent({
     super.key,
@@ -14,9 +12,17 @@ class BottomSheetContent extends StatelessWidget {
   });
 
   @override
+  State<BottomSheetContent> createState() => _BottomSheetContentState();
+}
+
+class _BottomSheetContentState extends State<BottomSheetContent> {
+  static const int imageSize = 100;
+  late BuildingData buildingData = widget.buildingData;
+
+  @override
   Widget build(BuildContext context) {
-    final bookmarksContext = context.watch<ApiContext>();
-    final Future<bool> isBookmarked = bookmarksContext.bookmarks.then((bookmarks) => bookmarks.any((bookmark) => bookmark.id == buildingData.id));
+    final Future<bool> isBookmarked =
+        BookmarkChecker(buildingData.id).fetch(mock: false);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -33,7 +39,7 @@ class BottomSheetContent extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      buildingData.name,
+                      widget.buildingData.name,
                       style: Theme.of(context)
                           .textTheme
                           .titleLarge
@@ -41,15 +47,20 @@ class BottomSheetContent extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Wrap(
-                      children: buildingData.categoryIds
+                      children: widget.buildingData.categoryIds
                           .map((category) => category.icon)
                           .toList(),
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      buildingData.alias.map((name) => "#$name").join("  "),
+                      widget.buildingData.alias
+                          .map((name) => "#$name")
+                          .join("  "),
                       maxLines: null,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(color: KMapColors.darkBlue),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall
+                          ?.copyWith(color: KMapColors.darkBlue),
                     ),
                   ],
                 ),
@@ -72,17 +83,13 @@ class BottomSheetContent extends StatelessWidget {
           Row(
             children: [
               FilledButton.icon(
-                onPressed: () {},
-                icon: const Icon(Icons.directions),
-                label: const Text("길찾기")),
+                  onPressed: () {},
+                  icon: const Icon(Icons.directions),
+                  label: const Text("길찾기")),
               const SizedBox(width: 8),
-              OutlinedButton(
-                onPressed: () {},
-                child: const Text("출발")),
+              OutlinedButton(onPressed: () {}, child: const Text("출발")),
               const SizedBox(width: 8),
-              OutlinedButton(
-                onPressed: () {},
-                child: const Text("도착")),
+              OutlinedButton(onPressed: () {}, child: const Text("도착")),
               const SizedBox(width: 8),
               const Spacer(),
               FutureBuilder<bool>(
@@ -96,12 +103,20 @@ class BottomSheetContent extends StatelessWidget {
                     onPressed: () {
                       if (!done) return;
                       if (snapshot.data!) {
-                        bookmarksContext.removeBookmark(buildingData.id);
+                        BookmarkRemover(buildingData.id)
+                            .fetch(mock: false)
+                            .then((success) {
+                          if (success) setState(() {});
+                        });
                       } else {
-                        bookmarksContext.addBookmark(buildingData);
+                        BookmarkAdder(buildingData.id)
+                            .fetch(mock: false)
+                            .then((success) {
+                          if (success) setState(() {});
+                        });
                       }
                     },
-                    );
+                  );
                 },
               ),
             ],

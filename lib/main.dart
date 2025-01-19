@@ -13,7 +13,7 @@ Future main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => BuildingCategoryFilterContext()),
         ChangeNotifierProvider(create: (_) => NavigationContext()),
-        ChangeNotifierProvider(create: (_) => ApiContext()),
+        ChangeNotifierProvider(create: (_) => BuildingContext()),
         ChangeNotifierProvider(create: (_) => MapContext())
       ],
       builder: (context, child) {

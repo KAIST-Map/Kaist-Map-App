@@ -19,7 +19,7 @@ class _KMapMapState extends State<KMapMap> {
   @override
   Widget build(BuildContext context) {
     final mapContext = context.read<MapContext>();
-    final buildingContext = context.read<ApiContext>();
+    final buildingContext = context.read<BuildingContext>();
     final filters = context.watch<BuildingCategoryFilterContext>().filters;
 
     mapContext.onTap = (_) {
@@ -30,12 +30,14 @@ class _KMapMapState extends State<KMapMap> {
 
     buildingContext.buildings.then((buildings) {
       final filteredBuildings = buildings.where((building) {
-        return filters.isEmpty || filters.any((filter) => building.categoryIds.contains(filter));
+        return filters.isEmpty ||
+            filters.any((filter) => building.categoryIds.contains(filter));
       }).toList();
       mapContext.setMarkers(filteredBuildings
-          .map((BuildingData e) => e.toMarker(onTap: () {
-                Scaffold.of(context)
-                    .showBottomSheet((context) => Column(
+          .map((BuildingData e) => e.toMarker(
+              pageName: "map",
+              onTap: () {
+                Scaffold.of(context).showBottomSheet((context) => Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Container(
@@ -47,7 +49,9 @@ class _KMapMapState extends State<KMapMap> {
                             borderRadius: BorderRadius.circular(2),
                           ),
                         ),
-                        BottomSheetContent(buildingData: e,),
+                        BottomSheetContent(
+                          buildingData: e,
+                        ),
                       ],
                     ));
               }))

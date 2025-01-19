@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:kaist_map/constant/colors.dart';
 
 enum BuildingCategory {
   department,
@@ -54,33 +55,33 @@ extension BuildingCategoryExtension on BuildingCategory {
   Icon get icon {
     switch (this) {
       case BuildingCategory.department:
-        return const Icon(Icons.school);
+      return const Icon(Icons.school, color: KMapColors.darkGray);
       case BuildingCategory.dormitory:
-        return const Icon(Icons.home);
+      return const Icon(Icons.home, color: KMapColors.darkGray);
       case BuildingCategory.restaurant:
-        return const Icon(Icons.restaurant);
+      return const Icon(Icons.restaurant, color: KMapColors.darkGray);
       case BuildingCategory.cafe:
-        return const Icon(Icons.local_cafe);
+      return const Icon(Icons.local_cafe, color: KMapColors.darkGray);
       case BuildingCategory.bank:
-        return const Icon(Icons.account_balance);
+      return const Icon(Icons.account_balance, color: KMapColors.darkGray);
       case BuildingCategory.atm:
-        return const Icon(Icons.atm);
+      return const Icon(Icons.atm, color: KMapColors.darkGray);
       case BuildingCategory.convenience:
-        return const Icon(Icons.local_grocery_store);
+      return const Icon(Icons.local_grocery_store, color: KMapColors.darkGray);
       case BuildingCategory.gym:
-        return const Icon(Icons.fitness_center);
+      return const Icon(Icons.fitness_center, color: KMapColors.darkGray);
       case BuildingCategory.laundry:
-        return const Icon(Icons.local_laundry_service);
+      return const Icon(Icons.local_laundry_service, color: KMapColors.darkGray);
       case BuildingCategory.printer:
-        return const Icon(Icons.print);
+      return const Icon(Icons.print, color: KMapColors.darkGray);
       case BuildingCategory.building:
-        return const Icon(Icons.apartment);
+      return const Icon(Icons.apartment, color: KMapColors.darkGray);
       case BuildingCategory.library:
-        return const Icon(Icons.menu_book);
+      return const Icon(Icons.menu_book, color: KMapColors.darkGray);
       case BuildingCategory.etc:
-        return const Icon(Icons.more_horiz);
+      return const Icon(Icons.more_horiz, color: KMapColors.darkGray);
       default:
-        return const Icon(Icons.more_horiz);
+      return const Icon(Icons.more_horiz, color: KMapColors.darkGray);
     }
   }
 }
@@ -115,9 +116,9 @@ class BuildingData {
         longitude = json['longitude'],
         alias = json['alias'];
       
-  Marker toMarker({required VoidCallback onTap}) {
+  Marker toMarker({required String pageName, required VoidCallback onTap}) {
     return Marker(
-      markerId: MarkerId(id.toString()),
+      markerId: MarkerId("$pageName-$id"),
       position: LatLng(latitude, longitude),
       infoWindow: InfoWindow(title: name),
       onTap: onTap,
