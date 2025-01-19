@@ -57,7 +57,7 @@ class _KMapGoogleMapState extends State<KMapGoogleMap> {
           },
           mapToolbarEnabled: false,
           zoomControlsEnabled: false,
-          myLocationButtonEnabled: _permissionStatus == PermissionStatus.granted,
+          myLocationButtonEnabled: false,
           myLocationEnabled: _permissionStatus == PermissionStatus.granted,
           compassEnabled: true,
           buildingsEnabled: true,

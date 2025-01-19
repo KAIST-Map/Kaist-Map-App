@@ -2,20 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:kaist_map/api/building/data.dart';
 import 'package:kaist_map/api/local/bookmarks.dart';
 import 'package:kaist_map/constant/colors.dart';
+import 'package:kaist_map/navigation/layout.dart';
+import 'package:provider/provider.dart';
 
-class BottomSheetContent extends StatefulWidget {
+class BuildingInfoSheet extends StatefulWidget {
   final BuildingData buildingData;
 
-  const BottomSheetContent({
+  const BuildingInfoSheet({
     super.key,
     required this.buildingData,
   });
 
   @override
-  State<BottomSheetContent> createState() => _BottomSheetContentState();
+  State<BuildingInfoSheet> createState() => _BuildingInfoSheetState();
 }
 
-class _BottomSheetContentState extends State<BottomSheetContent> {
+class _BuildingInfoSheetState extends State<BuildingInfoSheet> {
   static const int imageSize = 100;
   late BuildingData buildingData = widget.buildingData;
 
@@ -23,6 +25,8 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
   Widget build(BuildContext context) {
     final Future<bool> isBookmarked =
         BookmarkChecker(buildingData.id).fetch(mock: false);
+
+    final navigationContext = context.read<NavigationContext>();
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -106,13 +110,25 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
                         BookmarkRemover(buildingData.id)
                             .fetch(mock: false)
                             .then((success) {
-                          if (success) setState(() {});
+                          if (success) {
+                            setState(() {
+                              if (navigationContext.selectedIndex == 1) {
+                                navigationContext.refresh();
+                              }
+                            });
+                          }
                         });
                       } else {
                         BookmarkAdder(buildingData.id)
                             .fetch(mock: false)
                             .then((success) {
-                          if (success) setState(() {});
+                          if (success) {
+                            setState(() {
+                              if (navigationContext.selectedIndex == 1) {
+                                navigationContext.refresh();
+                              }
+                            });
+                          }
                         });
                       }
                     },

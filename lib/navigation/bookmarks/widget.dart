@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:kaist_map/api/context/building.dart';
 import 'package:kaist_map/api/local/bookmarks.dart';
+import 'package:kaist_map/component/building_filter.dart';
+import 'package:kaist_map/component/building_info_sheet.dart';
+import 'package:kaist_map/constant/colors.dart';
 import 'package:kaist_map/navigation/google_map/map_context.dart';
+import 'package:kaist_map/navigation/layout.dart';
 import 'package:provider/provider.dart';
 
 class KMapBookmarks extends StatelessWidget {
@@ -12,6 +16,7 @@ class KMapBookmarks extends StatelessWidget {
     final mapContext = context.read<MapContext>();
     final buildingContext = context.watch<BuildingContext>();
     final Future<List<int>> bookmarks = BookmarksFetcher().fetch(mock: false);
+    context.watch<NavigationContext>();
 
     return FutureBuilder<void>(
       future: bookmarks.then(
@@ -21,17 +26,38 @@ class KMapBookmarks extends StatelessWidget {
             bookmarks.map((buildingId) => 
                 buildings.firstWhere((building) => building.id == buildingId).toMarker(
                   pageName: "bookmarks",
-                  onTap: () {}))
+                  onTap: () {
+                    Scaffold.of(context).showBottomSheet((context) => Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.symmetric(vertical: 8),
+                          width: 40,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: KMapColors.darkGray.shade400,
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        ),
+                        BuildingInfoSheet(
+                          buildingData: buildings.firstWhere((building) => building.id == buildingId),
+                        ),
+                      ],
+                    ));
+                  }))
             .toSet());
         },
       ),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        } else {
+        if (snapshot.connectionState == ConnectionState.waiting || snapshot.hasError) {
           return Container();
+        } else {
+          return const SafeArea(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+              child: BuildingCategoryFilter(),
+            ),
+          );
         }
       },
     );

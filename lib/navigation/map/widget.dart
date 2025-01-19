@@ -5,7 +5,7 @@ import 'package:kaist_map/component/search/widget.dart';
 import 'package:kaist_map/component/building_filter.dart';
 import 'package:kaist_map/constant/colors.dart';
 import 'package:kaist_map/navigation/google_map/map_context.dart';
-import 'package:kaist_map/navigation/map/bottom_sheet_content.dart';
+import 'package:kaist_map/component/building_info_sheet.dart';
 import 'package:provider/provider.dart';
 
 class KMapMap extends StatefulWidget {
@@ -49,7 +49,7 @@ class _KMapMapState extends State<KMapMap> {
                             borderRadius: BorderRadius.circular(2),
                           ),
                         ),
-                        BottomSheetContent(
+                        BuildingInfoSheet(
                           buildingData: e,
                         ),
                       ],

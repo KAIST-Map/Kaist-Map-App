@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kaist_map/navigation/bookmarks/widget.dart';
 import 'package:kaist_map/navigation/map/widget.dart';
 import 'package:kaist_map/navigation/google_map/widget.dart';
-import 'package:kaist_map/navigation/my/widget.dart';
+import 'package:kaist_map/navigation/navigation/widget.dart';
 import 'package:provider/provider.dart';
 
 class NavigationContext extends ChangeNotifier {
@@ -12,6 +12,10 @@ class NavigationContext extends ChangeNotifier {
 
   void _setSelectedIndex(int index) {
     _selectedIndex = index;
+    notifyListeners();
+  }
+
+  void refresh() {
     notifyListeners();
   }
 }
@@ -49,9 +53,9 @@ class KMapNavigation extends StatelessWidget {
             label: '즐겨찾기',
           ),
           NavigationDestination(
-            selectedIcon: Icon(Icons.account_circle),
-            icon: Icon(Icons.account_circle_outlined),
-            label: '내 정보',
+            selectedIcon: Icon(Icons.directions),
+            icon: Icon(Icons.directions_outlined),
+            label: '길찾기',
           ),
         ],
       ),
@@ -65,9 +69,9 @@ class KMapNavigation extends StatelessWidget {
       case 1:
         return const KMapBookmarks();
       case 2:
-        return const KMapMyPage();
+        return const KMapNavigationPage();
       default:
-        return const Center(child: Text('탐색 페이지'));
+        return const Center(child: Text('올바르지 않은 요청입니다.'));
     }
   }
 }
