@@ -69,6 +69,31 @@ class KMapMain extends StatelessWidget {
           elevation: 3.0,
           pressElevation: 3.0,
         ),
+        outlinedButtonTheme: OutlinedButtonThemeData(
+          style: ButtonStyle(
+            padding: WidgetStateProperty.all(
+              const EdgeInsets.symmetric(horizontal: 20.0),
+            ),
+            backgroundColor: WidgetStateProperty.all(KMapColors.white),
+            foregroundColor: WidgetStateProperty.all(KMapColors.darkBlue),
+            side: WidgetStateProperty.all(
+              const BorderSide(
+                color: KMapColors.darkBlue,
+                width: 1.0,
+              ),
+            ),
+            shape: WidgetStateProperty.all(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0),
+              ),
+            ),
+          ),
+        ),
+        dividerTheme: DividerThemeData(
+          color: KMapColors.darkGray.shade200,
+          space: 0,
+          thickness: 1,
+        ),
       ),
       home: const Scaffold(
         body: KMapNavigation(),

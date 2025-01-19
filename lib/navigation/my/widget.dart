@@ -4,7 +4,7 @@ class KMapMyPage extends StatelessWidget {
   const KMapMyPage({super.key});
 
   Future<String> fetchData() async {
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
     return 'Hello, KAIST!';
   }
 

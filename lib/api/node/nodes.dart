@@ -6,6 +6,7 @@ class NodesLoader extends ApiFetcher<List<NodeData>> {
 
   NodesLoader(this.ids);
 
+  @override
   Future<List<NodeData>> fetchMock() async {
     return [
       NodeData(

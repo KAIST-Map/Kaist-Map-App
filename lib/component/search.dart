@@ -19,14 +19,14 @@ class KMapSearch extends StatelessWidget {
           child: IgnorePointer(
             child: SearchBar(
               controller: controller,
-              hintText: '어디로 가고 싶으신가요?',
+              hintText: '어디를 찾으시나요?',
               leading: const Icon(Icons.search),
             ),
           ),
         );
       },
       viewBackgroundColor: KMapColors.darkBlue.shade100,
-      viewHintText: '어디로 가고 싶으신가요?',
+      viewHintText: '어디를 찾으시나요?',
       suggestionsBuilder: (context, controller) {
         return List<ListTile>.generate(20, (index) {
           return ListTile(

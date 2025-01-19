@@ -27,7 +27,7 @@ class KMapBookmarks extends StatelessWidget {
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else {
-          return Center(child: Text(bookmarks.toString()));
+          return Center(child: Text('Bookmarks: ${bookmarks.length}'));
         }
       },
     );

@@ -3,6 +3,7 @@ import 'package:kaist_map/api/building/data.dart';
 import 'package:kaist_map/api/context/building.dart';
 import 'package:kaist_map/component/search.dart';
 import 'package:kaist_map/component/building_filter.dart';
+import 'package:kaist_map/constant/colors.dart';
 import 'package:kaist_map/navigation/google_map/map_context.dart';
 import 'package:kaist_map/navigation/map/bottom_sheet_content.dart';
 import 'package:provider/provider.dart';
@@ -34,42 +35,21 @@ class _KMapMapState extends State<KMapMap> {
       mapContext.setMarkers(filteredBuildings
           .map((BuildingData e) => e.toMarker(onTap: () {
                 Scaffold.of(context)
-                    .showBottomSheet((context) => DraggableScrollableSheet(
-                        expand: false,
-                        initialChildSize: 0.3,
-                        minChildSize: 0.15,
-                        maxChildSize: 0.9,
-                        builder: (context, scrollController) {
-                          return Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    // Drag handle
-                                    Container(
-                                      margin: const EdgeInsets.symmetric(vertical: 8),
-                                      width: 40,
-                                      height: 4,
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey[300],
-                                        borderRadius: BorderRadius.circular(2),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: SingleChildScrollView(
-                                        controller: scrollController,
-                                        child: BottomSheetContent(buildingData: e,),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          );
-                        }));
+                    .showBottomSheet((context) => Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.symmetric(vertical: 8),
+                          width: 40,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: KMapColors.darkGray.shade400,
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        ),
+                        BottomSheetContent(buildingData: e,),
+                      ],
+                    ));
               }))
           .toSet());
     });
