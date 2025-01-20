@@ -56,7 +56,7 @@ Future<Iterable<Widget>> suggestionsBuilder(BuildContext context,
     SearchController controller, BuildingCategoryFilterContext filterContext,
     {void Function(BuildingData)? onResultTap}) async {
   if (controller.text.isEmpty || (controller.text.length >= 2 && controller.text.substring(controller.text.length-2, controller.text.length) == "\$%")) {
-    final historyIds = SearchHistoryFetcher().fetch();
+    final historyIds = SearchHistoryFetcher().fetch(mock: false);
     final buildings = context.read<BuildingContext>().buildings;
     final historyBuildings =
         await Future.wait([historyIds, buildings]).then((value) {
@@ -84,6 +84,7 @@ Future<Iterable<Widget>> suggestionsBuilder(BuildContext context,
   return filterContext
       .applyFilters(searchBuilding)
       .map((buildingData) => SearchResult(
+            onTap: onResultTap,
             buildingData: buildingData,
             isHistory: false,
           ))

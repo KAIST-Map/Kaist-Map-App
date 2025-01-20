@@ -24,6 +24,7 @@ class SearchResult extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
+          SearchHistoryAdder(buildingData.id).fetch(mock: false);
           if (onTap != null) {
             onTap!(buildingData);
           } else {
@@ -57,7 +58,7 @@ class SearchResult extends StatelessWidget {
                     size: 16,
                   ),
                   onPressed: () {
-                    SearchHistoryRemover(buildingData.id).fetch();
+                    SearchHistoryRemover(buildingData.id).fetch(mock: false);
                   },
                 )
               : null,

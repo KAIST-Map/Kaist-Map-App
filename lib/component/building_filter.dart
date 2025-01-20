@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kaist_map/api/building/data.dart';
 import 'package:kaist_map/component/chip.dart';
+import 'package:kaist_map/constant/colors.dart';
 import 'package:provider/provider.dart';
 
 class BuildingCategoryFilterContext extends ChangeNotifier {
@@ -30,15 +31,36 @@ class BuildingCategoryFilter extends StatelessWidget {
     final filters = context.watch<BuildingCategoryFilterContext>().filters;
     final setFilters = context.read<BuildingCategoryFilterContext>().setFilters;
 
-    return Hero(
-      tag: 'building_filter',
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: BuildingCategory.values.map((category) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: [
+          ElevatedButton(
+            style: ButtonStyle(
+              minimumSize: WidgetStateProperty.all(Size.zero),
+              backgroundColor: filters.isEmpty ? null : WidgetStateProperty.all(KMapColors.darkBlue),
+              elevation: WidgetStateProperty.all(2.5),
+              padding: const WidgetStatePropertyAll(EdgeInsets.all(12)),
+            ),
+            onPressed: () {
+              setFilters([]);
+            },
+            child: filters.isEmpty ?
+              const Icon(Icons.filter_alt_off, color: KMapColors.darkBlue,)
+              : Row(
+                children: [
+                  const Icon(Icons.filter_alt, color: KMapColors.white,),
+                  const SizedBox(width: 4),
+                  Text(filters.length.toString(), style: const TextStyle(color: KMapColors.white, fontWeight: FontWeight.bold)),
+                  const SizedBox(width: 4),
+                  const Icon(Icons.close, color: KMapColors.white),
+                ],
+              ),
+          ),
+          ...BuildingCategory.values.map((category) {
             final selected = filters.contains(category);
             return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+              padding: const EdgeInsets.only(left: 8.0),
               child: KMapChip(
                 isSelected: selected,
                 onChange: (selected) {
@@ -51,8 +73,8 @@ class BuildingCategoryFilter extends StatelessWidget {
                 category: category,
               ),
             );
-          }).toList(),
-        ),
+          })
+        ],
       ),
     );
   }
