@@ -15,7 +15,7 @@ class AllBuildingLoader extends ApiFetcher<List<BuildingData>> {
         longitude: 127.363,
         categories: BuildingCategory.values,
         importance: 1,
-        imageUrl: [],
+        imageUrls: [],
         alias: [
           "창학",
           "창의관",
@@ -64,7 +64,7 @@ class AllBuildingLoader extends ApiFetcher<List<BuildingData>> {
         longitude: 127.364,
         categories: [BuildingCategory.department],
         importance: 2,
-        imageUrl: [],
+        imageUrls: [],
         alias: ["자과동"],
       ),
       BuildingData(
@@ -74,7 +74,7 @@ class AllBuildingLoader extends ApiFetcher<List<BuildingData>> {
         longitude: 127.365,
         categories: [BuildingCategory.dormitory],
         importance: 3,
-        imageUrl: [],
+        imageUrls: [],
         alias: [],
       ),
       BuildingData(
@@ -84,7 +84,7 @@ class AllBuildingLoader extends ApiFetcher<List<BuildingData>> {
         longitude: 127.366,
         categories: [BuildingCategory.dormitory],
         importance: 4,
-        imageUrl: [],
+        imageUrls: [],
         alias: [],
       ),
       BuildingData(
@@ -94,7 +94,7 @@ class AllBuildingLoader extends ApiFetcher<List<BuildingData>> {
         longitude: 127.367,
         categories: [BuildingCategory.restaurant],
         importance: 5,
-        imageUrl: [],
+        imageUrls: [],
         alias: ["카마"],
       ),
       BuildingData(
@@ -104,7 +104,7 @@ class AllBuildingLoader extends ApiFetcher<List<BuildingData>> {
         longitude: 127.368,
         categories: [BuildingCategory.restaurant],
         importance: 6,
-        imageUrl: [],
+        imageUrls: [],
         alias: [],
       ),
       BuildingData(
@@ -115,7 +115,7 @@ class AllBuildingLoader extends ApiFetcher<List<BuildingData>> {
         categories: [BuildingCategory.library],
         importance: 7,
         alias: ["학술관"],
-        imageUrl: [],
+        imageUrls: [],
       ),
       BuildingData(
         id: 8,
@@ -125,7 +125,7 @@ class AllBuildingLoader extends ApiFetcher<List<BuildingData>> {
         categories: [BuildingCategory.library],
         importance: 8,
         alias: [],
-        imageUrl: [],
+        imageUrls: [],
       ),
       BuildingData(
         id: 9,
@@ -134,7 +134,7 @@ class AllBuildingLoader extends ApiFetcher<List<BuildingData>> {
         longitude: 127.362,
         categories: [BuildingCategory.cafe],
         importance: 9,
-        imageUrl: [],
+        imageUrls: [],
         alias: [],
       ),
       BuildingData(
@@ -145,7 +145,7 @@ class AllBuildingLoader extends ApiFetcher<List<BuildingData>> {
         categories: [BuildingCategory.cafe],
         importance: 10,
         alias: [],
-        imageUrl: [],
+        imageUrls: [],
       ),
       BuildingData(
         id: 11,
@@ -155,7 +155,7 @@ class AllBuildingLoader extends ApiFetcher<List<BuildingData>> {
         categories: [BuildingCategory.etc],
         importance: 11,
         alias: [],
-        imageUrl: [],
+        imageUrls: [],
       ),
       BuildingData(
         id: 12,
@@ -165,7 +165,7 @@ class AllBuildingLoader extends ApiFetcher<List<BuildingData>> {
         categories: [BuildingCategory.etc],
         importance: 12,
         alias: [],
-        imageUrl: [],
+        imageUrls: [],
       ),
       BuildingData(
         id: 13,
@@ -175,7 +175,7 @@ class AllBuildingLoader extends ApiFetcher<List<BuildingData>> {
         importance: 13,
         alias: [],
         categories: [],
-        imageUrl: [],
+        imageUrls: [],
       ),
       BuildingData(
         id: 13,
@@ -185,7 +185,7 @@ class AllBuildingLoader extends ApiFetcher<List<BuildingData>> {
         importance: 14,
         alias: [],
         categories: [],
-        imageUrl: [],
+        imageUrls: [],
       ),
     ];
   }
@@ -195,7 +195,11 @@ class AllBuildingLoader extends ApiFetcher<List<BuildingData>> {
     final uri = Uri.parse('$baseUrl/building');
 
     try {
-      final response = await http.get(uri);
+      final response = await http.get(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+        },).timeout(const Duration(seconds: 5));
 
       if (response.statusCode == 200) {
         return jsonDecode(response.body)['buildings']

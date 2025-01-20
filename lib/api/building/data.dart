@@ -48,8 +48,6 @@ extension BuildingCategoryExtension on BuildingCategory {
         return '도서관';
       case BuildingCategory.etc:
         return '기타';
-      default:
-        return '';
     }
   }
 
@@ -81,8 +79,6 @@ extension BuildingCategoryExtension on BuildingCategory {
         return Icon(Icons.menu_book, color: color, size: size);
       case BuildingCategory.etc:
         return Icon(Icons.more_horiz, color: color, size: size);
-      default:
-        return Icon(Icons.more_horiz, color: color, size: size);
     }
   }
 }
@@ -91,7 +87,7 @@ class BuildingData {
   final int id;
   final String name;
   final List<BuildingCategory> categories;
-  final List<String> imageUrl;
+  final List<String> imageUrls;
   final int importance;
   final double latitude;
   final double longitude;
@@ -101,7 +97,7 @@ class BuildingData {
       {required this.id,
       required this.name,
       required this.categories,
-      required this.imageUrl,
+      required this.imageUrls,
       required this.latitude,
       required this.longitude,
       required this.importance,
@@ -113,7 +109,7 @@ class BuildingData {
         categories = (json['categoryIds'] as List)
             .map((value) => BuildingCategory.values[value])
             .toList(),
-        imageUrl = toList<String>(json['imageUrl']),
+        imageUrls = json['imageUrls'].toString().trim().replaceAll(RegExp(r'^\[|\]$'), '').split(","),
         importance = json['importance'],
         latitude = json['latitude'],
         longitude = json['longitude'],

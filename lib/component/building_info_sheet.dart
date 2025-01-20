@@ -76,10 +76,11 @@ class _BuildingInfoSheetState extends State<BuildingInfoSheet> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(16),
                 child: Image.network(
-                  buildingData.imageUrl.elementAtOrNull(0) ??
+                  buildingData.imageUrls.elementAtOrNull(0) ??
                       "https://picsum.photos/$imageSize?image=9",
                   width: imageSize.toDouble(),
                   height: imageSize.toDouble(),
+                  fit: BoxFit.cover,
                 ),
               ),
             ],

@@ -134,11 +134,11 @@ class MapContext extends ChangeNotifier {
     _mapController!.animateCamera(CameraUpdate.newLatLngBounds(bounds, 50.0));
   }
 
-  void Function(LatLng) onTap = (LatLng latLng) {};
+  void Function(LatLng) _onTap = (LatLng latLng) {};
+  void Function(LatLng) get onTap => _onTap;
 
   void setOnTap(void Function(LatLng) onTap) {
-    this.onTap = onTap;
-    notifyListeners();
+    _onTap = onTap;
   }
 
   void lookAt(BuildingData building) {

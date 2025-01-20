@@ -1,6 +1,6 @@
 abstract class ApiFetcher<T> {
   static const bool _mock = true;
-  final String baseUrl = "http://localhost:3000";
+  final String baseUrl = "http://jtkim-loadbalancer3-2029968473.ap-northeast-2.elb.amazonaws.com";
 
   Future<T> fetch({bool mock = _mock}) async {
     if (mock) {

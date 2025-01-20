@@ -14,7 +14,7 @@ class BuildingContext extends ChangeNotifier {
 
   void _loadBuildings() async {
     try {
-      _buildings.complete(await AllBuildingLoader().fetch());
+      _buildings.complete(await AllBuildingLoader().fetch(mock: false));
     } catch (e) {
       _buildings.completeError(e);
     }

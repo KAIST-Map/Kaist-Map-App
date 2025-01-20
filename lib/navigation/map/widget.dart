@@ -23,11 +23,11 @@ class _KMapMapState extends State<KMapMap> {
 
     mapContext.cleanUpPath();
 
-    mapContext.onTap = (_) {
+    mapContext.setOnTap((_) {
       if (Navigator.of(context).canPop()) {
         Navigator.of(context).pop();
       }
-    };
+    });
 
     buildingContext.buildings.then((buildings) {
       final filteredBuildings = filterContext.applyFilters(buildings);

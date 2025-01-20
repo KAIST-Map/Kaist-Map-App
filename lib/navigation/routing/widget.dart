@@ -30,11 +30,11 @@ class _KMapRoutingPageState extends State<KMapRoutingPage> {
     final endLatLng = routingContext.endLatLng;
     final pathData = routingContext.pathData;
 
-    mapContext.onTap = (_) {
+    mapContext.setOnTap((_) {
       if (Navigator.of(context).canPop()) {
         Navigator.of(context).pop();
       }
-    };
+    });
 
     Future.wait([startLatLng.future, endLatLng.future]).then((values) {
       final start = values[0];

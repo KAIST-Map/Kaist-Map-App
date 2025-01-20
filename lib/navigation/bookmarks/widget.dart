@@ -21,6 +21,12 @@ class KMapBookmarks extends StatelessWidget {
 
     mapContext.cleanUpPath();
 
+    mapContext.setOnTap((_) {
+      if (Navigator.of(context).canPop()) {
+        Navigator.of(context).pop();
+      }
+    });
+
     bookmarks.then((bookmarks) async {
       final buildings = await buildingContext.buildings;
       final filtered = filterContext.applyFilters(
