@@ -90,7 +90,7 @@ extension BuildingCategoryExtension on BuildingCategory {
 class BuildingData {
   final int id;
   final String name;
-  final List<BuildingCategory> categoryIds;
+  final List<BuildingCategory> categories;
   final List<String> imageUrl;
   final int importance;
   final double latitude;
@@ -100,7 +100,7 @@ class BuildingData {
   BuildingData(
       {required this.id,
       required this.name,
-      required this.categoryIds,
+      required this.categories,
       required this.imageUrl,
       required this.latitude,
       required this.longitude,
@@ -110,7 +110,7 @@ class BuildingData {
   BuildingData.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         name = json['name'],
-        categoryIds = (json['categoryIds'] as List)
+        categories = (json['categoryIds'] as List)
             .map((value) => BuildingCategory.values[value])
             .toList(),
         imageUrl = toList<String>(json['imageUrl']),
@@ -130,6 +130,6 @@ class BuildingData {
 
   @override
   String toString() {
-    return 'BuildingData{id: $id, name: $name, latitude: $latitude, longitude: $longitude, category: $categoryIds}';
+    return 'BuildingData{id: $id, name: $name, latitude: $latitude, longitude: $longitude, category: $categories}';
   }
 }

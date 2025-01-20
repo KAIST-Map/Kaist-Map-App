@@ -16,55 +16,49 @@ class KMapBookmarks extends StatelessWidget {
     final mapContext = context.read<MapContext>();
     final buildingContext = context.watch<BuildingContext>();
     final Future<List<int>> bookmarks = BookmarksFetcher().fetch(mock: false);
+    final filterContext = context.watch<BuildingCategoryFilterContext>();
     context.watch<NavigationContext>();
 
-    return FutureBuilder<void>(
-      future: bookmarks.then(
-        (bookmarks) async {
-          final buildings = await buildingContext.buildings;
-          mapContext.setMarkers(bookmarks
-              .map((buildingId) => buildings
-                  .firstWhere((building) => building.id == buildingId)
-                  .toMarker(
-                      pageName: "bookmarks",
-                      onTap: () {
-                        Scaffold.of(context).showBottomSheet((context) =>
-                            Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Container(
-                                  margin:
-                                      const EdgeInsets.symmetric(vertical: 8),
-                                  width: 40,
-                                  height: 4,
-                                  decoration: BoxDecoration(
-                                    color: KMapColors.darkGray.shade400,
-                                    borderRadius: BorderRadius.circular(2),
-                                  ),
-                                ),
-                                BuildingInfoSheet(
-                                  buildingData: buildings.firstWhere(
-                                      (building) => building.id == buildingId),
-                                ),
-                              ],
-                            ));
-                      }))
-              .toSet());
-        },
+    mapContext.cleanUpPath();
+
+    bookmarks.then((bookmarks) async {
+      final buildings = await buildingContext.buildings;
+      final filtered = filterContext.applyFilters(
+          buildings.where((building) => bookmarks.contains(building.id))
+      );
+      mapContext.setMarkers(filtered
+          .map((data) => buildings
+              .firstWhere((building) => building.id == data.id)
+              .toMarker(
+                  pageName: "bookmarks",
+                  onTap: () {
+                    Scaffold.of(context).showBottomSheet((context) => Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.symmetric(vertical: 8),
+                              width: 40,
+                              height: 4,
+                              decoration: BoxDecoration(
+                                color: KMapColors.darkGray.shade400,
+                                borderRadius: BorderRadius.circular(2),
+                              ),
+                            ),
+                            BuildingInfoSheet(
+                              buildingData: buildings.firstWhere(
+                                  (building) => building.id == data.id),
+                            ),
+                          ],
+                        ));
+                  }))
+          .toSet());
+    });
+
+    return const SafeArea(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
+        child: BuildingCategoryFilter(),
       ),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting ||
-            snapshot.hasError) {
-          return Container();
-        } else {
-          return const SafeArea(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
-              child: BuildingCategoryFilter(),
-            ),
-          );
-        }
-      },
     );
   }
 }

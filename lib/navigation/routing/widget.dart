@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:kaist_map/api/building/data.dart';
 import 'package:kaist_map/api/context/building.dart';
+import 'package:kaist_map/component/building_filter.dart';
 import 'package:kaist_map/component/building_sheet_frame.dart';
 import 'package:kaist_map/component/search/widget.dart';
 import 'package:kaist_map/constant/colors.dart';
@@ -93,78 +94,102 @@ class _KMapRoutingPageState extends State<KMapRoutingPage> {
     });
 
     return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-        child: Row(
-          children: [
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: KMapColors.darkBlue,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
-                      spreadRadius: 2,
-                      blurRadius: 4,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12.0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.swap_vert,
-                            color: KMapColors.white),
-                        onPressed: () {
-                          final tmpStartBuildingData = startBuildingData;
-                          routingContext.setStartBuildingData(endBuildingData);
-                          routingContext
-                              .setEndBuildingData(tmpStartBuildingData);
-                        },
-                      ),
-                      Expanded(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            DestinationSearch(
-                              selectedName: startBuildingData == null
-                                  ? ""
-                                  : startBuildingData
-                                      .map((data) => data.name)
-                                      .getOrElse("내 위치"),
-                              hintText: "출발지를 입력하세요",
-                              onBuildingDataChanged:
-                                  (Option<BuildingData>? buildingData) {
-                                routingContext
-                                    .setStartBuildingData(buildingData);
-                              },
-                            ),
-                            DestinationSearch(
-                              selectedName: endBuildingData == null
-                                  ? ""
-                                  : endBuildingData
-                                      .map((data) => data.name)
-                                      .getOrElse("내 위치"),
-                              hintText: "도착지를 입력하세요",
-                              onBuildingDataChanged:
-                                  (Option<BuildingData>? buildingData) {
-                                routingContext.setEndBuildingData(buildingData);
-                              },
-                            ),
-                          ],
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: KMapColors.darkBlue,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          spreadRadius: 2,
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
                         ),
+                      ],
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.swap_vert,
+                                color: KMapColors.white),
+                            onPressed: () {
+                              final tmpStartBuildingData = startBuildingData;
+                              routingContext.setStartBuildingData(endBuildingData);
+                              routingContext
+                                  .setEndBuildingData(tmpStartBuildingData);
+                            },
+                          ),
+                          Expanded(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                DestinationSearch(
+                                  selectedName: startBuildingData == null
+                                      ? ""
+                                      : startBuildingData
+                                          .map((data) => data.name)
+                                          .getOrElse("내 위치"),
+                                  hintText: "출발지를 입력하세요",
+                                  onBuildingDataChanged:
+                                      (Option<BuildingData>? buildingData) {
+                                    routingContext
+                                        .setStartBuildingData(buildingData);
+                                  },
+                                ),
+                                DestinationSearch(
+                                  selectedName: endBuildingData == null
+                                      ? ""
+                                      : endBuildingData
+                                          .map((data) => data.name)
+                                          .getOrElse("내 위치"),
+                                  hintText: "도착지를 입력하세요",
+                                  onBuildingDataChanged:
+                                      (Option<BuildingData>? buildingData) {
+                                    routingContext.setEndBuildingData(buildingData);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: Column(
+              children: [
+                FloatingActionButton.small(
+                  onPressed: routingContext.toggleBeam,
+                  backgroundColor: routingContext.wantBeam
+                      ? KMapColors.darkBlue
+                      : KMapColors.white,
+                  child: Icon(Icons.bike_scooter, color: routingContext.wantBeam ? KMapColors.white : KMapColors.darkBlue),),
+                FloatingActionButton.small(
+                  onPressed: routingContext.toggleFreeOfRain,
+                  backgroundColor: routingContext.wantFreeOfRain
+                      ? KMapColors.darkBlue
+                      : KMapColors.white,
+                  child: Icon(Icons.thunderstorm, color: routingContext.wantFreeOfRain ? KMapColors.white : KMapColors.darkBlue),),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -184,8 +209,15 @@ class DestinationSearch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final filterContext = context.watch<BuildingCategoryFilterContext>();
+
     return SearchAnchor(
       builder: (context, controller) {
+        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+          controller.text = "${controller.text}1";
+          controller.text = controller.text.substring(0, controller.text.length - 1);
+        });
+
         return Material(
           color: Colors.transparent,
           child: Row(
@@ -237,7 +269,7 @@ class DestinationSearch extends StatelessWidget {
       },
       viewHintText: hintText,
       suggestionsBuilder: (context, controller) {
-        return suggestionsBuilder(context, controller,
+        return suggestionsBuilder(context, controller, filterContext,
             onResultTap: (buildingData) {
           onBuildingDataChanged(Some(buildingData));
         });

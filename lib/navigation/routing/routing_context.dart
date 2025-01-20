@@ -14,22 +14,33 @@ import 'package:kaist_map/utils/option.dart';
 class RoutingContext extends ChangeNotifier {
   Option<BuildingData>? _startBuildingData;
   Option<BuildingData>? _endBuildingData;
+  bool _wantBeam = false;
+  bool _wantFreeOfRain = false;
   Completer<LatLng?> _startLatLng = Completer();
   Completer<LatLng?> _endLatLng = Completer();
   Completer<Option<PathData>> _pathData = Completer();
 
   Option<BuildingData>? get startBuildingData => _startBuildingData;
   Option<BuildingData>? get endBuildingData => _endBuildingData;
+  bool get wantBeam => _wantBeam;
+  bool get wantFreeOfRain => _wantFreeOfRain;
   Completer<LatLng?> get startLatLng => _startLatLng;
   Completer<LatLng?> get endLatLng => _endLatLng;
   Completer<Option<PathData>> get pathData => _pathData;
+
+  RoutingContext() {
+    _startLatLng.complete(null);
+    _endLatLng.complete(null);
+    _pathData.complete(const None());
+  }
 
   void setStartBuildingData(Option<BuildingData>? data) {
     _startBuildingData = data;
 
     _startLatLng = Completer();
+    final copy = _startLatLng;
     data?._toLatLng().then((latLng) {
-          _startLatLng.complete(latLng);
+          copy.complete(latLng);
           notifyListeners();
         }) ??
         _startLatLng.complete(null);
@@ -43,8 +54,9 @@ class RoutingContext extends ChangeNotifier {
     _endBuildingData = data;
 
     _endLatLng = Completer();
+    final copy = _endLatLng;
     data?._toLatLng().then((latLng) {
-          _endLatLng.complete(latLng);
+          copy.complete(latLng);
           notifyListeners();
         }) ??
         _endLatLng.complete(null);
@@ -80,35 +92,47 @@ class RoutingContext extends ChangeNotifier {
                 startLongitude: startLatLng.longitude,
                 endLatitude: endLatLng.latitude,
                 endLongitude: endLatLng.longitude,
-                wantBeam: false,
-                wantFreeOfRain: false,
+                wantBeam: _wantBeam,
+                wantFreeOfRain: _wantFreeOfRain,
               ).fetch()
             : P2BLoader(
-                    startLatitude: startLatLng.latitude,
-                    startLongitude: startLatLng.longitude,
-                    endBuildingId: endBuildingData!.value.id,
-                    wantFreeOfRain: false,
-                    wantBeam: false)
-                .fetch())
+                startLatitude: startLatLng.latitude,
+                startLongitude: startLatLng.longitude,
+                endBuildingId: endBuildingData!.value.id,
+                wantBeam: _wantBeam,
+                wantFreeOfRain: _wantFreeOfRain,
+              ).fetch())
         : (isEndPosition
             ? B2PLoader(
-                    startBuildingId: startBuildingData!.value.id,
-                    endLatitude: endLatLng.latitude,
-                    endLongitude: endLatLng.longitude,
-                    wantFreeOfRain: false,
-                    wantBeam: false)
-                .fetch()
+                startBuildingId: startBuildingData!.value.id,
+                endLatitude: endLatLng.latitude,
+                endLongitude: endLatLng.longitude,
+                wantBeam: _wantBeam,
+                wantFreeOfRain: _wantFreeOfRain,
+              ).fetch()
             : B2BLoader(
-                    startBuildingId: startBuildingData!.value.id,
-                    endBuildingId: endBuildingData!.value.id,
-                    wantFreeOfRain: false,
-                    wantBeam: false)
-                .fetch());
+                startBuildingId: startBuildingData!.value.id,
+                endBuildingId: endBuildingData!.value.id,
+                wantBeam: _wantBeam,
+                wantFreeOfRain: _wantFreeOfRain,
+              ).fetch());
 
     pathDataFuture.then((pathData) {
       _pathData.complete(Some(pathData));
       notifyListeners();
     });
+  }
+
+  void toggleBeam() {
+    _wantBeam = !_wantBeam;
+    _fetchPath();
+    notifyListeners();
+  }
+
+  void toggleFreeOfRain() {
+    _wantFreeOfRain = !_wantFreeOfRain;
+    _fetchPath();
+    notifyListeners();
   }
 }
 

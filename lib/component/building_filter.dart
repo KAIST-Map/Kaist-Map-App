@@ -12,6 +12,14 @@ class BuildingCategoryFilterContext extends ChangeNotifier {
     _filters = filters;
     notifyListeners();
   }
+
+  Iterable<BuildingData> applyFilters(Iterable<BuildingData> buildings) {
+    if (_filters.isEmpty) {
+      return buildings;
+    }
+    return buildings.where((building) =>
+        _filters.any((category) => building.categories.contains(category)));
+  }
 }
 
 class BuildingCategoryFilter extends StatelessWidget {

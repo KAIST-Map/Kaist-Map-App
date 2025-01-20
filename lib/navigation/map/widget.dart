@@ -19,7 +19,9 @@ class _KMapMapState extends State<KMapMap> {
   Widget build(BuildContext context) {
     final mapContext = context.read<MapContext>();
     final buildingContext = context.read<BuildingContext>();
-    final filters = context.watch<BuildingCategoryFilterContext>().filters;
+    final filterContext = context.watch<BuildingCategoryFilterContext>();
+    
+    mapContext.cleanUpPath();
 
     mapContext.onTap = (_) {
       if (Navigator.of(context).canPop()) {
@@ -28,10 +30,7 @@ class _KMapMapState extends State<KMapMap> {
     };
 
     buildingContext.buildings.then((buildings) {
-      final filteredBuildings = buildings.where((building) {
-        return filters.isEmpty ||
-            filters.any((filter) => building.categoryIds.contains(filter));
-      }).toList();
+      final filteredBuildings = filterContext.applyFilters(buildings);
       mapContext.setMarkers(filteredBuildings
           .map((BuildingData buildingData) => buildingData.toMarker(
               pageName: "map",

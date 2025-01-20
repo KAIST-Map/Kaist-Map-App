@@ -38,7 +38,9 @@ class MapContext extends ChangeNotifier {
   void cleanUpPath() {
     _markers = {};
     _polylines = {};
-    notifyListeners();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notifyListeners();
+    });
   }
 
   void showPath(PathData path, LatLng start, LatLng end) {

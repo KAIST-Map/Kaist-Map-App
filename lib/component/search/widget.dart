@@ -20,8 +20,13 @@ class KMapSearch extends StatefulWidget {
 class _KMapSearchState extends State<KMapSearch> {
   @override
   Widget build(BuildContext context) {
+    final filterContext = context.watch<BuildingCategoryFilterContext>();
     return SearchAnchor(
       builder: (context, controller) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          controller.text = "${controller.text}1";
+          controller.text = controller.text.substring(0, controller.text.length - 1);
+        });
         return GestureDetector(
           behavior: HitTestBehavior.translucent,
           onTap: () {
@@ -38,7 +43,7 @@ class _KMapSearchState extends State<KMapSearch> {
       },
       viewHintText: '어디를 찾으시나요?',
       suggestionsBuilder: (context, controller) {
-        return suggestionsBuilder(context, controller);
+        return suggestionsBuilder(context, controller, filterContext);
       },
       viewBuilder: (suggestions) {
         return SearchView(suggestions: suggestions);
@@ -48,7 +53,7 @@ class _KMapSearchState extends State<KMapSearch> {
 }
 
 Future<Iterable<Widget>> suggestionsBuilder(
-    BuildContext context, SearchController controller,
+    BuildContext context, SearchController controller, BuildingCategoryFilterContext filterContext,
     {void Function(BuildingData)? onResultTap}) async {
   if (controller.text.isEmpty) {
     final historyIds = SearchHistoryFetcher().fetch();
@@ -63,7 +68,7 @@ Future<Iterable<Widget>> suggestionsBuilder(
           .toList();
     });
 
-    return historyBuildings
+    return filterContext.applyFilters(historyBuildings)
         .map((buildingData) => SearchResult(
               onTap: onResultTap,
               buildingData: buildingData,
@@ -75,7 +80,7 @@ Future<Iterable<Widget>> suggestionsBuilder(
   final searchQuery = controller.text;
   final searchBuilding = await BuildingSearchLoader(name: searchQuery).fetch();
 
-  return searchBuilding
+  return filterContext.applyFilters(searchBuilding)
       .map((buildingData) => SearchResult(
             buildingData: buildingData,
             isHistory: false,
@@ -104,15 +109,24 @@ class SearchView extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 20.0),
             child: BuildingCategoryFilter(),
           ),
+          const SizedBox(height: 6),
           Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(0),
-              itemBuilder: (context, index) {
-                return suggestions.elementAt(index);
-              },
-              itemCount: suggestions.length,
-              shrinkWrap: true,
-            ),
+            child: suggestions.isEmpty ?
+              const Center(child: Text('검색 결과가 없습니다.')) :
+              ListView.builder(
+                padding: const EdgeInsets.all(0),
+                itemBuilder: (context, index) {
+                  return Column(
+                    children: [
+                      if (index == 0) const Divider(height: 1),
+                      suggestions.elementAt(index),
+                      const Divider(height: 1),
+                    ],
+                  );
+                },
+                itemCount: suggestions.length,
+                shrinkWrap: true,
+              ),
           ),
         ],
       ),

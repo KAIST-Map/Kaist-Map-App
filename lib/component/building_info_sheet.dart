@@ -54,7 +54,7 @@ class _BuildingInfoSheetState extends State<BuildingInfoSheet> {
                     ),
                     const SizedBox(height: 4),
                     Wrap(
-                      children: widget.buildingData.categoryIds
+                      children: widget.buildingData.categories
                           .map((category) => category.getIcon())
                           .toList(),
                     ),

@@ -32,16 +32,27 @@ class SearchResult extends StatelessWidget {
           Navigator.of(context).pop();
         },
         child: ListTile(
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-          title: Text(buildingData.name),
-          subtitle:
-              Text(buildingData.categoryIds.map((e) => e.name).join(', ')),
+          contentPadding: const EdgeInsets.fromLTRB(15, 0, 8, 0),
+          title: Text(buildingData.name,
+              style: const TextStyle(
+                  fontSize: 16, fontWeight: FontWeight.w500)),
+          subtitle: 
+            buildingData.alias.isNotEmpty ?
+              Text(
+                buildingData.alias.map((a) => "#$a").join("  "),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis, 
+                style: const TextStyle(
+                    fontSize: 12, color: KMapColors.darkBlue, fontWeight: FontWeight.w400),
+              ) :  null,
           trailing: isHistory
               ? IconButton(
+                  padding: const EdgeInsets.all(6),
+                  constraints: const BoxConstraints(),
                   icon: Icon(
                     Icons.close,
                     color: KMapColors.darkGray.shade500,
+                    size: 16,
                   ),
                   onPressed: () {
                     SearchHistoryRemover(buildingData.id).fetch();
