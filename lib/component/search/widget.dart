@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:kaist_map/api/building/data.dart';
 import 'package:kaist_map/api/building/search.dart';
 import 'package:kaist_map/api/context/building.dart';
