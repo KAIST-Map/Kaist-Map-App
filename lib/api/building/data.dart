@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:kaist_map/api/api_fetcher.dart';
 import 'package:kaist_map/constant/colors.dart';
+import 'package:kaist_map/navigation/kakao_map/core.dart';
 
 enum BuildingCategory {
   department, // 1
@@ -110,13 +110,8 @@ class BuildingData {
         longitude = json['longitude'],
         alias = toList<String>(json['alias']);
 
-  Marker toMarker({required String pageName, required VoidCallback onTap}) {
-    return Marker(
-      markerId: MarkerId("$pageName-$id"),
-      position: LatLng(latitude, longitude),
-      infoWindow: InfoWindow(title: name),
-      onTap: onTap,
-    );
+  Marker toMarker({required VoidCallback onTap}) {
+    return Marker.fromBuildingData(this, onTap);
   }
 
   @override

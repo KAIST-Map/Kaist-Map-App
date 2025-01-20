@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:kaist_map/api/building/data.dart';
 import 'package:kaist_map/api/routes/b2b.dart';
 import 'package:kaist_map/api/routes/b2p.dart';
 import 'package:kaist_map/api/routes/data.dart';
 import 'package:kaist_map/api/routes/p2b.dart';
 import 'package:kaist_map/api/routes/p2p.dart';
+import 'package:kaist_map/navigation/kakao_map/core.dart';
 import 'package:kaist_map/utils/option.dart';
 
 class RoutingContext extends ChangeNotifier {
@@ -117,8 +117,10 @@ class RoutingContext extends ChangeNotifier {
                 wantFreeOfRain: _wantFreeOfRain,
               ).fetch());
 
+    _pathData = Completer();
+    final copy = _pathData;
     pathDataFuture.then((pathData) {
-      _pathData.complete(Some(pathData));
+      copy.complete(Some(pathData));
       notifyListeners();
     });
   }

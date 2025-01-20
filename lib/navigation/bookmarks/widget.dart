@@ -4,7 +4,7 @@ import 'package:kaist_map/api/local/bookmarks.dart';
 import 'package:kaist_map/component/building_filter.dart';
 import 'package:kaist_map/component/building_info_sheet.dart';
 import 'package:kaist_map/constant/colors.dart';
-import 'package:kaist_map/navigation/google_map/map_context.dart';
+import 'package:kaist_map/navigation/kakao_map/map_context.dart';
 import 'package:kaist_map/navigation/layout.dart';
 import 'package:provider/provider.dart';
 
@@ -13,20 +13,16 @@ class KMapBookmarks extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mapContext = context.read<MapContext>();
+    final mapContext = context.read<KakaoMapContext>();
     final buildingContext = context.watch<BuildingContext>();
     final Future<List<int>> bookmarks = BookmarksFetcher().fetch(mock: false);
     final filterContext = context.watch<BuildingCategoryFilterContext>();
     context.watch<NavigationContext>();
-
-    mapContext.cleanUpPath();
-
-    mapContext.setOnTap((_) {
-      if (Navigator.of(context).canPop()) {
-        Navigator.of(context).pop();
-      }
+  
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      mapContext.cleanUpPath();
     });
-
+    
     bookmarks.then((bookmarks) async {
       final buildings = await buildingContext.buildings;
       final filtered = filterContext.applyFilters(
@@ -35,7 +31,6 @@ class KMapBookmarks extends StatelessWidget {
           .map((data) => buildings
               .firstWhere((building) => building.id == data.id)
               .toMarker(
-                  pageName: "bookmarks",
                   onTap: () {
                     Scaffold.of(context).showBottomSheet((context) => Column(
                           mainAxisSize: MainAxisSize.min,
@@ -55,8 +50,7 @@ class KMapBookmarks extends StatelessWidget {
                             ),
                           ],
                         ));
-                  }))
-          .toSet());
+                  })).toList());
     });
 
     return const SafeArea(
