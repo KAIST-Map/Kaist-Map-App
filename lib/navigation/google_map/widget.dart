@@ -47,6 +47,7 @@ class _KMapGoogleMapState extends State<KMapGoogleMap> {
               northeast: KaistLocation.northeastBound,
             ),
           ),
+          polylines: mapContext.polylines,
           minMaxZoomPreference: const MinMaxZoomPreference(
             KaistLocation.minZoom,
             KaistLocation.maxZoom,
@@ -64,20 +65,20 @@ class _KMapGoogleMapState extends State<KMapGoogleMap> {
           trafficEnabled: false,
           indoorViewEnabled: false,
           style: '''[
-        {
-          "featureType": "poi",
-          "elementType": "labels",
-          "stylers": [
-            {"visibility": "off"}
-          ]
-        },
-        {
-          "featureType": "poi.business",
-          "elementType": "labels",
-          "stylers": [
-            {"visibility": "off"}
-          ]
-        }
+                {
+                  "featureType": "poi",
+                  "elementType": "labels",
+                  "stylers": [
+                    {"visibility": "off"}
+                  ]
+                },
+                {
+                  "featureType": "poi.business",
+                  "elementType": "labels",
+                  "stylers": [
+                    {"visibility": "off"}
+                  ]
+                }
               ]''',
           markers: mapContext.markers,
           onCameraMove: (position) => mapContext.setCameraPosition(position),

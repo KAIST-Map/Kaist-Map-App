@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:kaist_map/api/building/data.dart';
+import 'package:kaist_map/api/routes/data.dart';
+import 'package:kaist_map/constant/colors.dart';
 import 'package:kaist_map/constant/map.dart';
 
 class MapContext extends ChangeNotifier {
@@ -14,6 +16,8 @@ class MapContext extends ChangeNotifier {
 
   Set<Marker> _markers = {};
   Set<Marker> get markers => _markers;
+  Set<Polyline> _polylines = {};
+  Set<Polyline> get polylines => _polylines;
 
   void setMarkers(Set<Marker> markers) {
     _markers = markers;
@@ -31,7 +35,73 @@ class MapContext extends ChangeNotifier {
     notifyListeners();
   }
 
-  void showTwoLocations(LatLng location1, LatLng location2) {
+  void cleanUpPath() {
+    _markers = {};
+    _polylines = {};
+    notifyListeners();
+  }
+
+  void showPath(PathData path, LatLng start, LatLng end) {
+    if (_mapController == null) {
+      return;
+    }
+
+    _showTwoLocations(start, end);
+
+    final pathPolyline = Polyline(
+      polylineId: const PolylineId('path'),
+      endCap: Cap.roundCap,
+      startCap: Cap.roundCap,
+      jointType: JointType.round,
+      points: path.path
+          .map((node) => LatLng(node.latitude, node.longitude))
+          .toList(),
+      color: KMapColors.darkBlue,
+      width: 5,
+    );
+
+    final startLine = Polyline(
+      polylineId: const PolylineId('start'),
+      points: [
+        start,
+        LatLng(path.path.first.latitude, path.path.first.longitude)
+      ],
+      startCap: Cap.roundCap,
+      endCap: Cap.roundCap,
+      patterns: [PatternItem.dash(10), PatternItem.gap(20)],
+      color: KMapColors.darkBlue,
+      width: 5,
+    );
+
+    final endLine = Polyline(
+      polylineId: const PolylineId('end'),
+      startCap: Cap.roundCap,
+      endCap: Cap.roundCap,
+      points: [end, LatLng(path.path.last.latitude, path.path.last.longitude)],
+      patterns: [PatternItem.dash(10), PatternItem.gap(20)],
+      color: KMapColors.darkBlue,
+      width: 5,
+    );
+
+    final startMarker = Marker(
+      markerId: MarkerId('start-${start.toString()}'),
+      position: start,
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+    );
+
+    final endMarker = Marker(
+      markerId: MarkerId('end-${end.toString()}'),
+      position: end,
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+    );
+
+    _markers = {startMarker, endMarker};
+    _polylines = {startLine, pathPolyline, endLine};
+
+    notifyListeners();
+  }
+
+  void _showTwoLocations(LatLng location1, LatLng location2) {
     if (_mapController == null) {
       return;
     }

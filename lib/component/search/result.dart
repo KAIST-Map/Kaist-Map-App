@@ -8,14 +8,12 @@ import 'package:provider/provider.dart';
 class SearchResult extends StatelessWidget {
   final BuildingData buildingData;
   final bool isHistory;
-  final void Function() setState;
   final void Function(BuildingData)? onTap;
 
   const SearchResult(
       {super.key,
       required this.buildingData,
       required this.isHistory,
-      required this.setState,
       this.onTap});
 
   @override

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:kaist_map/api/building/data.dart';
 import 'package:kaist_map/api/context/building.dart';
 import 'package:kaist_map/component/building_sheet_frame.dart';
@@ -24,6 +25,9 @@ class _KMapRoutingPageState extends State<KMapRoutingPage> {
     final routingContext = context.watch<RoutingContext>();
     final startBuildingData = routingContext.startBuildingData;
     final endBuildingData = routingContext.endBuildingData;
+    final startLatLng = routingContext.startLatLng;
+    final endLatLng = routingContext.endLatLng;
+    final pathData = routingContext.pathData;
 
     mapContext.onTap = (_) {
       if (Navigator.of(context).canPop()) {
@@ -31,27 +35,62 @@ class _KMapRoutingPageState extends State<KMapRoutingPage> {
       }
     };
 
-    buildingContext.buildings.then((buildings) {
-      mapContext.setMarkers(buildings
-          .map((BuildingData buildingData) => buildingData.toMarker(
-              pageName: "map",
-              onTap: () {
-                Scaffold.of(context)
-                    .showBottomSheet((context) => BuildingSheetFrame(
-                          buildingData: buildingData,
-                        ));
-              }))
-          .toSet());
-    });
+    Future.wait([startLatLng.future, endLatLng.future]).then((values) {
+      final start = values[0];
+      final end = values[1];
 
-    if (startBuildingData != null && endBuildingData != null) {
-      Future.wait([startBuildingData.toLatLng(), endBuildingData.toLatLng()])
-          .then((values) {
-        final start = values[0];
-        final end = values[1];
-        mapContext.showTwoLocations(start, end);
-      });
-    }
+      if (startBuildingData != null && endBuildingData != null) {
+        pathData.future.then((path) {
+          if (start != null && end != null && start != end && path.isDefined) {
+            mapContext.showPath(path.value, start, end);
+          }
+        });
+      } else {
+        mapContext.cleanUpPath();
+        buildingContext.buildings.then((buildings) {
+          mapContext.setMarkers({
+            ...buildings
+                .map((BuildingData buildingData) => buildingData
+                    .toMarker(
+                        pageName: "map",
+                        onTap: () {
+                          Scaffold.of(context)
+                              .showBottomSheet((context) => BuildingSheetFrame(
+                                    buildingData: buildingData,
+                                  ));
+                        })
+                    .copyWith(
+                      iconParam: BitmapDescriptor.defaultMarkerWithHue(
+                          startBuildingData
+                                      ?.map((data) => data.id)
+                                      .getOrElse(-1) ==
+                                  buildingData.id
+                              ? BitmapDescriptor.hueGreen
+                              : endBuildingData
+                                          ?.map((data) => data.id)
+                                          .getOrElse(-1) ==
+                                      buildingData.id
+                                  ? BitmapDescriptor.hueBlue
+                                  : BitmapDescriptor.hueRed),
+                    ))
+                .toSet(),
+            if (startBuildingData == const None<BuildingData>() &&
+                start != null)
+              Marker(
+                  markerId: const MarkerId("start"),
+                  position: start,
+                  icon: BitmapDescriptor.defaultMarkerWithHue(
+                      BitmapDescriptor.hueGreen)),
+            if (endBuildingData == const None<BuildingData>() && end != null)
+              Marker(
+                  markerId: const MarkerId("end"),
+                  position: end,
+                  icon: BitmapDescriptor.defaultMarkerWithHue(
+                      BitmapDescriptor.hueBlue)),
+          });
+        });
+      }
+    });
 
     return SafeArea(
       child: Padding(
@@ -80,7 +119,12 @@ class _KMapRoutingPageState extends State<KMapRoutingPage> {
                       IconButton(
                         icon: const Icon(Icons.swap_vert,
                             color: KMapColors.white),
-                        onPressed: () {},
+                        onPressed: () {
+                          final tmpStartBuildingData = startBuildingData;
+                          routingContext.setStartBuildingData(endBuildingData);
+                          routingContext
+                              .setEndBuildingData(tmpStartBuildingData);
+                        },
                       ),
                       Expanded(
                         child: Column(
@@ -126,7 +170,7 @@ class _KMapRoutingPageState extends State<KMapRoutingPage> {
   }
 }
 
-class DestinationSearch extends StatefulWidget {
+class DestinationSearch extends StatelessWidget {
   final String hintText;
   final String selectedName;
   final void Function(Option<BuildingData>?) onBuildingDataChanged;
@@ -137,16 +181,6 @@ class DestinationSearch extends StatefulWidget {
     required this.selectedName,
     required this.onBuildingDataChanged,
   });
-
-  @override
-  State<DestinationSearch> createState() => _DestinationSearchState();
-}
-
-class _DestinationSearchState extends State<DestinationSearch> {
-  String get hintText => widget.hintText;
-  String get selectedName => widget.selectedName;
-  void Function(Option<BuildingData>?) get onBuildingDataChanged =>
-      widget.onBuildingDataChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -191,7 +225,6 @@ class _DestinationSearchState extends State<DestinationSearch> {
                   onPressed: () {
                     onBuildingDataChanged(
                         selectedName.isEmpty ? const None() : null);
-                    setState(() {});
                   },
                   icon: selectedName.isEmpty
                       ? const Icon(Icons.near_me,
@@ -204,7 +237,7 @@ class _DestinationSearchState extends State<DestinationSearch> {
       },
       viewHintText: hintText,
       suggestionsBuilder: (context, controller) {
-        return suggestionsBuilder(context, controller, () => setState(() {}),
+        return suggestionsBuilder(context, controller,
             onResultTap: (buildingData) {
           onBuildingDataChanged(Some(buildingData));
         });

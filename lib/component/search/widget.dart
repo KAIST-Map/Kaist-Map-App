@@ -38,7 +38,7 @@ class _KMapSearchState extends State<KMapSearch> {
       },
       viewHintText: '어디를 찾으시나요?',
       suggestionsBuilder: (context, controller) {
-        return suggestionsBuilder(context, controller, () => setState(() {}));
+        return suggestionsBuilder(context, controller);
       },
       viewBuilder: (suggestions) {
         return SearchView(suggestions: suggestions);
@@ -48,7 +48,7 @@ class _KMapSearchState extends State<KMapSearch> {
 }
 
 Future<Iterable<Widget>> suggestionsBuilder(
-    BuildContext context, SearchController controller, VoidCallback setState,
+    BuildContext context, SearchController controller,
     {void Function(BuildingData)? onResultTap}) async {
   if (controller.text.isEmpty) {
     final historyIds = SearchHistoryFetcher().fetch();
@@ -65,10 +65,10 @@ Future<Iterable<Widget>> suggestionsBuilder(
 
     return historyBuildings
         .map((buildingData) => SearchResult(
-            onTap: onResultTap,
-            buildingData: buildingData,
-            isHistory: true,
-            setState: setState))
+              onTap: onResultTap,
+              buildingData: buildingData,
+              isHistory: true,
+            ))
         .toList();
   }
 
@@ -79,7 +79,6 @@ Future<Iterable<Widget>> suggestionsBuilder(
       .map((buildingData) => SearchResult(
             buildingData: buildingData,
             isHistory: false,
-            setState: setState,
           ))
       .toList();
 }
