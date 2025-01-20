@@ -107,9 +107,9 @@ class KakaoMapContext extends ChangeNotifier {
       );
     ''');
 
-    if (!markers.any((marker) => marker.name == "\"building-${building.id}\"")) return;
+    if (!markers.any((marker) => marker.name == "building-${building.id}")) return;
 
-    final buildingMarker = markers.firstWhere((marker) => marker.name == "\"building-${building.id}\"");
+    final buildingMarker = markers.firstWhere((marker) => marker.name == "building-${building.id}");
     buildingMarker.onTap.call();
   }
 

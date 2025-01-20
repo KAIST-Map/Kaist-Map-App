@@ -55,7 +55,7 @@ class Marker {
   }
 
   Marker.fromBuildingData(BuildingData buildingData, this.onTap)
-      : name = "\"building-${buildingData.id}\"",
+      : name = "building-${buildingData.id}",
         lat = buildingData.latitude,
         lng = buildingData.longitude,
         image = null,

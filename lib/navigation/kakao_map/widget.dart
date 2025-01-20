@@ -18,7 +18,7 @@ class KakaoMapWidget extends StatefulWidget {
 }
 
 class _KakaoMapWidgetState extends State<KakaoMapWidget> {
-  final baseUrl = 'http://10.0.2.2:8000';
+  final baseUrl = 'https://kaist-map.github.io/Kaist-Map-App';
 
   WebViewController? _controller;
 
@@ -49,7 +49,7 @@ class _KakaoMapWidgetState extends State<KakaoMapWidget> {
       ..addJavaScriptChannel("OnMarkerClickedChannel",
         onMessageReceived: (message) {
           final marker = kakaoMapContext.markers
-              .firstWhere((marker) => marker.name == "\"${jsonDecode(message.message)['name']}\"");
+              .firstWhere((marker) => marker.name == jsonDecode(message.message)['name'].toString());
           marker.onTap();
         })
       ..addJavaScriptChannel("OnMapClickedChannel",
@@ -61,8 +61,8 @@ class _KakaoMapWidgetState extends State<KakaoMapWidget> {
 
 
     kakaoMapContext.controller?.runJavaScript('''
-      setMarkers(${kakaoMapContext.markers.map((marker) => marker.toJson()).toList()});
-      setPolylines(${kakaoMapContext.polylines.map((polyline) => polyline.toJson()).toList()});
+      setMarkers(${kakaoMapContext.markers.map((marker) => jsonEncode(marker.toJson())).toList()});
+      setPolylines(${kakaoMapContext.polylines.map((polyline) => jsonEncode(polyline.toJson())).toList()});
     ''');
 
     return Stack(
