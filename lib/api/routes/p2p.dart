@@ -22,22 +22,36 @@ class P2PLoader extends ApiFetcher<PathData> {
 
   @override
   Future<PathData> fetchMock() async {
-    const exampleResponse = """
+    final mockPath = [
       {
-        "path": [
-          {
-            "id": 1,
-            "name": "Node 1",
-            "latitude": 37.4123,
-            "longitude": 127.1234,
-            "buildingId": 1
-          }
-        ],
-        "totalDistance": 0
+      "id": 1,
+      "name": "Start Node",
+      "latitude": startLatitude,
+      "longitude": startLongitude,
+      "buildingId": 1
+      },
+      {
+      "id": 2,
+      "name": "Midpoint Node",
+      "latitude": (startLatitude + endLatitude) / 2 + 0.002,
+      "longitude": (startLongitude + endLongitude) / 2 + 0.002,
+      "buildingId": 2
+      },
+      {
+      "id": 3,
+      "name": "End Node",
+      "latitude": endLatitude,
+      "longitude": endLongitude,
+      "buildingId": 3
       }
-    """;
+    ];
 
-    return PathData.fromJson(jsonDecode(exampleResponse));
+    final mockResponse = jsonEncode({
+      "path": mockPath,
+      "totalDistance": 0
+    });
+
+    return PathData.fromJson(jsonDecode(mockResponse));
   }
 
   @override

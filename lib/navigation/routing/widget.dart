@@ -45,7 +45,6 @@ class _KMapRoutingPageState extends State<KMapRoutingPage> {
     });
 
     if (startBuildingData != null && endBuildingData != null) {
-      print("showing two locations");
       Future.wait([startBuildingData.toLatLng(), endBuildingData.toLatLng()])
           .then((values) {
         final start = values[0];

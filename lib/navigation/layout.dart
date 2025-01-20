@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:kaist_map/constant/colors.dart';
 import 'package:kaist_map/navigation/bookmarks/widget.dart';
 import 'package:kaist_map/navigation/map/widget.dart';
 import 'package:kaist_map/navigation/google_map/widget.dart';
@@ -20,11 +22,26 @@ class NavigationContext extends ChangeNotifier {
   }
 }
 
-class KMapNavigation extends StatelessWidget {
+class KMapNavigation extends StatefulWidget {
   const KMapNavigation({super.key});
 
   @override
+  State<KMapNavigation> createState() => _KMapNavigationState();
+}
+
+class _KMapNavigationState extends State<KMapNavigation> with RouteAware {
+  void setNavigationBar() {
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+      systemNavigationBarColor: KMapColors.darkBlue,
+      systemNavigationBarIconBrightness: Brightness.light,
+    ));
+  }
+
+  @override
   Widget build(BuildContext context) {
+    setNavigationBar();
     final navigationContext = context.watch<NavigationContext>();
 
     if (Navigator.of(context).canPop()) {
