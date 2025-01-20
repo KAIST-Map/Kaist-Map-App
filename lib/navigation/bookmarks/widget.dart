@@ -24,8 +24,7 @@ class KMapBookmarks extends StatelessWidget {
     bookmarks.then((bookmarks) async {
       final buildings = await buildingContext.buildings;
       final filtered = filterContext.applyFilters(
-          buildings.where((building) => bookmarks.contains(building.id))
-      );
+          buildings.where((building) => bookmarks.contains(building.id)));
       mapContext.setMarkers(filtered
           .map((data) => buildings
               .firstWhere((building) => building.id == data.id)

@@ -125,7 +125,8 @@ class _KMapRoutingPageState extends State<KMapRoutingPage> {
                                 color: KMapColors.white),
                             onPressed: () {
                               final tmpStartBuildingData = startBuildingData;
-                              routingContext.setStartBuildingData(endBuildingData);
+                              routingContext
+                                  .setStartBuildingData(endBuildingData);
                               routingContext
                                   .setEndBuildingData(tmpStartBuildingData);
                             },
@@ -156,7 +157,8 @@ class _KMapRoutingPageState extends State<KMapRoutingPage> {
                                   hintText: "도착지를 입력하세요",
                                   onBuildingDataChanged:
                                       (Option<BuildingData>? buildingData) {
-                                    routingContext.setEndBuildingData(buildingData);
+                                    routingContext
+                                        .setEndBuildingData(buildingData);
                                   },
                                 ),
                               ],
@@ -179,13 +181,21 @@ class _KMapRoutingPageState extends State<KMapRoutingPage> {
                   backgroundColor: routingContext.wantBeam
                       ? KMapColors.darkBlue
                       : KMapColors.white,
-                  child: Icon(Icons.bike_scooter, color: routingContext.wantBeam ? KMapColors.white : KMapColors.darkBlue),),
+                  child: Icon(Icons.bike_scooter,
+                      color: routingContext.wantBeam
+                          ? KMapColors.white
+                          : KMapColors.darkBlue),
+                ),
                 FloatingActionButton.small(
                   onPressed: routingContext.toggleFreeOfRain,
                   backgroundColor: routingContext.wantFreeOfRain
                       ? KMapColors.darkBlue
                       : KMapColors.white,
-                  child: Icon(Icons.thunderstorm, color: routingContext.wantFreeOfRain ? KMapColors.white : KMapColors.darkBlue),),
+                  child: Icon(Icons.thunderstorm,
+                      color: routingContext.wantFreeOfRain
+                          ? KMapColors.white
+                          : KMapColors.darkBlue),
+                ),
               ],
             ),
           ),
@@ -215,7 +225,8 @@ class DestinationSearch extends StatelessWidget {
       builder: (context, controller) {
         WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
           controller.text = "${controller.text}1";
-          controller.text = controller.text.substring(0, controller.text.length - 1);
+          controller.text =
+              controller.text.substring(0, controller.text.length - 1);
         });
 
         return Material(

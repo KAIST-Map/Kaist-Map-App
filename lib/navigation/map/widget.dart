@@ -20,7 +20,7 @@ class _KMapMapState extends State<KMapMap> {
     final mapContext = context.read<MapContext>();
     final buildingContext = context.read<BuildingContext>();
     final filterContext = context.watch<BuildingCategoryFilterContext>();
-    
+
     mapContext.cleanUpPath();
 
     mapContext.onTap = (_) {

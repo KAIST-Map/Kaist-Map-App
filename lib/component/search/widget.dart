@@ -25,7 +25,8 @@ class _KMapSearchState extends State<KMapSearch> {
       builder: (context, controller) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           controller.text = "${controller.text}1";
-          controller.text = controller.text.substring(0, controller.text.length - 1);
+          controller.text =
+              controller.text.substring(0, controller.text.length - 1);
         });
         return GestureDetector(
           behavior: HitTestBehavior.translucent,
@@ -52,8 +53,8 @@ class _KMapSearchState extends State<KMapSearch> {
   }
 }
 
-Future<Iterable<Widget>> suggestionsBuilder(
-    BuildContext context, SearchController controller, BuildingCategoryFilterContext filterContext,
+Future<Iterable<Widget>> suggestionsBuilder(BuildContext context,
+    SearchController controller, BuildingCategoryFilterContext filterContext,
     {void Function(BuildingData)? onResultTap}) async {
   if (controller.text.isEmpty) {
     final historyIds = SearchHistoryFetcher().fetch();
@@ -68,7 +69,8 @@ Future<Iterable<Widget>> suggestionsBuilder(
           .toList();
     });
 
-    return filterContext.applyFilters(historyBuildings)
+    return filterContext
+        .applyFilters(historyBuildings)
         .map((buildingData) => SearchResult(
               onTap: onResultTap,
               buildingData: buildingData,
@@ -80,7 +82,8 @@ Future<Iterable<Widget>> suggestionsBuilder(
   final searchQuery = controller.text;
   final searchBuilding = await BuildingSearchLoader(name: searchQuery).fetch();
 
-  return filterContext.applyFilters(searchBuilding)
+  return filterContext
+      .applyFilters(searchBuilding)
       .map((buildingData) => SearchResult(
             buildingData: buildingData,
             isHistory: false,
@@ -111,22 +114,22 @@ class SearchView extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           Expanded(
-            child: suggestions.isEmpty ?
-              const Center(child: Text('검색 결과가 없습니다.')) :
-              ListView.builder(
-                padding: const EdgeInsets.all(0),
-                itemBuilder: (context, index) {
-                  return Column(
-                    children: [
-                      if (index == 0) const Divider(height: 1),
-                      suggestions.elementAt(index),
-                      const Divider(height: 1),
-                    ],
-                  );
-                },
-                itemCount: suggestions.length,
-                shrinkWrap: true,
-              ),
+            child: suggestions.isEmpty
+                ? const Center(child: Text('검색 결과가 없습니다.'))
+                : ListView.builder(
+                    padding: const EdgeInsets.all(0),
+                    itemBuilder: (context, index) {
+                      return Column(
+                        children: [
+                          if (index == 0) const Divider(height: 1),
+                          suggestions.elementAt(index),
+                          const Divider(height: 1),
+                        ],
+                      );
+                    },
+                    itemCount: suggestions.length,
+                    shrinkWrap: true,
+                  ),
           ),
         ],
       ),
