@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class BookmarksBase<T> extends ApiFetcher<T> {
   static const String _bookmarksKey = 'user_bookmarks';
-  
+
   Future<SharedPreferences> _getPrefs() async {
     return await SharedPreferences.getInstance();
   }
@@ -16,7 +16,7 @@ abstract class BookmarksBase<T> extends ApiFetcher<T> {
     if (bookmarksJson == null || bookmarksJson.isEmpty) {
       return [];
     }
-    
+
     try {
       final List<dynamic> decoded = jsonDecode(bookmarksJson);
       return decoded.map((e) => e as int).toList();

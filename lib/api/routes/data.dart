@@ -9,7 +9,7 @@ class PathData {
     required this.totalDistance,
   });
 
-  PathData.fromJson(Map<String, dynamic> json):
-      path = json['path'].map((node) => NodeData.fromJson(node)).toList(),
-      totalDistance = json['totalDistance'];
+  PathData.fromJson(Map<String, dynamic> json)
+      : path = json['path'].map((node) => NodeData.fromJson(node)).toList(),
+        totalDistance = json['totalDistance'];
 }

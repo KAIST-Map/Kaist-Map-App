@@ -16,7 +16,46 @@ class AllBuildingLoader extends ApiFetcher<List<BuildingData>> {
         categoryIds: BuildingCategory.values,
         importance: 1,
         imageUrl: [],
-        alias: ["창학", "창의관", "창학", "창의관", "창학", "창의관", "창학", "창의관", "창학", "창의관", "창학", "창의관", "창학", "창의관", "창학", "창의관", "창학", "창의관", "창학", "창의관", "창학", "창의관", "창학", "창의관", "창학", "창의관", "창학", "창의관", "창학", "창의관", "창학", "창의관", "창학", "창의관", "창학", "창의관", "창학", "창의관"],
+        alias: [
+          "창학",
+          "창의관",
+          "창학",
+          "창의관",
+          "창학",
+          "창의관",
+          "창학",
+          "창의관",
+          "창학",
+          "창의관",
+          "창학",
+          "창의관",
+          "창학",
+          "창의관",
+          "창학",
+          "창의관",
+          "창학",
+          "창의관",
+          "창학",
+          "창의관",
+          "창학",
+          "창의관",
+          "창학",
+          "창의관",
+          "창학",
+          "창의관",
+          "창학",
+          "창의관",
+          "창학",
+          "창의관",
+          "창학",
+          "창의관",
+          "창학",
+          "창의관",
+          "창학",
+          "창의관",
+          "창학",
+          "창의관"
+        ],
       ),
       BuildingData(
         id: 2,
@@ -28,7 +67,6 @@ class AllBuildingLoader extends ApiFetcher<List<BuildingData>> {
         imageUrl: [],
         alias: ["자과동"],
       ),
-
       BuildingData(
         id: 3,
         name: '소망관',
@@ -49,7 +87,6 @@ class AllBuildingLoader extends ApiFetcher<List<BuildingData>> {
         imageUrl: [],
         alias: [],
       ),
-
       BuildingData(
         id: 5,
         name: '카이마루',
@@ -70,7 +107,6 @@ class AllBuildingLoader extends ApiFetcher<List<BuildingData>> {
         imageUrl: [],
         alias: [],
       ),
-
       BuildingData(
         id: 7,
         name: '학술문화관',
@@ -91,7 +127,6 @@ class AllBuildingLoader extends ApiFetcher<List<BuildingData>> {
         alias: [],
         imageUrl: [],
       ),
-
       BuildingData(
         id: 9,
         name: '카페1',
@@ -112,7 +147,6 @@ class AllBuildingLoader extends ApiFetcher<List<BuildingData>> {
         alias: [],
         imageUrl: [],
       ),
-
       BuildingData(
         id: 11,
         name: '동아리1',
@@ -139,7 +173,8 @@ class AllBuildingLoader extends ApiFetcher<List<BuildingData>> {
         latitude: 36.370,
         longitude: 127.367,
         importance: 13,
-        alias: [], categoryIds: [],
+        alias: [],
+        categoryIds: [],
         imageUrl: [],
       ),
       BuildingData(
@@ -148,7 +183,8 @@ class AllBuildingLoader extends ApiFetcher<List<BuildingData>> {
         latitude: 36.370,
         longitude: 127.367,
         importance: 14,
-        alias: [], categoryIds: [],
+        alias: [],
+        categoryIds: [],
         imageUrl: [],
       ),
     ];

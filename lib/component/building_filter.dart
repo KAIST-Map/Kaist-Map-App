@@ -39,7 +39,8 @@ class BuildingCategoryFilter extends StatelessWidget {
                   } else {
                     setFilters(filters.where((e) => e != category).toList());
                   }
-                }, category: category,
+                },
+                category: category,
               ),
             );
           }).toList(),

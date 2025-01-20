@@ -13,16 +13,16 @@ class KMapColors {
   static const MaterialColor darkBlue = MaterialColor(
     0xFF004191,
     <int, Color>{
-      50: Color.fromRGBO(230, 235, 246, 1),  // 90% white + 10% base
-      100: Color.fromRGBO(204, 214, 237, 1),  // 80% white + 20% base
-      200: Color.fromRGBO(179, 194, 228, 1),  // 70% white + 30% base
-      300: Color.fromRGBO(153, 173, 218, 1),  // 60% white + 40% base
-      400: Color.fromRGBO(128, 153, 209, 1),  // 50% white + 50% base
-      500: Color.fromRGBO(102, 132, 200, 1),  // 40% white + 60% base
-      600: Color.fromRGBO(77, 112, 191, 1),   // 30% white + 70% base
-      700: Color.fromRGBO(51, 91, 182, 1),    // 20% white + 80% base
-      800: Color.fromRGBO(26, 71, 173, 1),    // 10% white + 90% base
-      900: Color.fromRGBO(0, 65, 145, 1),     // base color
+      50: Color.fromRGBO(230, 235, 246, 1), // 90% white + 10% base
+      100: Color.fromRGBO(204, 214, 237, 1), // 80% white + 20% base
+      200: Color.fromRGBO(179, 194, 228, 1), // 70% white + 30% base
+      300: Color.fromRGBO(153, 173, 218, 1), // 60% white + 40% base
+      400: Color.fromRGBO(128, 153, 209, 1), // 50% white + 50% base
+      500: Color.fromRGBO(102, 132, 200, 1), // 40% white + 60% base
+      600: Color.fromRGBO(77, 112, 191, 1), // 30% white + 70% base
+      700: Color.fromRGBO(51, 91, 182, 1), // 20% white + 80% base
+      800: Color.fromRGBO(26, 71, 173, 1), // 10% white + 90% base
+      900: Color.fromRGBO(0, 65, 145, 1), // base color
     },
   );
 

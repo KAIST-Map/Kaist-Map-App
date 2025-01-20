@@ -39,25 +39,27 @@ class MapContext extends ChangeNotifier {
     final bounds = LatLngBounds(
       southwest: LatLng(
         (location1.latitude < location2.latitude
-            ? location1.latitude
-            : location2.latitude) - 0.003,
+                ? location1.latitude
+                : location2.latitude) -
+            0.003,
         (location1.longitude < location2.longitude
-            ? location1.longitude
-            : location2.longitude) - 0.0004,
+                ? location1.longitude
+                : location2.longitude) -
+            0.0004,
       ),
       northeast: LatLng(
         (location1.latitude > location2.latitude
-            ? location1.latitude
-            : location2.latitude) + 0.003,
+                ? location1.latitude
+                : location2.latitude) +
+            0.003,
         (location1.longitude > location2.longitude
-            ? location1.longitude
-            : location2.longitude) + 0.0004,
+                ? location1.longitude
+                : location2.longitude) +
+            0.0004,
       ),
     );
 
-    _mapController!.animateCamera(
-      CameraUpdate.newLatLngBounds(bounds, 50.0)
-    );
+    _mapController!.animateCamera(CameraUpdate.newLatLngBounds(bounds, 50.0));
   }
 
   void Function(LatLng) onTap = (LatLng latLng) {};
@@ -84,11 +86,13 @@ class MapContext extends ChangeNotifier {
       ),
     );
 
-    if (!markers.any((marker) => marker.markerId.value.split('-').last == building.id.toString())) {
+    if (!markers.any((marker) =>
+        marker.markerId.value.split('-').last == building.id.toString())) {
       return;
     }
 
-    final marker = markers.firstWhere((marker) => marker.markerId.value.split('-').last == building.id.toString());
+    final marker = markers.firstWhere((marker) =>
+        marker.markerId.value.split('-').last == building.id.toString());
     mapController?.showMarkerInfoWindow(marker.markerId);
     marker.onTap?.call();
   }

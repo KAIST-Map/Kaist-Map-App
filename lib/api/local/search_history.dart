@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 abstract class SearchHistoryBase<T> extends ApiFetcher<T> {
   static const String _historyKey = 'search_history';
   final int maxHistorySize = 20;
-  
+
   Future<SharedPreferences> _getPrefs() async {
     return await SharedPreferences.getInstance();
   }
@@ -16,7 +16,7 @@ abstract class SearchHistoryBase<T> extends ApiFetcher<T> {
     if (historyJson == null || historyJson.isEmpty) {
       return [];
     }
-    
+
     try {
       final List<dynamic> decoded = jsonDecode(historyJson);
       return decoded.map((e) => e as int).toList();
@@ -57,18 +57,18 @@ class SearchHistoryAdder extends SearchHistoryBase<bool> {
   @override
   Future<bool> fetchReal() async {
     final history = await loadHistory();
-    
+
     final existingIndex = history.indexOf(searchId);
     if (existingIndex != -1) {
       history.removeAt(existingIndex);
     }
-    
+
     history.insert(0, searchId);
-    
+
     if (history.length > maxHistorySize) {
       history.removeRange(maxHistorySize, history.length);
     }
-    
+
     await saveHistory(history);
     return true;
   }

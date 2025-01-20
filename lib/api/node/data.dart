@@ -13,10 +13,10 @@ class NodeData {
     this.buildingId,
   });
 
-  NodeData.fromJson(Map<String, dynamic> json):
-      id = json['id'],
-      name = json['name'],
-      latitude = json['latitude'],
-      longitude = json['longitude'],
-      buildingId = json['buildingId'];
+  NodeData.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        name = json['name'],
+        latitude = json['latitude'],
+        longitude = json['longitude'],
+        buildingId = json['buildingId'];
 }

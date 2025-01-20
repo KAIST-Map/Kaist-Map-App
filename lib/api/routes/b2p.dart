@@ -37,10 +37,7 @@ class B2PLoader extends ApiFetcher<PathData> {
       }
     ];
 
-    final mockResponse = jsonEncode({
-      "path": mockPath,
-      "totalDistance": 0
-    });
+    final mockResponse = jsonEncode({"path": mockPath, "totalDistance": 0});
 
     return PathData.fromJson(jsonDecode(mockResponse));
   }

@@ -25,11 +25,10 @@ class RoutingContext extends ChangeNotifier {
 extension BuildingDataToLatLng on Option<BuildingData> {
   Future<LatLng> toLatLng() async {
     return map((buildingData) =>
-      Future.value(LatLng(buildingData.latitude, buildingData.longitude))).getOrElse(
-        () async {
-          var position = await Geolocator.getCurrentPosition();
-          return LatLng(position.latitude, position.longitude);
-        }()
-      );
+            Future.value(LatLng(buildingData.latitude, buildingData.longitude)))
+        .getOrElse(() async {
+      var position = await Geolocator.getCurrentPosition();
+      return LatLng(position.latitude, position.longitude);
+    }());
   }
 }

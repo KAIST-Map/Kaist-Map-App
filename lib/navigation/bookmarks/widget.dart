@@ -22,34 +22,39 @@ class KMapBookmarks extends StatelessWidget {
       future: bookmarks.then(
         (bookmarks) async {
           final buildings = await buildingContext.buildings;
-          mapContext.setMarkers(
-            bookmarks.map((buildingId) => 
-                buildings.firstWhere((building) => building.id == buildingId).toMarker(
-                  pageName: "bookmarks",
-                  onTap: () {
-                    Scaffold.of(context).showBottomSheet((context) => Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.symmetric(vertical: 8),
-                          width: 40,
-                          height: 4,
-                          decoration: BoxDecoration(
-                            color: KMapColors.darkGray.shade400,
-                            borderRadius: BorderRadius.circular(2),
-                          ),
-                        ),
-                        BuildingInfoSheet(
-                          buildingData: buildings.firstWhere((building) => building.id == buildingId),
-                        ),
-                      ],
-                    ));
-                  }))
-            .toSet());
+          mapContext.setMarkers(bookmarks
+              .map((buildingId) => buildings
+                  .firstWhere((building) => building.id == buildingId)
+                  .toMarker(
+                      pageName: "bookmarks",
+                      onTap: () {
+                        Scaffold.of(context).showBottomSheet((context) =>
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 8),
+                                  width: 40,
+                                  height: 4,
+                                  decoration: BoxDecoration(
+                                    color: KMapColors.darkGray.shade400,
+                                    borderRadius: BorderRadius.circular(2),
+                                  ),
+                                ),
+                                BuildingInfoSheet(
+                                  buildingData: buildings.firstWhere(
+                                      (building) => building.id == buildingId),
+                                ),
+                              ],
+                            ));
+                      }))
+              .toSet());
         },
       ),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting || snapshot.hasError) {
+        if (snapshot.connectionState == ConnectionState.waiting ||
+            snapshot.hasError) {
           return Container();
         } else {
           return const SafeArea(

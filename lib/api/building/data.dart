@@ -110,13 +110,15 @@ class BuildingData {
   BuildingData.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         name = json['name'],
-        categoryIds = (json['categoryIds'] as List).map((value) => BuildingCategory.values[value]).toList(),
+        categoryIds = (json['categoryIds'] as List)
+            .map((value) => BuildingCategory.values[value])
+            .toList(),
         imageUrl = toList<String>(json['imageUrl']),
         importance = json['importance'],
         latitude = json['latitude'],
         longitude = json['longitude'],
         alias = toList<String>(json['alias']);
-      
+
   Marker toMarker({required String pageName, required VoidCallback onTap}) {
     return Marker(
       markerId: MarkerId("$pageName-$id"),

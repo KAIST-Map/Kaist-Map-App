@@ -19,15 +19,21 @@ class KMapChip extends StatelessWidget {
     return ElevatedButton(
       onPressed: () => onChange(!isSelected),
       style: ButtonStyle(
-        backgroundColor: isSelected ? WidgetStateProperty.all(KMapColors.darkBlue) : null,
+        backgroundColor:
+            isSelected ? WidgetStateProperty.all(KMapColors.darkBlue) : null,
         elevation: WidgetStateProperty.all(2.5),
-        padding: WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 12, vertical: 2)),
+        padding: WidgetStateProperty.all(
+            const EdgeInsets.symmetric(horizontal: 12, vertical: 2)),
       ),
       child: Row(
         children: [
-          Text(category.name, style: TextStyle(color: isSelected ? KMapColors.white : KMapColors.darkBlue)),
+          Text(category.name,
+              style: TextStyle(
+                  color: isSelected ? KMapColors.white : KMapColors.darkBlue)),
           const SizedBox(width: 4),
-          category.getIcon(color: isSelected ? KMapColors.white : KMapColors.darkBlue, size: 16),
+          category.getIcon(
+              color: isSelected ? KMapColors.white : KMapColors.darkBlue,
+              size: 16),
         ],
       ),
     );
