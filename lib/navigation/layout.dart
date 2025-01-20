@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kaist_map/constant/colors.dart';
 import 'package:kaist_map/navigation/bookmarks/widget.dart';
+import 'package:kaist_map/navigation/kakao_map/widget.dart';
 import 'package:kaist_map/navigation/map/widget.dart';
-import 'package:kaist_map/navigation/google_map/widget.dart';
 import 'package:kaist_map/navigation/routing/widget.dart';
 import 'package:provider/provider.dart';
 
@@ -51,7 +51,7 @@ class _KMapNavigationState extends State<KMapNavigation> with RouteAware {
     return Scaffold(
       body: Stack(
         children: <Widget>[
-          const KMapGoogleMap(),
+          const KakaoMapWidget(),
           _getSelectedBodyWidget(navigationContext.selectedIndex),
         ],
       ),

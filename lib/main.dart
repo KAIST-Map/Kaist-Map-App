@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kaist_map/api/context/building.dart';
 import 'package:kaist_map/constant/colors.dart';
 import 'package:kaist_map/component/building_filter.dart';
-import 'package:kaist_map/navigation/google_map/map_context.dart';
+import 'package:kaist_map/navigation/kakao_map/map_context.dart';
 import 'package:kaist_map/navigation/layout.dart';
 import 'package:kaist_map/navigation/routing/routing_context.dart';
 import 'package:provider/provider.dart';
@@ -15,8 +15,8 @@ Future main() async {
         ChangeNotifierProvider(create: (_) => BuildingCategoryFilterContext()),
         ChangeNotifierProvider(create: (_) => NavigationContext()),
         ChangeNotifierProvider(create: (_) => BuildingContext()),
-        ChangeNotifierProvider(create: (_) => MapContext()),
         ChangeNotifierProvider(create: (_) => RoutingContext()),
+        ChangeNotifierProvider(create: (_) => KakaoMapContext()),
       ],
       builder: (context, child) {
         return const KMapMain();

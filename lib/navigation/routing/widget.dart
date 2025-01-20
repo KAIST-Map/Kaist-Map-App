@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:kaist_map/api/building/data.dart';
 import 'package:kaist_map/api/context/building.dart';
 import 'package:kaist_map/component/building_filter.dart';
 import 'package:kaist_map/component/building_sheet_frame.dart';
 import 'package:kaist_map/component/search/widget.dart';
 import 'package:kaist_map/constant/colors.dart';
-import 'package:kaist_map/navigation/google_map/map_context.dart';
+import 'package:kaist_map/navigation/kakao_map/core.dart';
+import 'package:kaist_map/navigation/kakao_map/map_context.dart';
 import 'package:kaist_map/navigation/routing/routing_context.dart';
 import 'package:kaist_map/utils/option.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +21,7 @@ class KMapRoutingPage extends StatefulWidget {
 class _KMapRoutingPageState extends State<KMapRoutingPage> {
   @override
   Widget build(BuildContext context) {
-    final mapContext = context.read<MapContext>();
+    final mapContext = context.read<KakaoMapContext>();
     final buildingContext = context.read<BuildingContext>();
     final routingContext = context.watch<RoutingContext>();
     final startBuildingData = routingContext.startBuildingData;
@@ -30,12 +30,6 @@ class _KMapRoutingPageState extends State<KMapRoutingPage> {
     final endLatLng = routingContext.endLatLng;
     final pathData = routingContext.pathData;
 
-    mapContext.setOnTap((_) {
-      if (Navigator.of(context).canPop()) {
-        Navigator.of(context).pop();
-      }
-    });
-
     Future.wait([startLatLng.future, endLatLng.future]).then((values) {
       final start = values[0];
       final end = values[1];
@@ -43,17 +37,16 @@ class _KMapRoutingPageState extends State<KMapRoutingPage> {
       if (startBuildingData != null && endBuildingData != null) {
         pathData.future.then((path) {
           if (start != null && end != null && start != end && path.isDefined) {
-            mapContext.showPath(path.value, start, end);
+            mapContext.showPath(path.value.path.map((node) => LatLng(node.latitude, node.longitude)).toList(), start, end);
           }
         });
       } else {
         mapContext.cleanUpPath();
         buildingContext.buildings.then((buildings) {
-          mapContext.setMarkers({
+          mapContext.setMarkers([
             ...buildings
                 .map((BuildingData buildingData) => buildingData
                     .toMarker(
-                        pageName: "map",
                         onTap: () {
                           Scaffold.of(context)
                               .showBottomSheet((context) => BuildingSheetFrame(
@@ -61,34 +54,39 @@ class _KMapRoutingPageState extends State<KMapRoutingPage> {
                                   ));
                         })
                     .copyWith(
-                      iconParam: BitmapDescriptor.defaultMarkerWithHue(
-                          startBuildingData
-                                      ?.map((data) => data.id)
-                                      .getOrElse(-1) ==
-                                  buildingData.id
-                              ? BitmapDescriptor.hueGreen
-                              : endBuildingData
-                                          ?.map((data) => data.id)
-                                          .getOrElse(-1) ==
-                                      buildingData.id
-                                  ? BitmapDescriptor.hueBlue
-                                  : BitmapDescriptor.hueRed),
-                    ))
-                .toSet(),
+                      // iconParam: BitmapDescriptor.defaultMarkerWithHue(
+                      //     startBuildingData
+                      //                 ?.map((data) => data.id)
+                      //                 .getOrElse(-1) ==
+                      //             buildingData.id
+                      //         ? BitmapDescriptor.hueGreen
+                      //         : endBuildingData
+                      //                     ?.map((data) => data.id)
+                      //                     .getOrElse(-1) ==
+                      //                 buildingData.id
+                      //             ? BitmapDescriptor.hueBlue
+                      //             : BitmapDescriptor.hueRed),
+                    )),
             if (startBuildingData == const None<BuildingData>() &&
                 start != null)
               Marker(
-                  markerId: const MarkerId("start"),
-                  position: start,
-                  icon: BitmapDescriptor.defaultMarkerWithHue(
-                      BitmapDescriptor.hueGreen)),
+                  name: "position-start",
+                  lat: start.latitude,
+                  lng: start.longitude,
+                  draggable: false,
+                  importance: 128,
+                  onTap: () {},
+                  image: null),
             if (endBuildingData == const None<BuildingData>() && end != null)
               Marker(
-                  markerId: const MarkerId("end"),
-                  position: end,
-                  icon: BitmapDescriptor.defaultMarkerWithHue(
-                      BitmapDescriptor.hueBlue)),
-          });
+                  name: "position-end",
+                  lat: end.latitude,
+                  lng: end.longitude,
+                  draggable: false,
+                  importance: 128,
+                  onTap: () {},
+                  image: null),
+          ]);
         });
       }
     });

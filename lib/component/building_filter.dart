@@ -40,7 +40,7 @@ class BuildingCategoryFilter extends StatelessWidget {
               minimumSize: WidgetStateProperty.all(Size.zero),
               backgroundColor: filters.isEmpty ? null : WidgetStateProperty.all(KMapColors.darkBlue),
               elevation: WidgetStateProperty.all(2.5),
-              padding: const WidgetStatePropertyAll(EdgeInsets.all(12)),
+              padding: const WidgetStatePropertyAll(EdgeInsets.all(10)),
             ),
             onPressed: () {
               setFilters([]);

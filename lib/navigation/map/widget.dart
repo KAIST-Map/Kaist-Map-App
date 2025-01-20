@@ -4,7 +4,7 @@ import 'package:kaist_map/api/context/building.dart';
 import 'package:kaist_map/component/building_sheet_frame.dart';
 import 'package:kaist_map/component/search/widget.dart';
 import 'package:kaist_map/component/building_filter.dart';
-import 'package:kaist_map/navigation/google_map/map_context.dart';
+import 'package:kaist_map/navigation/kakao_map/map_context.dart';
 import 'package:provider/provider.dart';
 
 class KMapMap extends StatefulWidget {
@@ -17,30 +17,23 @@ class KMapMap extends StatefulWidget {
 class _KMapMapState extends State<KMapMap> {
   @override
   Widget build(BuildContext context) {
-    final mapContext = context.read<MapContext>();
+    final mapContext = context.read<KakaoMapContext>();
     final buildingContext = context.read<BuildingContext>();
     final filterContext = context.watch<BuildingCategoryFilterContext>();
 
-    mapContext.cleanUpPath();
-
-    mapContext.setOnTap((_) {
-      if (Navigator.of(context).canPop()) {
-        Navigator.of(context).pop();
-      }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      mapContext.cleanUpPath();
     });
-
     buildingContext.buildings.then((buildings) {
       final filteredBuildings = filterContext.applyFilters(buildings);
       mapContext.setMarkers(filteredBuildings
           .map((BuildingData buildingData) => buildingData.toMarker(
-              pageName: "map",
               onTap: () {
                 Scaffold.of(context)
                     .showBottomSheet((context) => BuildingSheetFrame(
                           buildingData: buildingData,
                         ));
-              }))
-          .toSet());
+              })).toList());
     });
 
     return const SafeArea(
