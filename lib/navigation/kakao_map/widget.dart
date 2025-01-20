@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
@@ -47,7 +49,7 @@ class _KakaoMapWidgetState extends State<KakaoMapWidget> {
       ..addJavaScriptChannel("OnMarkerClickedChannel",
         onMessageReceived: (message) {
           final marker = kakaoMapContext.markers
-              .firstWhere((marker) => marker.name == message.message);
+              .firstWhere((marker) => marker.name == "\"${jsonDecode(message.message)['name']}\"");
           marker.onTap();
         })
       ..addJavaScriptChannel("OnMapClickedChannel",
