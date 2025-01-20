@@ -61,7 +61,8 @@ class _BuildingInfoSheetState extends State<BuildingInfoSheet> {
                     const SizedBox(height: 4),
                     Text(
                       widget.buildingData.alias
-                          .map((name) => "#$name")
+                          .where((name) => name.trim().isNotEmpty)
+                          .map((name) => "#${name.trim()}")
                           .join("  "),
                       maxLines: null,
                       style: Theme.of(context)
@@ -81,6 +82,27 @@ class _BuildingInfoSheetState extends State<BuildingInfoSheet> {
                   width: imageSize.toDouble(),
                   height: imageSize.toDouble(),
                   fit: BoxFit.cover,
+                  loadingBuilder: (context, child, loadingProgress) =>
+                      loadingProgress == null
+                          ? child
+                          : Container(
+                              width: imageSize.toDouble(),
+                              height: imageSize.toDouble(),
+                              color: KMapColors.darkGray.shade300,
+                              child: const Center(
+                                  child: CircularProgressIndicator()),
+                            ),
+                  errorBuilder: (context, error, stackTrace) => Container(
+                    width: imageSize.toDouble(),
+                    height: imageSize.toDouble(),
+                    color: KMapColors.darkGray.shade300,
+                    child: const Center(
+                        child: Icon(
+                      Icons.error,
+                      color: KMapColors.darkGray,
+                      size: 50,
+                    )),
+                  ),
                 ),
               ),
             ],

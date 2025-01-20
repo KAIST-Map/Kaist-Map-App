@@ -36,9 +36,9 @@ class SearchResult extends StatelessWidget {
           title: Text(buildingData.name,
               style:
                   const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-          subtitle: buildingData.alias.isNotEmpty
+          subtitle: buildingData.alias.where((a) => a.trim().isNotEmpty).map((a) => "#${a.trim()}").join("  ").isNotEmpty
               ? Text(
-                  buildingData.alias.map((a) => "#$a").join("  "),
+                  buildingData.alias.where((a) => a.trim().isNotEmpty).map((a) => "#${a.trim()}").join("  "),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(

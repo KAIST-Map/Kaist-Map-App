@@ -40,7 +40,7 @@ class BuildingSearchLoader extends ApiFetcher<List<BuildingData>> {
 
   @override
   Future<List<BuildingData>> fetchReal() async {
-    final uri = Uri.parse('$baseUrl/building/$name');
+    final uri = Uri.parse('$baseUrl/building/name/$name');
 
     try {
       final response = await http.get(uri);

@@ -4,19 +4,18 @@ import 'package:kaist_map/api/api_fetcher.dart';
 import 'package:kaist_map/constant/colors.dart';
 
 enum BuildingCategory {
-  department,
-  dormitory,
-  restaurant,
-  cafe,
-  bank,
-  atm,
-  convenience,
-  gym,
-  laundry,
-  printer,
-  building,
-  library,
-  etc,
+  department, // 1
+  dormitory, // 2
+  restaurant, // 3
+  cafe, // 4
+  bank, // 5
+  atm, // 6
+  convenience, // 7
+  gym, // 8
+  laundry, // 9
+  printer, // 10
+  building, // 11
+  library, // 12
 }
 
 extension BuildingCategoryExtension on BuildingCategory {
@@ -46,8 +45,6 @@ extension BuildingCategoryExtension on BuildingCategory {
         return '건물';
       case BuildingCategory.library:
         return '도서관';
-      case BuildingCategory.etc:
-        return '기타';
     }
   }
 
@@ -64,11 +61,11 @@ extension BuildingCategoryExtension on BuildingCategory {
       case BuildingCategory.bank:
         return Icon(Icons.account_balance, color: color, size: size);
       case BuildingCategory.atm:
-        return Icon(Icons.atm, color: color, size: size);
+        return Icon(Icons.local_atm, color: color, size: size);
       case BuildingCategory.convenience:
-        return Icon(Icons.local_grocery_store, color: color, size: size);
+        return Icon(Icons.storefront_rounded, color: color, size: size);
       case BuildingCategory.gym:
-        return Icon(Icons.fitness_center, color: color, size: size);
+        return Icon(Icons.sports_basketball_rounded, color: color, size: size);
       case BuildingCategory.laundry:
         return Icon(Icons.local_laundry_service, color: color, size: size);
       case BuildingCategory.printer:
@@ -77,8 +74,6 @@ extension BuildingCategoryExtension on BuildingCategory {
         return Icon(Icons.apartment, color: color, size: size);
       case BuildingCategory.library:
         return Icon(Icons.menu_book, color: color, size: size);
-      case BuildingCategory.etc:
-        return Icon(Icons.more_horiz, color: color, size: size);
     }
   }
 }
@@ -107,7 +102,7 @@ class BuildingData {
       : id = json['id'],
         name = json['name'],
         categories = (json['categoryIds'] as List)
-            .map((value) => BuildingCategory.values[value])
+            .map((value) => BuildingCategory.values[value-1])
             .toList(),
         imageUrls = json['imageUrls'].toString().trim().replaceAll(RegExp(r'^\[|\]$'), '').split(","),
         importance = json['importance'],

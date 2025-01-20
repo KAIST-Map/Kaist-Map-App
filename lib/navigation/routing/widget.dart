@@ -224,9 +224,8 @@ class DestinationSearch extends StatelessWidget {
     return SearchAnchor(
       builder: (context, controller) {
         WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-          controller.text = "${controller.text}1";
-          controller.text =
-              controller.text.substring(0, controller.text.length - 1);
+          controller.text="${controller.text}\$%";
+          controller.text=controller.text.substring(0,controller.text.length-2);
         });
 
         return Material(
