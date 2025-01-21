@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:kaist_map/api/building/data.dart';
 import 'package:kaist_map/navigation/kakao_map/core.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -15,6 +16,27 @@ class KakaoMapContext extends ChangeNotifier {
   List<Marker> get markers => _markers;
   List<Polyline> _polylines = [];
   List<Polyline> get polylines => _polylines;
+
+  LatLng _myLocation = const LatLng(36.372143, 127.360313);
+  LatLng get myLocation => _myLocation;
+  Marker get myLocationMarker => Marker(
+    name: "my-position",
+    lat: _myLocation.latitude,
+    lng: _myLocation.longitude,
+    width: 20,
+    height: 20,
+    offsetY: 10,
+    image: "https://kaist-map.github.io/Kaist-Map-App/my_location_pin.png",
+    draggable: false,
+    importance: 99,
+    onTap: () {});
+
+  void startMyLocationService() {
+    Geolocator.getPositionStream().listen((position) {
+      _myLocation = LatLng(position.latitude, position.longitude);
+      notifyListeners();
+    });
+  }
 
   void setMarkers(List<Marker> markers) {
     _markers = markers;

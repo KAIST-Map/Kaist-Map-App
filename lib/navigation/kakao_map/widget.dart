@@ -42,27 +42,30 @@ class _KakaoMapWidgetState extends State<KakaoMapWidget> {
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..loadRequest(Uri.parse('$baseUrl/kakao_map.html'))
       ..addJavaScriptChannel("OnMapCreatedChannel",
-        onMessageReceived: (message) => {
-              kakaoMapContext.controller = _controller,
-              kakaoMapContext.lookAt(KaistLocation.location),
-            })
+          onMessageReceived: (message) {
+        kakaoMapContext.controller = _controller;
+        kakaoMapContext.lookAt(KaistLocation.location);
+        kakaoMapContext.startMyLocationService();
+      })
       ..addJavaScriptChannel("OnMarkerClickedChannel",
-        onMessageReceived: (message) {
-          final marker = kakaoMapContext.markers
-              .firstWhere((marker) => marker.name == jsonDecode(message.message)['name'].toString());
-          marker.onTap();
-          kakaoMapContext.lookAt(LatLng(marker.lat, marker.lng));
-        })
+          onMessageReceived: (message) {
+        final marker = kakaoMapContext.markers.firstWhere((marker) =>
+            marker.name == jsonDecode(message.message)['name'].toString());
+        marker.onTap();
+        kakaoMapContext.lookAt(LatLng(marker.lat, marker.lng));
+      })
       ..addJavaScriptChannel("OnMapClickedChannel",
-        onMessageReceived: (message) {
-          if (Navigator.canPop(context)) {
-            Navigator.pop(context);
-          }
-        });
-
+          onMessageReceived: (message) {
+        if (Navigator.canPop(context)) {
+          Navigator.pop(context);
+        }
+      });
 
     kakaoMapContext.controller?.runJavaScript('''
-      setMarkers(${kakaoMapContext.markers.map((marker) => jsonEncode(marker.toJson())).toList()});
+      setMarkers(${[
+        ...kakaoMapContext.markers.map((marker) => jsonEncode(marker.toJson())),
+        jsonEncode(kakaoMapContext.myLocationMarker.toJson()),
+      ]});
       setPolylines(${kakaoMapContext.polylines.map((polyline) => jsonEncode(polyline.toJson())).toList()});
     ''');
 
