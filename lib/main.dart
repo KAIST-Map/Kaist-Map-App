@@ -24,12 +24,16 @@ Future main() async {
 }
 
 class KMapMain extends StatelessWidget {
+  static double? height;
+  static double? paddingBottom;
   const KMapMain({super.key});
 
   final MaterialColor primaryColor = KMapColors.darkBlue;
 
   @override
   Widget build(BuildContext context) {
+    height ??= MediaQuery.of(context).size.height;
+    paddingBottom ??= MediaQuery.of(context).padding.bottom;
     return MaterialApp(
       theme: ThemeData(
           useMaterial3: true,

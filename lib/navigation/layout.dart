@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kaist_map/constant/colors.dart';
+import 'package:kaist_map/main.dart';
 import 'package:kaist_map/navigation/bookmarks/widget.dart';
 import 'package:kaist_map/navigation/kakao_map/widget.dart';
 import 'package:kaist_map/navigation/map/widget.dart';
@@ -30,6 +31,8 @@ class KMapNavigation extends StatefulWidget {
 }
 
 class _KMapNavigationState extends State<KMapNavigation> with RouteAware {
+  static const double navigationBarHeight = 100;
+
   void setNavigationBar() {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -49,13 +52,18 @@ class _KMapNavigationState extends State<KMapNavigation> with RouteAware {
     }
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: <Widget>[
-          const KakaoMapWidget(),
+          SizedBox(
+              width: MediaQuery.of(context).size.width,
+              height: (KMapMain.height ?? MediaQuery.of(context).size.height) - (KMapMain.paddingBottom ?? MediaQuery.of(context).padding.bottom) - navigationBarHeight,
+            child: const KakaoMapWidget()),
           _getSelectedBodyWidget(navigationContext.selectedIndex),
         ],
       ),
       bottomNavigationBar: NavigationBar(
+        height: navigationBarHeight,
         onDestinationSelected: navigationContext.setSelectedIndex,
         selectedIndex: navigationContext.selectedIndex,
         destinations: const <Widget>[

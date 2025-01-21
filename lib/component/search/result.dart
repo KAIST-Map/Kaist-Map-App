@@ -28,7 +28,9 @@ class SearchResult extends StatelessWidget {
           if (onTap != null) {
             onTap!(buildingData);
           } else {
-            mapContext.lookAtBuilding(buildingData);
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+                mapContext.lookAtBuilding(buildingData);
+            });
           }
           Navigator.of(context).pop();
         },

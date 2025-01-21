@@ -85,14 +85,16 @@ class KakaoMapContext extends ChangeNotifier {
   }
 
   void _showTwoLocations(LatLng start, LatLng end) {
-    controller?.runJavaScript('''
-      lookAtTwoPoints(
-        ${start.latitude.toStringAsFixed(14)},
-        ${start.longitude.toStringAsFixed(14)},
-        ${end.latitude.toStringAsFixed(14)},
-        ${end.longitude.toStringAsFixed(14)}
-      );
-    ''');
+    Future.delayed(const Duration(milliseconds: 310), () {
+      controller?.runJavaScript('''
+        lookAtTwoPoints(
+          ${start.latitude.toStringAsFixed(14)},
+          ${start.longitude.toStringAsFixed(14)},
+          ${end.latitude.toStringAsFixed(14)},
+          ${end.longitude.toStringAsFixed(14)}
+        );
+      ''');
+    });
   }
 
   void lookAtBuilding(BuildingData building) {
@@ -100,17 +102,19 @@ class KakaoMapContext extends ChangeNotifier {
       return;
     }
 
-    controller?.runJavaScript('''
-      jumpAt(
-        ${building.latitude.toStringAsFixed(14)},
-        ${building.longitude.toStringAsFixed(14)}
-      );
-    ''');
+    Future.delayed(const Duration(milliseconds: 310), () {
+      controller?.runJavaScript('''
+        lookCloserAt(
+          ${building.latitude.toStringAsFixed(14)},
+          ${building.longitude.toStringAsFixed(14)}
+        );
+      ''');
+    });
 
     if (!markers.any((marker) => marker.name == "building-${building.id}")) return;
 
     final buildingMarker = markers.firstWhere((marker) => marker.name == "building-${building.id}");
-    buildingMarker.onTap.call();
+    buildingMarker.onTap();
   }
 
   void lookAt(LatLng position) {

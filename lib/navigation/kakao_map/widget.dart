@@ -51,6 +51,7 @@ class _KakaoMapWidgetState extends State<KakaoMapWidget> {
           final marker = kakaoMapContext.markers
               .firstWhere((marker) => marker.name == jsonDecode(message.message)['name'].toString());
           marker.onTap();
+          kakaoMapContext.lookAt(LatLng(marker.lat, marker.lng));
         })
       ..addJavaScriptChannel("OnMapClickedChannel",
         onMessageReceived: (message) {
