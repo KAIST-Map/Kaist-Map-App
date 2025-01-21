@@ -64,8 +64,8 @@ class _KMapRoutingPageState extends State<KMapRoutingPage> {
                                       ?.map((data) => data.id)
                                       .getOrElse(-1) ==
                                   buildingData.id
-                              ? "https://kaist-map.github.io/Kaist-Map-App/map_pin_blue.png"
-                              : "https://kaist-map.github.io/Kaist-Map-App/map_pin.png",
+                              ? "https://kaist-map.github.io/Kaist-Map-App/map_pin.png"
+                              : "https://kaist-map.github.io/Kaist-Map-App/map_pin_blue.png",
                     )),
             if (startBuildingData == const None<BuildingData>() &&
                 start != null)
