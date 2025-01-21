@@ -63,7 +63,7 @@ class _KMapRoutingPageState extends State<KMapRoutingPage> {
                                       ?.map((data) => data.id)
                                       .getOrElse(-1) ==
                                   buildingData.id
-                          ? 100
+                          ? 128
                           : null,
                   image: startBuildingData
                               ?.map((data) => data.id)
@@ -95,7 +95,7 @@ class _KMapRoutingPageState extends State<KMapRoutingPage> {
                   importance: 128,
                   onTap: () {},
                   image:
-                      "https://kaist-map.github.io/Kaist-Map-App/map_pin_blue.png"),
+                      "https://kaist-map.github.io/Kaist-Map-App/map_pin.png"),
           ]);
         });
       }

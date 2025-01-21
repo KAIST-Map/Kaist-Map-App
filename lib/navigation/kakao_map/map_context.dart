@@ -90,7 +90,7 @@ class KakaoMapContext extends ChangeNotifier {
       lng: start.longitude,
       image: "https://kaist-map.github.io/Kaist-Map-App/map_pin_green.png",
       draggable: false,
-      importance: 1,
+      importance: 128,
       onTap: () {},
     );
 
@@ -98,9 +98,9 @@ class KakaoMapContext extends ChangeNotifier {
       name: "end",
       lat: end.latitude,
       lng: end.longitude,
-      image: "https://kaist-map.github.io/Kaist-Map-App/map_pin_blue.png",
+      image: "https://kaist-map.github.io/Kaist-Map-App/map_pin.png",
       draggable: false,
-      importance: 1,
+      importance: 128,
       onTap: () {},
     );
 
