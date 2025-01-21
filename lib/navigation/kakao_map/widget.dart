@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:kaist_map/constant/map.dart';
 import 'package:kaist_map/navigation/kakao_map/core.dart';
 import 'package:kaist_map/navigation/kakao_map/map_context.dart';
@@ -63,9 +62,10 @@ class _KakaoMapWidgetState extends State<KakaoMapWidget> {
 
     kakaoMapContext.controller?.runJavaScript('''
       setMarkers(${[
-        ...kakaoMapContext.markers.map((marker) => jsonEncode(marker.toJson())),
-        jsonEncode(kakaoMapContext.myLocationMarker.toJson()),
-      ]});
+      ...kakaoMapContext.markers.map((marker) => jsonEncode(marker.toJson())),
+      if (kakaoMapContext.myLocationMarker != null)
+        jsonEncode(kakaoMapContext.myLocationMarker!.toJson()),
+    ]});
       setPolylines(${kakaoMapContext.polylines.map((polyline) => jsonEncode(polyline.toJson())).toList()});
     ''');
 
@@ -78,10 +78,13 @@ class _KakaoMapWidgetState extends State<KakaoMapWidget> {
           alignment: Alignment.bottomRight,
           padding: const EdgeInsets.all(10),
           child: FloatingActionButton.small(
-              onPressed: () => Geolocator.getCurrentPosition().then((position) {
-                    kakaoMapContext
-                        .lookAt(LatLng(position.latitude, position.longitude));
-                  }),
+              onPressed: ()  {
+                final myLocation = kakaoMapContext.myLocation;
+                if (myLocation != null)
+                  {
+                    kakaoMapContext.lookAt(myLocation);
+                  }
+              },
               child: const Icon(Icons.my_location)),
         ),
       ],

@@ -17,22 +17,25 @@ class KakaoMapContext extends ChangeNotifier {
   List<Polyline> _polylines = [];
   List<Polyline> get polylines => _polylines;
 
-  LatLng _myLocation = const LatLng(36.372143, 127.360313);
-  LatLng get myLocation => _myLocation;
-  Marker get myLocationMarker => Marker(
-    name: "my-position",
-    lat: _myLocation.latitude,
-    lng: _myLocation.longitude,
-    width: 20,
-    height: 20,
-    offsetY: 10,
-    image: "https://kaist-map.github.io/Kaist-Map-App/my_location_pin.png",
-    draggable: false,
-    importance: 99,
-    onTap: () {});
+  LatLng? _myLocation;
+  LatLng? get myLocation => _myLocation;
+  Marker? get myLocationMarker => _myLocation != null ? Marker(
+      name: "my-position",
+      lat: _myLocation!.latitude,
+      lng: _myLocation!.longitude,
+      width: 20,
+      height: 20,
+      offsetY: 10,
+      image: "https://kaist-map.github.io/Kaist-Map-App/my_location_pin.png",
+      draggable: false,
+      importance: 99,
+      onTap: () {}) : null;
 
   void startMyLocationService() {
-    Geolocator.getPositionStream().listen((position) {
+    Geolocator.getPositionStream(
+            locationSettings:
+                const LocationSettings(accuracy: LocationAccuracy.high))
+        .listen((position) {
       _myLocation = LatLng(position.latitude, position.longitude);
       notifyListeners();
     });
@@ -100,7 +103,7 @@ class KakaoMapContext extends ChangeNotifier {
       importance: 1,
       onTap: () {},
     );
-    
+
     _markers = [startMarker, endMarker];
     _polylines = [pathPolyline, startLine, endLine];
     notifyListeners();
@@ -133,9 +136,11 @@ class KakaoMapContext extends ChangeNotifier {
       ''');
     });
 
-    if (!markers.any((marker) => marker.name == "building-${building.id}")) return;
+    if (!markers.any((marker) => marker.name == "building-${building.id}"))
+      return;
 
-    final buildingMarker = markers.firstWhere((marker) => marker.name == "building-${building.id}");
+    final buildingMarker = markers
+        .firstWhere((marker) => marker.name == "building-${building.id}");
     buildingMarker.onTap();
   }
 
