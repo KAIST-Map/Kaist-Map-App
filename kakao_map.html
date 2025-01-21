@@ -97,6 +97,7 @@
     //    importance: number,
     // }
     function setMarkers(markerData) {
+      console.log(JSON.stringify(markerData));
       for (var i = 0; i < markers.length; i++) {
         markers[i].setMap(null);
       }
@@ -108,8 +109,8 @@
           draggable: markerData[i].draggable,
           image: new kakao.maps.MarkerImage(
             markerData[i].image,
-            new kakao.maps.Size(64, 64),
-            { offset: new kakao.maps.Point(32, 64) }
+            new kakao.maps.Size(31, 35),
+            { offset: new kakao.maps.Point(15, 35) }
           ),
           position: new kakao.maps.LatLng(markerData[i].lat, markerData[i].lng),
           clickable: true,
