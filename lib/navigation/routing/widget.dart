@@ -54,6 +54,7 @@ class _KMapRoutingPageState extends State<KMapRoutingPage> {
                                   ));
                         })
                     .copyWith(
+                      importance: 100,
                       image: startBuildingData
                                   ?.map((data) => data.id)
                                   .getOrElse(-1) ==
