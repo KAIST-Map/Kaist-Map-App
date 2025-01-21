@@ -54,18 +54,17 @@ class _KMapRoutingPageState extends State<KMapRoutingPage> {
                                   ));
                         })
                     .copyWith(
-                      // iconParam: BitmapDescriptor.defaultMarkerWithHue(
-                      //     startBuildingData
-                      //                 ?.map((data) => data.id)
-                      //                 .getOrElse(-1) ==
-                      //             buildingData.id
-                      //         ? BitmapDescriptor.hueGreen
-                      //         : endBuildingData
-                      //                     ?.map((data) => data.id)
-                      //                     .getOrElse(-1) ==
-                      //                 buildingData.id
-                      //             ? BitmapDescriptor.hueBlue
-                      //             : BitmapDescriptor.hueRed),
+                      image: startBuildingData
+                                  ?.map((data) => data.id)
+                                  .getOrElse(-1) ==
+                              buildingData.id
+                          ? "https://kaist-map.github.io/Kaist-Map-App/map_pin_green.png"
+                          : endBuildingData
+                                      ?.map((data) => data.id)
+                                      .getOrElse(-1) ==
+                                  buildingData.id
+                              ? "https://kaist-map.github.io/Kaist-Map-App/map_pin_blue.png"
+                              : "https://kaist-map.github.io/Kaist-Map-App/map_pin.png",
                     )),
             if (startBuildingData == const None<BuildingData>() &&
                 start != null)
@@ -76,7 +75,7 @@ class _KMapRoutingPageState extends State<KMapRoutingPage> {
                   draggable: false,
                   importance: 128,
                   onTap: () {},
-                  image: null),
+                  image: "https://kaist-map.github.io/Kaist-Map-App/map_pin_green.png"),
             if (endBuildingData == const None<BuildingData>() && end != null)
               Marker(
                   name: "position-end",
@@ -85,7 +84,7 @@ class _KMapRoutingPageState extends State<KMapRoutingPage> {
                   draggable: false,
                   importance: 128,
                   onTap: () {},
-                  image: null),
+                  image: "https://kaist-map.github.io/Kaist-Map-App/map_pin_blue.png"),
           ]);
         });
       }
