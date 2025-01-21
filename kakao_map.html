@@ -93,9 +93,9 @@
     //    lat: number, 
     //    lng: number, 
     //    image: string,
-    //    width: number?,
-    //    height: number?,
-    //    offsetY: number?,
+    //    width: number,
+    //    height: number,
+    //    offsetY: number,
     //    draggable: boolean, 
     //    importance: number,
     // }
@@ -112,8 +112,8 @@
           draggable: markerData[i].draggable,
           image: new kakao.maps.MarkerImage(
             markerData[i].image,
-            new kakao.maps.Size(markerData[i].width ?? 30, markerData[i].height ?? 35),
-            { offset: new kakao.maps.Point((markerData[i].width ?? 30) / 2, offset ?? (markerData[i].height ?? 35)) }
+            new kakao.maps.Size(markerData[i].width, markerData[i].height),
+            { offset: new kakao.maps.Point((markerData[i].width) / 2, offset) }
           ),
           position: new kakao.maps.LatLng(markerData[i].lat, markerData[i].lng),
           clickable: true,
