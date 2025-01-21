@@ -43,7 +43,9 @@ class _KakaoMapWidgetState extends State<KakaoMapWidget> {
       ..addJavaScriptChannel("OnMapCreatedChannel",
           onMessageReceived: (message) {
         kakaoMapContext.controller = _controller;
-        kakaoMapContext.lookAt(KaistLocation.location);
+        Future.delayed(const Duration(milliseconds: 300), () {
+          kakaoMapContext.lookAt(KaistLocation.location);
+        });
         kakaoMapContext.startMyLocationService();
       })
       ..addJavaScriptChannel("OnMarkerClickedChannel",

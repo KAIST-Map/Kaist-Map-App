@@ -32,8 +32,6 @@ class KMapMain extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    height ??= MediaQuery.of(context).size.height;
-    paddingBottom ??= MediaQuery.of(context).padding.bottom;
     return MaterialApp(
       theme: ThemeData(
           useMaterial3: true,

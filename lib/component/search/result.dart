@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kaist_map/api/building/data.dart';
 import 'package:kaist_map/api/local/search_history.dart';
+import 'package:kaist_map/component/building_filter.dart';
 import 'package:kaist_map/constant/colors.dart';
 import 'package:kaist_map/navigation/kakao_map/map_context.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +20,7 @@ class SearchResult extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mapContext = context.read<KakaoMapContext>();
+    final filterContext = context.watch<BuildingCategoryFilterContext>();
 
     return Material(
       color: Colors.transparent,
@@ -60,7 +62,9 @@ class SearchResult extends StatelessWidget {
                     size: 16,
                   ),
                   onPressed: () {
-                    SearchHistoryRemover(buildingData.id).fetch(mock: false);
+                    SearchHistoryRemover(buildingData.id).fetch(mock: false).then((value) {
+                      filterContext.notify();
+                    });
                   },
                 )
               : null,

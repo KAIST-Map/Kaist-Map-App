@@ -14,6 +14,10 @@ class BuildingCategoryFilterContext extends ChangeNotifier {
     notifyListeners();
   }
 
+  void notify() {
+    notifyListeners();
+  }
+
   Iterable<BuildingData> applyFilters(Iterable<BuildingData> buildings) {
     if (_filters.isEmpty) {
       return buildings;
