@@ -113,7 +113,7 @@
           image: new kakao.maps.MarkerImage(
             markerData[i].image,
             new kakao.maps.Size(markerData[i].width, markerData[i].height),
-            { offset: new kakao.maps.Point((markerData[i].width) / 2, offset) }
+            { offset: new kakao.maps.Point((markerData[i].width) / 2, markerData[i].offsetY) }
           ),
           position: new kakao.maps.LatLng(markerData[i].lat, markerData[i].lng),
           clickable: true,
