@@ -69,9 +69,9 @@ class Marker {
         lat = buildingData.latitude,
         lng = buildingData.longitude,
         image = PinImages.defaultPin,
-        width = 30,
-        height = 35,
-        offsetY = 35,
+        width = 26,
+        height = 32,
+        offsetY = 32,
         draggable = false,
         importance = buildingData.importance;
 
