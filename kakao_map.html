@@ -49,9 +49,8 @@
 
     function lookCloserAt(lat, lng) {
       var locPosition = new kakao.maps.LatLng(lat, lng);
-      map.setLevel(2, {
-        anchor: locPosition
-      });
+      map.setLevel(2);
+      map.setCenter(locPosition);
     }
 
     function lookAt(lat, lng) {
