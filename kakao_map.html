@@ -47,9 +47,11 @@
       }
     }
 
-    function jumpAt(lat, lng) {
+    function lookCloserAt(lat, lng) {
       var locPosition = new kakao.maps.LatLng(lat, lng);
-      map.jump(locPosition, 2, { animate: { duration: 1000 } });
+      map.setLevel(2, {
+        anchor: locPosition
+      });
     }
 
     function lookAt(lat, lng) {
