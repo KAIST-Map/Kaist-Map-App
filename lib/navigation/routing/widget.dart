@@ -37,36 +37,44 @@ class _KMapRoutingPageState extends State<KMapRoutingPage> {
       if (startBuildingData != null && endBuildingData != null) {
         pathData.future.then((path) {
           if (start != null && end != null && start != end && path.isDefined) {
-            mapContext.showPath(path.value.path.map((node) => LatLng(node.latitude, node.longitude)).toList(), start, end);
+            mapContext.showPath(
+                path.value.path
+                    .map((node) => LatLng(node.latitude, node.longitude))
+                    .toList(),
+                start,
+                end);
           }
         });
       } else {
         mapContext.cleanUpPath();
         buildingContext.buildings.then((buildings) {
           mapContext.setMarkers([
-            ...buildings
-                .map((BuildingData buildingData) => buildingData
-                    .toMarker(
-                        onTap: () {
-                          Scaffold.of(context)
-                              .showBottomSheet((context) => BuildingSheetFrame(
-                                    buildingData: buildingData,
-                                  ));
-                        })
-                    .copyWith(
-                      importance: 100,
-                      image: startBuildingData
-                                  ?.map((data) => data.id)
-                                  .getOrElse(-1) ==
-                              buildingData.id
-                          ? "https://kaist-map.github.io/Kaist-Map-App/map_pin_green.png"
-                          : endBuildingData
+            ...buildings.map((BuildingData buildingData) =>
+                buildingData.toMarker(onTap: () {
+                  Scaffold.of(context)
+                      .showBottomSheet((context) => BuildingSheetFrame(
+                            buildingData: buildingData,
+                          ));
+                }).copyWith(
+                  importance:
+                      startBuildingData?.map((data) => data.id).getOrElse(-1) ==
+                                  buildingData.id ||
+                              endBuildingData
                                       ?.map((data) => data.id)
                                       .getOrElse(-1) ==
                                   buildingData.id
-                              ? "https://kaist-map.github.io/Kaist-Map-App/map_pin.png"
-                              : "https://kaist-map.github.io/Kaist-Map-App/map_pin_blue.png",
-                    )),
+                          ? 100
+                          : null,
+                  image: startBuildingData
+                              ?.map((data) => data.id)
+                              .getOrElse(-1) ==
+                          buildingData.id
+                      ? "https://kaist-map.github.io/Kaist-Map-App/map_pin_green.png"
+                      : endBuildingData?.map((data) => data.id).getOrElse(-1) ==
+                              buildingData.id
+                          ? "https://kaist-map.github.io/Kaist-Map-App/map_pin.png"
+                          : "https://kaist-map.github.io/Kaist-Map-App/map_pin_blue.png",
+                )),
             if (startBuildingData == const None<BuildingData>() &&
                 start != null)
               Marker(
@@ -76,7 +84,8 @@ class _KMapRoutingPageState extends State<KMapRoutingPage> {
                   draggable: false,
                   importance: 128,
                   onTap: () {},
-                  image: "https://kaist-map.github.io/Kaist-Map-App/map_pin_green.png"),
+                  image:
+                      "https://kaist-map.github.io/Kaist-Map-App/map_pin_green.png"),
             if (endBuildingData == const None<BuildingData>() && end != null)
               Marker(
                   name: "position-end",
@@ -85,7 +94,8 @@ class _KMapRoutingPageState extends State<KMapRoutingPage> {
                   draggable: false,
                   importance: 128,
                   onTap: () {},
-                  image: "https://kaist-map.github.io/Kaist-Map-App/map_pin_blue.png"),
+                  image:
+                      "https://kaist-map.github.io/Kaist-Map-App/map_pin_blue.png"),
           ]);
         });
       }
@@ -222,8 +232,9 @@ class DestinationSearch extends StatelessWidget {
     return SearchAnchor(
       builder: (context, controller) {
         WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-          controller.text="${controller.text}\$%";
-          controller.text=controller.text.substring(0,controller.text.length-2);
+          controller.text = "${controller.text}\$%";
+          controller.text =
+              controller.text.substring(0, controller.text.length - 2);
         });
 
         return Material(
