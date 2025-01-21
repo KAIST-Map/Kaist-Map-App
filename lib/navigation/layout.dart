@@ -4,6 +4,7 @@ import 'package:kaist_map/constant/colors.dart';
 import 'package:kaist_map/navigation/bookmarks/widget.dart';
 import 'package:kaist_map/navigation/kakao_map/widget.dart';
 import 'package:kaist_map/navigation/map/widget.dart';
+import 'package:kaist_map/navigation/report/widget.dart';
 import 'package:kaist_map/navigation/routing/widget.dart';
 import 'package:provider/provider.dart';
 
@@ -75,6 +76,10 @@ class _KMapNavigationState extends State<KMapNavigation> with RouteAware {
             icon: Icon(Icons.directions_outlined),
             label: '길찾기',
           ),
+          NavigationDestination(
+            selectedIcon: Icon(Icons.flag),
+            icon: Icon(Icons.flag_outlined),
+            label: '제보')
         ],
       ),
     );
@@ -89,7 +94,7 @@ class _KMapNavigationState extends State<KMapNavigation> with RouteAware {
       case 2:
         return const KMapRoutingPage();
       default:
-        return const Center(child: Text('올바르지 않은 요청입니다.'));
+        return const ReportTab();
     }
   }
 }
