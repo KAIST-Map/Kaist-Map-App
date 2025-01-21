@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:kaist_map/api/building/data.dart';
+import 'package:kaist_map/constant/network_assets.dart';
 
 class LatLng {
   final double latitude;
@@ -58,7 +59,7 @@ class Marker {
       : name = "building-${buildingData.id}",
         lat = buildingData.latitude,
         lng = buildingData.longitude,
-        image = null,
+        image = PinImages.defaultPin,
         draggable = false,
         importance = buildingData.importance;
 
