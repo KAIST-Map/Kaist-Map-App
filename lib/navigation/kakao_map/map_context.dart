@@ -182,7 +182,7 @@ class KakaoMapContext extends ChangeNotifier {
 
     _showTwoLocations(start, end);
 
-    const mediumBlue = "#004187";
+    const mediumBlue = "#1487C8";
     final pathPolyline = Polyline(
       path: path,
       strokeWeight: 5,
@@ -196,7 +196,7 @@ class KakaoMapContext extends ChangeNotifier {
       strokeWeight: 5,
       strokeColor: mediumBlue,
       strokeOpacity: 1,
-      strokeStyle: "dot",
+      strokeStyle: "shortdot",
     );
 
     final endLine = Polyline(
@@ -204,7 +204,7 @@ class KakaoMapContext extends ChangeNotifier {
       strokeWeight: 5,
       strokeColor: mediumBlue,
       strokeOpacity: 1,
-      strokeStyle: "dot",
+      strokeStyle: "shortdot",
     );
 
     final startMarker = Marker(
