@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kaist_map/api/context/building.dart';
 import 'package:kaist_map/constant/colors.dart';
 import 'package:kaist_map/component/building_filter.dart';
@@ -9,7 +10,7 @@ import 'package:provider/provider.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await dotenv.load(fileName: ".env");
   runApp(MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => BuildingCategoryFilterContext()),

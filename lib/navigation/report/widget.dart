@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:kaist_map/constant/colors.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ReportTab extends StatefulWidget {
   const ReportTab({super.key});
@@ -98,7 +99,7 @@ class _ReportTabState extends State<ReportTab> {
   Future<void> _submitReport() async {
     if (_formKey.currentState!.validate() && !_isSubmitting) {
       setState(() {
-        _isSubmitting = true; // 제출 시작할 때 true로 설정
+        _isSubmitting = true;
       });
 
       try {
@@ -107,37 +108,47 @@ class _ReportTabState extends State<ReportTab> {
           context: context,
           barrierDismissible: false,
           builder: (BuildContext context) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Center(child: CircularProgressIndicator());
           },
         );
 
-        // 이미지 업로드 후 URL 목록 저장
         List<String> imageUrls = [];
 
-        // 각 이미지에 대해 업로드 처리
+        // (1) 각 이미지에 대해 S3 업로드 후, 최종 접근 가능한 URL을 생성해 담아줌
         for (int i = 0; i < _selectedImages.length; i++) {
           final file = _selectedImages[i];
-          final extension =
-              file.path.split('.').last.toLowerCase(); // 실제 파일 확장자 가져오기
+          final extension = file.path.split('.').last.toLowerCase();
+          // 파일명
           String fileName =
               'report_${DateTime.now().millisecondsSinceEpoch}_$i.$extension';
+
+          // (1-1) Presigned URL 받아오기
           final presignedUrl = await _getPresignedUrl(fileName);
+
+          // (1-2) 해당 Presigned URL로 실제 S3에 업로드
           await _uploadImageToS3(file, presignedUrl);
-          imageUrls.add(fileName);
+
+          final bucketName = dotenv.env['AWS_BUCKET_NAME']; // => 'jtkim-bucket'
+          final region = dotenv.env['AWS_REGION'];
+
+          // (1-3) 업로드가 끝났다면, S3 버킷에 접근 가능한 공개 URL을 생성
+          //       => "버킷명/리전"에 맞추어 수정하세요.
+          final publicUrl =
+              'https://$bucketName.s3.$region.amazonaws.com/$fileName';
+
+          // (1-4) 완전한 URL을 리스트에 저장
+          imageUrls.add(publicUrl);
         }
 
-        // 제보 데이터 준비
+        // (2) 이제 reportData에 'imageUrls'를 담아서 서버로 전송
         final Map<String, dynamic> reportData = {
           'title': _titleController.text.trim(),
-          'email': _emailController.text.trim(),
-          'phoneNumber': _phoneController.text.trim(),
           'description': _descriptionController.text.trim(),
-          'imageUrls': imageUrls, // 'images' 대신 'imageUrls' 사용
+          'phoneNumber': _phoneController.text.trim(),
+          'email': _emailController.text.trim(),
+          'imageUrls': imageUrls, // 이 부분이 S3 공개 URL 리스트
         };
 
-        // 제보 데이터 서버로 전송
         final reportResponse = await http.post(
           Uri.parse('$baseUrl$reportEndpoint'),
           headers: {
@@ -147,36 +158,34 @@ class _ReportTabState extends State<ReportTab> {
           },
           body: json.encode(reportData),
         );
-        print('Report response: ${reportResponse.body}');
 
-        if (reportResponse.statusCode == 200 ||
-            reportResponse.statusCode == 201) {
-          // 성공 메시지 표시
+        // 2xx 응답인 경우 성공 처리
+        if (reportResponse.statusCode >= 200 &&
+            reportResponse.statusCode < 300) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('제보가 성공적으로 접수되었습니다.')),
           );
 
-          // 폼 초기화
+          // 폼/이미지 초기화
           _titleController.clear();
+          _descriptionController.clear();
           _phoneController.clear();
           _emailController.clear();
-          _descriptionController.clear();
           setState(() {
             _selectedImages.clear();
           });
         } else {
-          throw '제보 전송에 실패했습니다.';
+          throw '제보 전송에 실패했습니다. (상태코드: ${reportResponse.statusCode})';
         }
       } catch (e) {
-        // 에러 메시지 표시
-        print('Error: $e');
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('제보 접수 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.')),
         );
       } finally {
+        // 로딩 다이얼로그 닫기
         Navigator.of(context, rootNavigator: true).pop();
         setState(() {
-          _isSubmitting = false; // 성공/실패 상관없이 마지막에 false로 설정
+          _isSubmitting = false;
         });
       }
     }
