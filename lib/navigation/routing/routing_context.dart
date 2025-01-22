@@ -127,12 +127,18 @@ class RoutingContext extends ChangeNotifier {
 
   void toggleBeam() {
     _wantBeam = !_wantBeam;
+    if (_wantBeam && _wantFreeOfRain) {
+      _wantFreeOfRain = false;
+    }
     _fetchPath();
     notifyListeners();
   }
 
   void toggleFreeOfRain() {
     _wantFreeOfRain = !_wantFreeOfRain;
+    if (_wantBeam && _wantFreeOfRain) {
+      _wantBeam = false;
+    }
     _fetchPath();
     notifyListeners();
   }

@@ -3,6 +3,7 @@ import 'package:kaist_map/api/building/data.dart';
 import 'package:kaist_map/api/local/bookmarks.dart';
 import 'package:kaist_map/constant/colors.dart';
 import 'package:kaist_map/navigation/layout.dart';
+import 'package:kaist_map/navigation/photo/widget.dart';
 import 'package:kaist_map/navigation/routing/routing_context.dart';
 import 'package:kaist_map/utils/option.dart';
 import 'package:provider/provider.dart';
@@ -74,34 +75,50 @@ class _BuildingInfoSheetState extends State<BuildingInfoSheet> {
                 ),
               ),
               const SizedBox(width: 16),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(16),
-                child: Image.network(
-                  buildingData.imageUrls.elementAtOrNull(0) ??
-                      "https://picsum.photos/$imageSize?image=9",
-                  width: imageSize.toDouble(),
-                  height: imageSize.toDouble(),
-                  fit: BoxFit.cover,
-                  loadingBuilder: (context, child, loadingProgress) =>
-                      loadingProgress == null
-                          ? child
-                          : Container(
-                              width: imageSize.toDouble(),
-                              height: imageSize.toDouble(),
-                              color: KMapColors.darkGray.shade300,
-                              child: const Center(
-                                  child: CircularProgressIndicator()),
-                            ),
-                  errorBuilder: (context, error, stackTrace) => Container(
-                    width: imageSize.toDouble(),
-                    height: imageSize.toDouble(),
-                    color: KMapColors.darkGray.shade300,
-                    child: const Center(
-                        child: Icon(
-                      Icons.error,
-                      color: KMapColors.darkGray,
-                      size: 50,
-                    )),
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(PageRouteBuilder(
+                      pageBuilder: (
+                        BuildContext context,
+                        Animation<double> animation,
+                        Animation<double> secondaryAnimation,
+                      ) {
+                        return BuildingPhotoView(buildingData);
+                      },
+                      opaque: false));
+                },
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: Hero(
+                    tag: buildingData.name,
+                    child: Image.network(
+                      buildingData.imageUrls.elementAtOrNull(0) ??
+                          "https://picsum.photos/$imageSize?image=9",
+                      width: imageSize.toDouble(),
+                      height: imageSize.toDouble(),
+                      fit: BoxFit.cover,
+                      loadingBuilder: (context, child, loadingProgress) =>
+                          loadingProgress == null
+                              ? child
+                              : Container(
+                                  width: imageSize.toDouble(),
+                                  height: imageSize.toDouble(),
+                                  color: KMapColors.darkGray.shade300,
+                                  child: const Center(
+                                      child: CircularProgressIndicator()),
+                                ),
+                      errorBuilder: (context, error, stackTrace) => Container(
+                        width: imageSize.toDouble(),
+                        height: imageSize.toDouble(),
+                        color: KMapColors.darkGray.shade300,
+                        child: const Center(
+                            child: Icon(
+                          Icons.error,
+                          color: KMapColors.darkGray,
+                          size: 50,
+                        )),
+                      ),
+                    ),
                   ),
                 ),
               ),
