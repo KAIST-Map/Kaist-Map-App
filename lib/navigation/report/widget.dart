@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
+import 'package:kaist_map/constant/colors.dart';
+
 class ReportTab extends StatefulWidget {
   const ReportTab({super.key});
 
@@ -63,8 +65,15 @@ class _ReportTabState extends State<ReportTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: KMapColors.darkBlue.shade300,
       appBar: AppBar(
+        backgroundColor: KMapColors.darkBlue.shade900,
         title: const Text('제보하기'),
+        titleTextStyle: const TextStyle(
+          fontSize: 22,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
