@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:kaist_map/constant/colors.dart';
 import 'package:kaist_map/constant/map.dart';
 import 'package:kaist_map/navigation/kakao_map/core.dart';
 import 'package:kaist_map/navigation/kakao_map/map_context.dart';
@@ -20,6 +21,7 @@ class _KakaoMapWidgetState extends State<KakaoMapWidget> {
   final baseUrl = 'https://kaist-map.github.io/Kaist-Map-App';
 
   WebViewController? _controller;
+  bool isSatellite = false;
 
   @override
   Widget build(BuildContext context) {
@@ -85,14 +87,29 @@ class _KakaoMapWidgetState extends State<KakaoMapWidget> {
         Container(
           alignment: Alignment.bottomRight,
           padding: const EdgeInsets.all(10),
-          child: FloatingActionButton.small(
-              onPressed: () {
-                final myLocation = kakaoMapContext.myLocation;
-                if (myLocation != null) {
-                  kakaoMapContext.lookAt(myLocation);
-                }
-              },
-              child: const Icon(Icons.my_location)),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              FloatingActionButton.small(
+                  backgroundColor: isSatellite ? KMapColors.darkBlue : Colors.white,
+                  onPressed: () {
+                    kakaoMapContext.controller?.runJavaScript("switchView();");
+                    setState(() {
+                      isSatellite = !isSatellite;
+                    });
+                  },
+                  child: Icon(Icons.satellite_alt,
+                      color: isSatellite ? Colors.white : KMapColors.darkBlue)),
+              FloatingActionButton.small(
+                  onPressed: () {
+                    final myLocation = kakaoMapContext.myLocation;
+                    if (myLocation != null) {
+                      kakaoMapContext.lookAt(myLocation);
+                    }
+                  },
+                  child: const Icon(Icons.my_location)),
+            ],
+          ),
         ),
       ],
     );
