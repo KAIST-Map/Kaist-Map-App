@@ -16,27 +16,30 @@ class ReportTab extends StatefulWidget {
 }
 
 class _ReportTabState extends State<ReportTab> {
+  static String _title = '';
+  static String _description = '';
+  static String _phoneNumber = '';
+  static String _email = '';
+  static List<File> _images = [];
+
   final double imageSize = 100;
   final _formKey = GlobalKey<FormState>();
   bool _isSubmitting = false; // 제보 전송 상태 추적
 
   // TextEditingController는 사용자의 입력값을 추적하기 위해 사용
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
-
-  // 여러 장의 이미지 파일을 저장할 리스트
-  List<File> _selectedImages = [];
+  final TextEditingController _titleController = TextEditingController(text: _title);
+  final TextEditingController _phoneController = TextEditingController(text: _phoneNumber);
+  final TextEditingController _emailController = TextEditingController(text: _email);
+  final TextEditingController _descriptionController = TextEditingController(text: _description);
 
   // 갤러리에서 여러 장 선택
   Future<void> _pickMultipleImages() async {
     final ImagePicker picker = ImagePicker();
-    final List<XFile>? pickedFiles = await picker.pickMultiImage();
+    final List<XFile> pickedFiles = await picker.pickMultiImage();
 
-    if (pickedFiles != null && pickedFiles.isNotEmpty) {
+    if (pickedFiles.isNotEmpty) {
       setState(() {
-        _selectedImages.addAll(pickedFiles.map((xfile) => File(xfile.path)));
+        _images.addAll(pickedFiles.map((xfile) => File(xfile.path)));
       });
     }
   }
@@ -117,8 +120,8 @@ class _ReportTabState extends State<ReportTab> {
         List<String> imageUrls = [];
 
         // (1) 각 이미지에 대해 S3 업로드 후, 최종 접근 가능한 URL을 생성해 담아줌
-        for (int i = 0; i < _selectedImages.length; i++) {
-          final file = _selectedImages[i];
+        for (int i = 0; i < _images.length; i++) {
+          final file = _images[i];
           final extension = file.path.split('.').last.toLowerCase();
           // 파일명
           String fileName =
@@ -164,6 +167,7 @@ class _ReportTabState extends State<ReportTab> {
         // 2xx 응답인 경우 성공 처리
         if (reportResponse.statusCode >= 200 &&
             reportResponse.statusCode < 300) {
+          // ignore: use_build_context_synchronously
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('제보가 성공적으로 접수되었습니다.')),
           );
@@ -174,7 +178,7 @@ class _ReportTabState extends State<ReportTab> {
           _phoneController.clear();
           _emailController.clear();
           setState(() {
-            _selectedImages.clear();
+            _images.clear();
           });
         } else {
           throw '제보 전송에 실패했습니다. (상태코드: ${reportResponse.statusCode})';
@@ -184,10 +188,15 @@ class _ReportTabState extends State<ReportTab> {
           const SnackBar(content: Text('제보 접수 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.')),
         );
       } finally {
-        // 로딩 다이얼로그 닫기
+        // ignore: use_build_context_synchronously
         Navigator.of(context, rootNavigator: true).pop();
         setState(() {
           _isSubmitting = false;
+          _title = '';
+          _description = '';
+          _phoneNumber = '';
+          _email = '';
+          _images = [];
         });
       }
     }
@@ -276,6 +285,11 @@ class _ReportTabState extends State<ReportTab> {
                     // 제목
                     TextFormField(
                       controller: _titleController,
+                      onChanged: (value) {
+                        setState(() {
+                          _title = value;
+                        });
+                      },
                       decoration: const InputDecoration(
                         hintText: '예) 문화관 사진 추가해주세요!',
                       ),
@@ -301,6 +315,7 @@ class _ReportTabState extends State<ReportTab> {
                     // 전화번호 (선택)
                     TextFormField(
                       controller: _phoneController,
+                      onChanged:(value) => setState(() => _phoneNumber = value),
                       decoration: const InputDecoration(
                         hintText: '\'-\' 없이 입력해주세요. 예) 01012345678',
                       ),
@@ -320,6 +335,7 @@ class _ReportTabState extends State<ReportTab> {
                     ),
                     TextFormField(
                       controller: _emailController,
+                      onChanged: (value) => setState(() => _email = value),
                       decoration: const InputDecoration(
                         hintText: '예) kaistian@kaist.ac.kr',
                       ),
@@ -351,6 +367,11 @@ class _ReportTabState extends State<ReportTab> {
                     ),
                     TextFormField(
                       controller: _descriptionController,
+                      onChanged: (value) {
+                        setState(() {
+                          _description = value;
+                        });
+                      },
                       decoration: const InputDecoration(
                         hintText: '(선택) 설명을 입력해주세요.\n'
                             '예) "이 길은 막혀있어요."\n'
@@ -382,7 +403,7 @@ class _ReportTabState extends State<ReportTab> {
                         runSpacing: 8,
                         spacing: 8,
                         children: [
-                          ..._selectedImages
+                          ..._images
                               .asMap()
                               .map((index, file) => MapEntry(
                                   index,
@@ -406,7 +427,7 @@ class _ReportTabState extends State<ReportTab> {
                                                   pageBuilder:
                                                       (context, _, __) =>
                                                           SubmitPhotoView(
-                                                              _selectedImages,
+                                                              _images,
                                                               index),
                                                   opaque: false),
                                             );
@@ -421,7 +442,7 @@ class _ReportTabState extends State<ReportTab> {
                                           visualDensity: VisualDensity.compact,
                                           onPressed: () {
                                             setState(() {
-                                              _selectedImages.remove(file);
+                                              _images.remove(file);
                                             });
                                           },
                                           icon: const Icon(Icons.close,
