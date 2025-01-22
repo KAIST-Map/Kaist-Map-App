@@ -3,7 +3,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 class ReportTab extends StatefulWidget {
-  const ReportTab({Key? key}) : super(key: key);
+  const ReportTab({super.key});
 
   @override
   State<ReportTab> createState() => _ReportTabState();
