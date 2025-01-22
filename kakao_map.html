@@ -24,6 +24,13 @@
   </style>
   <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3d7a8744fc1024bcb47ad32ca06bce2c"></script>
   <script type="text/javascript">
+    var isSatellite = false;
+    function switchView() {
+      isSatellite = !isSatellite;
+      var mapType = isSatellite ? kakao.maps.MapTypeId.SKYVIEW : kakao.maps.MapTypeId.ROADMAP;
+      map.setMapTypeId(mapType);
+    }
+
     var myPositionMarker;
 
     function setMyPositionMarker() {
