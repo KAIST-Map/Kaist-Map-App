@@ -196,9 +196,9 @@ class _ReportTabState extends State<ReportTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KMapColors.darkBlue.shade100,
+      backgroundColor: KMapColors.darkBlue.shade50,
       appBar: AppBar(
-        backgroundColor: KMapColors.darkBlue.shade100,
+        backgroundColor: KMapColors.darkBlue.shade50,
         centerTitle: true,
         title: const Text('제보하기'),
         titleTextStyle: TextStyle(

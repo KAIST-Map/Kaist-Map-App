@@ -122,7 +122,7 @@ class KMapMain extends StatelessWidget {
           ),
           border: InputBorder.none,
           filled: true, // 배경색을 적용하기 위해 필요
-          fillColor: KMapColors.darkBlue.shade200,
+          fillColor: KMapColors.darkBlue.shade100,
           contentPadding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide.none,
