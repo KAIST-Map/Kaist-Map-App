@@ -62,9 +62,12 @@ class _KakaoMapWidgetState extends State<KakaoMapWidget> {
         }
       });
 
+    final markers = [...kakaoMapContext.markers];
+    markers.sort((a, b) => b.importance.compareTo(a.importance));
+
     kakaoMapContext.controller?.runJavaScript('''
       setMarkers(${[
-      ...kakaoMapContext.markers.map((marker) => jsonEncode(marker.toJson())),
+      ...markers.map((marker) => jsonEncode(marker.toJson())),
       if (kakaoMapContext.myLocationMarker != null)
         jsonEncode(kakaoMapContext.myLocationMarker!.toJson()),
     ]});
