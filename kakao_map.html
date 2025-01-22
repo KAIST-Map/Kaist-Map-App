@@ -219,46 +219,17 @@
         lat: latlng.getLat(),
         lng: latlng.getLng()
       };
-      OnMapClickedChannel.postMessage(JSON.stringify(message));
+      OnMapClickedChannel?.postMessage(JSON.stringify(message));
     });
-
-    const getHideDistance = (zoomLevel) => {
-      zoomLevel < 4 ? 0 : (zoomLevel - 3) * 40;
-    };
 
     kakao.maps.event.addListener(map, 'zoom_changed', function () {
-      var zoomLevel = map.getLevel();
-
-      if (zoomLevel < 4) {
-        for (var i = 0; i < markers.length; i++) {
-          markers[i].setMap(map);
-        }
-        return;
-      }
-      
-      for (var i = 0; i < markers.length; i++) {
-        (() => {
-          for (var j = 0; j < i; j++) {
-            var tempPolyline = new kakao.maps.Polyline({
-              map: map,
-              path: [
-                markers[i].getPosition(),
-                markers[j].getPosition()
-              ],
-              strokeOpacity: 0,
-            });
-            const distance = tempPolyline.getLength();
-            if (distance < getHideDistance(zoomLevel)) {
-              markers[i].setMap(null);
-              return;
-            }
-          }
-          markers[i].setMap(map);
-        })();
-      }
+      var message = {
+        zoom: map.getLevel()
+      };
+      OnZoomChangedChannel?.postMessage(JSON.stringify(message));
     });
 
-    OnMapCreatedChannel.postMessage("Map is created");
+    OnMapCreatedChannel?.postMessage("Map is created");
   </script>
 </body>
 
