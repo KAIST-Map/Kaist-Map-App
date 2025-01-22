@@ -373,9 +373,8 @@ class _ReportTabState extends State<ReportTab> {
                         });
                       },
                       decoration: const InputDecoration(
-                        hintText: '(선택) 설명을 입력해주세요.\n'
-                            '예) "이 길은 막혀있어요."\n'
-                            '예) "이 건물은 1층에 편의점이 있어요."',
+                        hintText: '예) "이 길은 막혀있어요."\n'
+                                  '예) "이 건물은 1층에 편의점이 있어요."',
                       ),
                       maxLines: 15,
                       validator: (value) {
