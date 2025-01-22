@@ -127,11 +127,8 @@ class KakaoMapContext extends ChangeNotifier {
     Future<List<Marker>> singleZoomLevelShowingMarkers(int zoomLevel) async {
       final isolateMarkers = await compute((message) {
         message.markers.sort((a, b) {
-          if (a.image.contains("green") || a.image.contains('red')) {
-            return (0).compareTo(-1);
-          }
-          if (b.image.contains("green") || b.image.contains('red')) {
-            return (-1).compareTo(0);
+          if (b.importance == a.importance) {
+            return a.name.compareTo(b.name);
           }
           return b.importance.compareTo(a.importance);
         });
@@ -151,8 +148,6 @@ class KakaoMapContext extends ChangeNotifier {
 
         return showingMarkers;
       }, ComputeMessage.fromMarkersZoom([...markers], zoomLevel));
-
-      print("zoomLevel: $zoomLevel, showingMarkers: ${isolateMarkers.map((m) => m.name).toList().toString().replaceAll('building-', '')}");
 
       return isolateMarkers.map((marker) => Marker(
             name: marker.name,
@@ -232,9 +227,8 @@ class KakaoMapContext extends ChangeNotifier {
       onTap: () {},
     );
 
-    _markers = [startMarker, endMarker];
     _polylines = [pathPolyline, startLine, endLine];
-    notifyListeners();
+    setMarkers([startMarker, endMarker]);
   }
 
   void _showTwoLocations(LatLng start, LatLng end) {

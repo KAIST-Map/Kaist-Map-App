@@ -94,14 +94,14 @@ class RoutingContext extends ChangeNotifier {
                 endLongitude: endLatLng.longitude,
                 wantBeam: _wantBeam,
                 wantFreeOfRain: _wantFreeOfRain,
-              ).fetch()
+              ).fetch(mock: false)
             : P2BLoader(
                 startLatitude: startLatLng.latitude,
                 startLongitude: startLatLng.longitude,
                 endBuildingId: endBuildingData!.value.id,
                 wantBeam: _wantBeam,
                 wantFreeOfRain: _wantFreeOfRain,
-              ).fetch())
+              ).fetch(mock: false))
         : (isEndPosition
             ? B2PLoader(
                 startBuildingId: startBuildingData!.value.id,
@@ -109,13 +109,13 @@ class RoutingContext extends ChangeNotifier {
                 endLongitude: endLatLng.longitude,
                 wantBeam: _wantBeam,
                 wantFreeOfRain: _wantFreeOfRain,
-              ).fetch()
+              ).fetch(mock: false)
             : B2BLoader(
                 startBuildingId: startBuildingData!.value.id,
                 endBuildingId: endBuildingData!.value.id,
                 wantBeam: _wantBeam,
                 wantFreeOfRain: _wantFreeOfRain,
-              ).fetch());
+              ).fetch(mock: false));
 
     _pathData = Completer();
     final copy = _pathData;
