@@ -325,7 +325,7 @@ class _ReportTabState extends State<ReportTab> {
                       ),
                       keyboardType: TextInputType.emailAddress,
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 8),
 
                     // 설명
                     const Padding(
