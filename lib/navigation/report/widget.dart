@@ -15,6 +15,7 @@ class ReportTab extends StatefulWidget {
 
 class _ReportTabState extends State<ReportTab> {
   final _formKey = GlobalKey<FormState>();
+  bool _isSubmitting = false; // 제보 전송 상태 추적
 
   // TextEditingController는 사용자의 입력값을 추적하기 위해 사용
   final TextEditingController _titleController = TextEditingController();
@@ -42,13 +43,26 @@ class _ReportTabState extends State<ReportTab> {
   final awsEndpoint = "/aws/s3";
   final reportEndpoint = "/report";
 
+  String _getContentType(File file) {
+    final extension = file.path.split('.').last.toLowerCase();
+    switch (extension) {
+      case 'png':
+        return 'image/png';
+      case 'jpg':
+      case 'jpeg':
+        return 'image/jpeg';
+      default:
+        return 'application/octet-stream';
+    }
+  }
+
   Future<String> _getPresignedUrl(String fileName) async {
     try {
       final response = await http.get(
         Uri.parse('$baseUrl$awsEndpoint?fileName=$fileName'),
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         final data = json.decode(response.body);
         return data['preSignedUrl'];
       } else {
@@ -62,26 +76,31 @@ class _ReportTabState extends State<ReportTab> {
   Future<void> _uploadImageToS3(File imageFile, String presignedUrl) async {
     try {
       final bytes = await imageFile.readAsBytes();
+      final contentType = _getContentType(imageFile);
 
       final response = await http.put(
         Uri.parse(presignedUrl),
         body: bytes,
         headers: {
-          'Content-Type': 'image/jpeg',
+          'Content-Type': contentType,
         },
       );
 
       if (response.statusCode != 200) {
-        throw Exception('Failed to upload image to S3: ${response.statusCode}');
+        throw '이미지 업로드에 실패했습니다.';
       }
     } catch (e) {
-      throw Exception('Error uploading image: $e');
+      throw '이미지 업로드 중 오류가 발생했습니다.';
     }
   }
 
   // 제보 데이터 처리(서버 전송 등) 함수
   Future<void> _submitReport() async {
-    if (_formKey.currentState!.validate()) {
+    if (_formKey.currentState!.validate() && !_isSubmitting) {
+      setState(() {
+        _isSubmitting = true; // 제출 시작할 때 true로 설정
+      });
+
       try {
         // 로딩 표시
         showDialog(
@@ -99,47 +118,23 @@ class _ReportTabState extends State<ReportTab> {
 
         // 각 이미지에 대해 업로드 처리
         for (int i = 0; i < _selectedImages.length; i++) {
-          // 파일명 생성 (고유성을 위해 타임스탬프 추가)
+          final file = _selectedImages[i];
+          final extension =
+              file.path.split('.').last.toLowerCase(); // 실제 파일 확장자 가져오기
           String fileName =
-              'report_${DateTime.now().millisecondsSinceEpoch}_$i.jpg';
-
-          // presigned URL 요청
-          final presignedUrlResponse = await http.get(
-            Uri.parse('$baseUrl$awsEndpoint?fileName=$fileName'),
-          );
-
-          if (presignedUrlResponse.statusCode != 200) {
-            throw Exception('Failed to get presigned URL');
-          }
-
-          final urlData = json.decode(presignedUrlResponse.body);
-          final presignedUrl = urlData['preSignedUrl'];
-
-          // S3에 이미지 업로드
-          final bytes = await _selectedImages[i].readAsBytes();
-          final uploadResponse = await http.put(
-            Uri.parse(presignedUrl),
-            body: bytes,
-            headers: {
-              'Content-Type': 'image/jpeg',
-            },
-          );
-
-          if (uploadResponse.statusCode != 200) {
-            throw Exception('Failed to upload image');
-          }
-
-          // 업로드 성공한 이미지 URL 저장
-          imageUrls.add(fileName); // 또는 서버에서 정의한 URL 형식으로 변환
+              'report_${DateTime.now().millisecondsSinceEpoch}_$i.$extension';
+          final presignedUrl = await _getPresignedUrl(fileName);
+          await _uploadImageToS3(file, presignedUrl);
+          imageUrls.add(fileName);
         }
 
-        // 제보 데이터 준비 (이미지 URL 포함)
+        // 제보 데이터 준비
         final Map<String, dynamic> reportData = {
           'title': _titleController.text.trim(),
-          'phone': _phoneController.text.trim(),
           'email': _emailController.text.trim(),
+          'phoneNumber': _phoneController.text.trim(),
           'description': _descriptionController.text.trim(),
-          'images': imageUrls, // 업로드된 이미지 URL 목록
+          'imageUrls': imageUrls, // 'images' 대신 'imageUrls' 사용
         };
 
         // 제보 데이터 서버로 전송
@@ -147,14 +142,15 @@ class _ReportTabState extends State<ReportTab> {
           Uri.parse('$baseUrl$reportEndpoint'),
           headers: {
             'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Access-Control-Allow-Origin': '*',
           },
           body: json.encode(reportData),
         );
+        print('Report response: ${reportResponse.body}');
 
-        // 로딩 다이얼로그 닫기
-        Navigator.pop(context);
-
-        if (reportResponse.statusCode == 200) {
+        if (reportResponse.statusCode == 200 ||
+            reportResponse.statusCode == 201) {
           // 성공 메시지 표시
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('제보가 성공적으로 접수되었습니다.')),
@@ -169,16 +165,19 @@ class _ReportTabState extends State<ReportTab> {
             _selectedImages.clear();
           });
         } else {
-          throw Exception('제보 전송 실패: ${reportResponse.statusCode}');
+          throw '제보 전송에 실패했습니다.';
         }
       } catch (e) {
-        // 로딩 다이얼로그 닫기 (에러 발생 시)
-        Navigator.pop(context);
-
         // 에러 메시지 표시
+        print('Error: $e');
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('제보 접수 중 오류가 발생했습니다: $e')),
+          const SnackBar(content: Text('제보 접수 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.')),
         );
+      } finally {
+        Navigator.of(context, rootNavigator: true).pop();
+        setState(() {
+          _isSubmitting = false; // 성공/실패 상관없이 마지막에 false로 설정
+        });
       }
     }
   }
@@ -332,7 +331,9 @@ class _ReportTabState extends State<ReportTab> {
               Row(
                 children: [
                   ElevatedButton(
-                    onPressed: _pickMultipleImages,
+                    onPressed: _isSubmitting
+                        ? null
+                        : _pickMultipleImages, // 제출 중일 때 비활성화
                     child: const Text('이미지 선택'),
                   ),
                   const SizedBox(width: 16),
@@ -342,15 +343,38 @@ class _ReportTabState extends State<ReportTab> {
                         : SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             child: Row(
-                              children: _selectedImages.map((file) {
-                                return Container(
-                                  margin: const EdgeInsets.only(right: 8),
-                                  width: 80,
-                                  height: 80,
-                                  child: Image.file(
-                                    file,
-                                    fit: BoxFit.cover,
-                                  ),
+                              children:
+                                  _selectedImages.asMap().entries.map((entry) {
+                                final index = entry.key;
+                                final file = entry.value;
+                                return Stack(
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(right: 8),
+                                      width: 80,
+                                      height: 80,
+                                      child: Image.file(
+                                        file,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    Positioned(
+                                      right: -12,
+                                      top: -12,
+                                      child: IconButton(
+                                        icon: const Icon(Icons.close,
+                                            color: Colors.red),
+                                        onPressed: _isSubmitting
+                                            ? null
+                                            : () {
+                                                setState(() {
+                                                  _selectedImages
+                                                      .removeAt(index);
+                                                });
+                                              },
+                                      ),
+                                    ),
+                                  ],
                                 );
                               }).toList(),
                             ),
@@ -360,18 +384,38 @@ class _ReportTabState extends State<ReportTab> {
               ),
               const SizedBox(height: 24),
 
-              // 제출 버튼
+// 제출 버튼
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: _submitReport,
-                  child: const Text('제출하기'),
+                  onPressed: _isSubmitting ? null : _submitReport,
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    backgroundColor: KMapColors.darkBlue.shade400,
+                  ),
+                  child: _isSubmitting
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        )
+                      : const Text(
+                          '제출하기',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
+            ], // Column children 닫기
+          ), // Column 닫기
+        ), // Form 닫기
+      ), // SingleChildScrollView 닫기
+    ); // Scaffold 닫기
+  } // build 메서드 닫기
+} // 클래스 닫기
