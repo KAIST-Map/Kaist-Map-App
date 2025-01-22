@@ -42,24 +42,35 @@ class BuildingCategoryFilter extends StatelessWidget {
           ElevatedButton(
             style: ButtonStyle(
               minimumSize: WidgetStateProperty.all(Size.zero),
-              backgroundColor: filters.isEmpty ? null : WidgetStateProperty.all(KMapColors.darkBlue),
+              backgroundColor: filters.isEmpty
+                  ? null
+                  : WidgetStateProperty.all(KMapColors.darkBlue),
               elevation: WidgetStateProperty.all(2.5),
               padding: const WidgetStatePropertyAll(EdgeInsets.all(10)),
             ),
             onPressed: () {
               setFilters([]);
             },
-            child: filters.isEmpty ?
-              const Icon(Icons.filter_alt_off, color: KMapColors.darkBlue,)
-              : Row(
-                children: [
-                  const Icon(Icons.filter_alt, color: KMapColors.white,),
-                  const SizedBox(width: 4),
-                  Text(filters.length.toString(), style: const TextStyle(color: KMapColors.white, fontWeight: FontWeight.bold)),
-                  const SizedBox(width: 4),
-                  const Icon(Icons.close, color: KMapColors.white),
-                ],
-              ),
+            child: filters.isEmpty
+                ? const Icon(
+                    Icons.filter_alt_off,
+                    color: KMapColors.darkBlue,
+                  )
+                : Row(
+                    children: [
+                      const Icon(
+                        Icons.filter_alt,
+                        color: KMapColors.white,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(filters.length.toString(),
+                          style: const TextStyle(
+                              color: KMapColors.white,
+                              fontWeight: FontWeight.bold)),
+                      const SizedBox(width: 4),
+                      const Icon(Icons.close, color: KMapColors.white),
+                    ],
+                  ),
           ),
           ...BuildingCategory.values.map((category) {
             final selected = filters.contains(category);

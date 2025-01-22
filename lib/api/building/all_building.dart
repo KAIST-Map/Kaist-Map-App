@@ -179,7 +179,8 @@ class AllBuildingLoader extends ApiFetcher<List<BuildingData>> {
         uri,
         headers: {
           'Content-Type': 'application/json',
-        },).timeout(const Duration(seconds: 5));
+        },
+      ).timeout(const Duration(seconds: 5));
 
       if (response.statusCode == 200) {
         return jsonDecode(response.body)['buildings']

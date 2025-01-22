@@ -27,13 +27,13 @@ class _KMapMapState extends State<KMapMap> {
     buildingContext.buildings.then((buildings) {
       final filteredBuildings = filterContext.applyFilters(buildings);
       mapContext.setMarkers(filteredBuildings
-          .map((BuildingData buildingData) => buildingData.toMarker(
-              onTap: () {
+          .map((BuildingData buildingData) => buildingData.toMarker(onTap: () {
                 Scaffold.of(context)
                     .showBottomSheet((context) => BuildingSheetFrame(
                           buildingData: buildingData,
                         ));
-              })).toList());
+              }))
+          .toList());
     });
 
     return const SafeArea(

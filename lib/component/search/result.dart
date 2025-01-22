@@ -31,7 +31,7 @@ class SearchResult extends StatelessWidget {
             onTap!(buildingData);
           } else {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-                mapContext.lookAtBuilding(buildingData);
+              mapContext.lookAtBuilding(buildingData);
             });
           }
           Navigator.of(context).pop();
@@ -41,9 +41,16 @@ class SearchResult extends StatelessWidget {
           title: Text(buildingData.name,
               style:
                   const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-          subtitle: buildingData.alias.where((a) => a.trim().isNotEmpty).map((a) => "#${a.trim()}").join("  ").isNotEmpty
+          subtitle: buildingData.alias
+                  .where((a) => a.trim().isNotEmpty)
+                  .map((a) => "#${a.trim()}")
+                  .join("  ")
+                  .isNotEmpty
               ? Text(
-                  buildingData.alias.where((a) => a.trim().isNotEmpty).map((a) => "#${a.trim()}").join("  "),
+                  buildingData.alias
+                      .where((a) => a.trim().isNotEmpty)
+                      .map((a) => "#${a.trim()}")
+                      .join("  "),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
@@ -62,7 +69,9 @@ class SearchResult extends StatelessWidget {
                     size: 16,
                   ),
                   onPressed: () {
-                    SearchHistoryRemover(buildingData.id).fetch(mock: false).then((value) {
+                    SearchHistoryRemover(buildingData.id)
+                        .fetch(mock: false)
+                        .then((value) {
                       filterContext.notify();
                     });
                   },

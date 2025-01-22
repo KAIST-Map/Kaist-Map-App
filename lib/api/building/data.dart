@@ -102,9 +102,13 @@ class BuildingData {
       : id = json['id'],
         name = json['name'],
         categories = (json['categoryIds'] as List)
-            .map((value) => BuildingCategory.values[value-1])
+            .map((value) => BuildingCategory.values[value - 1])
             .toList(),
-        imageUrls = json['imageUrls'].toString().trim().replaceAll(RegExp(r'^\[|\]$'), '').split(","),
+        imageUrls = json['imageUrls']
+            .toString()
+            .trim()
+            .replaceAll(RegExp(r'^\[|\]$'), '')
+            .split(","),
         importance = json['importance'],
         latitude = json['latitude'],
         longitude = json['longitude'],

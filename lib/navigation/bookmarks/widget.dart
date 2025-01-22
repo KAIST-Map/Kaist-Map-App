@@ -18,39 +18,39 @@ class KMapBookmarks extends StatelessWidget {
     final Future<List<int>> bookmarks = BookmarksFetcher().fetch(mock: false);
     final filterContext = context.watch<BuildingCategoryFilterContext>();
     context.watch<NavigationContext>();
-  
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       mapContext.cleanUpPath();
     });
-    
+
     bookmarks.then((bookmarks) async {
       final buildings = await buildingContext.buildings;
       final filtered = filterContext.applyFilters(
           buildings.where((building) => bookmarks.contains(building.id)));
       mapContext.setMarkers(filtered
           .map((data) => buildings
-              .firstWhere((building) => building.id == data.id)
-              .toMarker(
-                  onTap: () {
-                    Scaffold.of(context).showBottomSheet((context) => Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.symmetric(vertical: 8),
-                              width: 40,
-                              height: 4,
-                              decoration: BoxDecoration(
-                                color: KMapColors.darkGray.shade400,
-                                borderRadius: BorderRadius.circular(2),
-                              ),
-                            ),
-                            BuildingInfoSheet(
-                              buildingData: buildings.firstWhere(
-                                  (building) => building.id == data.id),
-                            ),
-                          ],
-                        ));
-                  })).toList());
+                  .firstWhere((building) => building.id == data.id)
+                  .toMarker(onTap: () {
+                Scaffold.of(context).showBottomSheet((context) => Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.symmetric(vertical: 8),
+                          width: 40,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: KMapColors.darkGray.shade400,
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        ),
+                        BuildingInfoSheet(
+                          buildingData: buildings
+                              .firstWhere((building) => building.id == data.id),
+                        ),
+                      ],
+                    ));
+              }))
+          .toList());
     });
 
     return const SafeArea(

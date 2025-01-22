@@ -80,12 +80,11 @@ class _KakaoMapWidgetState extends State<KakaoMapWidget> {
           alignment: Alignment.bottomRight,
           padding: const EdgeInsets.all(10),
           child: FloatingActionButton.small(
-              onPressed: ()  {
+              onPressed: () {
                 final myLocation = kakaoMapContext.myLocation;
-                if (myLocation != null)
-                  {
-                    kakaoMapContext.lookAt(myLocation);
-                  }
+                if (myLocation != null) {
+                  kakaoMapContext.lookAt(myLocation);
+                }
               },
               child: const Icon(Icons.my_location)),
         ),

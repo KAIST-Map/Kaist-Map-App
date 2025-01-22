@@ -77,9 +77,9 @@ class _KMapNavigationState extends State<KMapNavigation> with RouteAware {
             label: '길찾기',
           ),
           NavigationDestination(
-            selectedIcon: Icon(Icons.flag),
-            icon: Icon(Icons.flag_outlined),
-            label: '제보')
+              selectedIcon: Icon(Icons.flag),
+              icon: Icon(Icons.flag_outlined),
+              label: '제보')
         ],
       ),
     );

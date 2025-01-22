@@ -1,4 +1,3 @@
-
 import 'package:kaist_map/navigation/kakao_map/core.dart';
 
 class KaistLocation {

@@ -24,8 +24,9 @@ class _KMapSearchState extends State<KMapSearch> {
     return SearchAnchor(
       builder: (context, controller) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          controller.text="${controller.text}\$%";
-          controller.text=controller.text.substring(0,controller.text.length-2);
+          controller.text = "${controller.text}\$%";
+          controller.text =
+              controller.text.substring(0, controller.text.length - 2);
         });
         return GestureDetector(
           behavior: HitTestBehavior.translucent,
@@ -55,7 +56,11 @@ class _KMapSearchState extends State<KMapSearch> {
 Future<Iterable<Widget>> suggestionsBuilder(BuildContext context,
     SearchController controller, BuildingCategoryFilterContext filterContext,
     {void Function(BuildingData)? onResultTap}) async {
-  if (controller.text.isEmpty || (controller.text.length >= 2 && controller.text.substring(controller.text.length-2, controller.text.length) == "\$%")) {
+  if (controller.text.isEmpty ||
+      (controller.text.length >= 2 &&
+          controller.text.substring(
+                  controller.text.length - 2, controller.text.length) ==
+              "\$%")) {
     final historyIds = SearchHistoryFetcher().fetch(mock: false);
     final buildings = context.read<BuildingContext>().buildings;
     final historyBuildings =
@@ -79,7 +84,8 @@ Future<Iterable<Widget>> suggestionsBuilder(BuildContext context,
   }
 
   final searchQuery = controller.text;
-  final searchBuilding = await BuildingSearchLoader(name: searchQuery).fetch(mock: false);
+  final searchBuilding =
+      await BuildingSearchLoader(name: searchQuery).fetch(mock: false);
 
   return filterContext
       .applyFilters(searchBuilding)

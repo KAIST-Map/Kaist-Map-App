@@ -19,17 +19,20 @@ class KakaoMapContext extends ChangeNotifier {
 
   LatLng? _myLocation;
   LatLng? get myLocation => _myLocation;
-  Marker? get myLocationMarker => _myLocation != null ? Marker(
-      name: "my-position",
-      lat: _myLocation!.latitude,
-      lng: _myLocation!.longitude,
-      width: 20,
-      height: 20,
-      offsetY: 10,
-      image: "https://kaist-map.github.io/Kaist-Map-App/my_location_pin.png",
-      draggable: false,
-      importance: 99,
-      onTap: () {}) : null;
+  Marker? get myLocationMarker => _myLocation != null
+      ? Marker(
+          name: "my-position",
+          lat: _myLocation!.latitude,
+          lng: _myLocation!.longitude,
+          width: 20,
+          height: 20,
+          offsetY: 10,
+          image:
+              "https://kaist-map.github.io/Kaist-Map-App/my_location_pin.png",
+          draggable: false,
+          importance: 99,
+          onTap: () {})
+      : null;
 
   void startMyLocationService() {
     Geolocator.getPositionStream(
@@ -136,8 +139,9 @@ class KakaoMapContext extends ChangeNotifier {
       ''');
     });
 
-    if (!markers.any((marker) => marker.name == "building-${building.id}"))
+    if (!markers.any((marker) => marker.name == "building-${building.id}")) {
       return;
+    }
 
     final buildingMarker = markers
         .firstWhere((marker) => marker.name == "building-${building.id}");
