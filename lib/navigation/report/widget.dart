@@ -6,6 +6,7 @@ import 'package:kaist_map/constant/colors.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:kaist_map/navigation/photo/widget.dart';
 
 class ReportTab extends StatefulWidget {
   const ReportTab({super.key});
@@ -15,6 +16,7 @@ class ReportTab extends StatefulWidget {
 }
 
 class _ReportTabState extends State<ReportTab> {
+  final double imageSize = 100;
   final _formKey = GlobalKey<FormState>();
   bool _isSubmitting = false; // 제보 전송 상태 추적
 
@@ -34,7 +36,7 @@ class _ReportTabState extends State<ReportTab> {
 
     if (pickedFiles != null && pickedFiles.isNotEmpty) {
       setState(() {
-        _selectedImages = pickedFiles.map((xfile) => File(xfile.path)).toList();
+        _selectedImages.addAll(pickedFiles.map((xfile) => File(xfile.path)));
       });
     }
   }
@@ -197,10 +199,11 @@ class _ReportTabState extends State<ReportTab> {
       backgroundColor: KMapColors.darkBlue.shade100,
       appBar: AppBar(
         backgroundColor: KMapColors.darkBlue.shade100,
+        centerTitle: true,
         title: const Text('제보하기'),
         titleTextStyle: TextStyle(
-          fontSize: 22,
-          fontWeight: FontWeight.bold,
+          fontSize: 25,
+          fontWeight: FontWeight.w600,
           color: KMapColors.darkBlue.shade900,
         ),
         elevation: 0,
@@ -210,220 +213,291 @@ class _ReportTabState extends State<ReportTab> {
           statusBarIconBrightness: Brightness.dark, // 상단 바 아이콘을 어둡게 (검정색)
         ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // 안내 문구
-              const Text(
-                '이 지도 정보는 KAIST 구성원 모두의 참여로 더욱 정확해질 수 있습니다. '
-                '아래 양식에 자유롭게 제보를 남겨주세요.\n\n'
-                '- 잘못된 길 정보나 누락된 길/지름길\n'
-                '- 추가되어야 할 건물 정보나 건물 약칭\n'
-                '- 부족한 건물 사진이나 참고 이미지\n'
-                '- 기타 지도 개선을 위한 제안 사항\n',
-                style: TextStyle(fontSize: 14),
-              ),
-              const SizedBox(height: 24),
+      body: Column(
+        children: [
+          Divider(
+            color: KMapColors.darkBlue.shade300,
+            height: 1,
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(15),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      '이 지도 정보는 KAIST 구성원 모두의 참여로 더욱 정확해질 수 있습니다. 아래 양식에 자유롭게 제보를 남겨주세요.',
+                      style:
+                          TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                    ),
+                    const SizedBox(height: 6),
+                    ...[
+                      '잘못된 길 정보나 누락된 길/지름길',
+                      '추가되어야 할 건물 정보나 건물 약칭',
+                      '부족한 건물 사진이나 참고 이미지',
+                      '기타 지도 개선을 위한 제안 사항'
+                    ].map((message) => Row(
+                          children: [
+                            const SizedBox(width: 8),
+                            const Icon(Icons.check_rounded,
+                                size: 14, color: KMapColors.darkBlue),
+                            const SizedBox(width: 8),
+                            Text(message,
+                                style: const TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.w400)),
+                          ],
+                        )),
 
-              // 제목
-              TextFormField(
-                controller: _titleController,
-                decoration: InputDecoration(
-                  hintText: '제목',
-                  hintStyle: TextStyle(
-                    color: Colors.black.withAlpha(100),
-                  ),
-                  border: InputBorder.none,
-                  filled: true, // 배경색을 적용하기 위해 필요
-                  fillColor: KMapColors.darkBlue.shade200,
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(12), // 모서리 둥글기 설정
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return '제목을 입력해주세요.';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
+                    const SizedBox(height: 12),
 
-              // 전화번호 (선택)
-              TextFormField(
-                controller: _phoneController,
-                decoration: InputDecoration(
-                  hintText: '전화번호(선택)',
-                  hintStyle: TextStyle(
-                    color: Colors.black.withAlpha(100),
-                  ),
-                  border: InputBorder.none,
-                  filled: true, // 배경색을 적용하기 위해 필요
-                  fillColor: KMapColors.darkBlue.shade200,
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(12), // 모서리 둥글기 설정
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                keyboardType: TextInputType.phone,
-              ),
-              const SizedBox(height: 16),
+                    const Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 7.5, vertical: 4.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '제목',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w600),
+                          ),
+                          Text(
+                            '*',
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.red),
+                          )
+                        ],
+                      ),
+                    ),
+                    // 제목
+                    TextFormField(
+                      controller: _titleController,
+                      decoration: const InputDecoration(
+                        hintText: '예) 문화관 사진 추가해주세요!',
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return '제목을 입력해주세요.';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 8),
 
-              // 이메일 (선택)
-              TextFormField(
-                controller: _emailController,
-                decoration: InputDecoration(
-                  hintText: '이메일(선택)',
-                  hintStyle: TextStyle(
-                    color: Colors.black.withAlpha(100),
-                  ),
-                  border: InputBorder.none,
-                  filled: true, // 배경색을 적용하기 위해 필요
-                  fillColor: KMapColors.darkBlue.shade200,
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(12), // 모서리 둥글기 설정
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                keyboardType: TextInputType.emailAddress,
-              ),
-              const SizedBox(height: 16),
+                    const Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 7.5, vertical: 4.0),
+                      child: Text(
+                        '전화번호',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600),
+                      ),
+                    ),
 
-              // 설명
-              TextFormField(
-                controller: _descriptionController,
-                decoration: InputDecoration(
-                  hintText: '내용',
-                  hintStyle: TextStyle(
-                    color: Colors.black.withAlpha(100),
-                  ),
-                  border: InputBorder.none,
-                  filled: true, // 배경색을 적용하기 위해 필요
-                  fillColor: KMapColors.darkBlue.shade200,
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(12), // 모서리 둥글기 설정
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                maxLines: 5,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return '설명을 입력해주세요.';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
+                    // 전화번호 (선택)
+                    TextFormField(
+                      controller: _phoneController,
+                      decoration: const InputDecoration(
+                        hintText: '\'-\' 없이 입력해주세요. 예) 01012345678',
+                      ),
+                      keyboardType: TextInputType.phone,
+                    ),
+                    const SizedBox(height: 8),
 
-              // 이미지 선택 버튼
-              Row(
-                children: [
-                  ElevatedButton(
-                    onPressed: _isSubmitting
-                        ? null
-                        : _pickMultipleImages, // 제출 중일 때 비활성화
-                    child: const Text('이미지 선택'),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: _selectedImages.isEmpty
-                        ? const Text('선택된 이미지가 없습니다.')
-                        : SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children:
-                                  _selectedImages.asMap().entries.map((entry) {
-                                final index = entry.key;
-                                final file = entry.value;
-                                return Stack(
-                                  children: [
-                                    Container(
-                                      margin: const EdgeInsets.only(right: 8),
-                                      width: 80,
-                                      height: 80,
-                                      child: Image.file(
-                                        file,
-                                        fit: BoxFit.cover,
-                                      ),
+                    // 이메일 (선택)
+                    const Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 7.5, vertical: 4.0),
+                      child: Text(
+                        '이메일',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    TextFormField(
+                      controller: _emailController,
+                      decoration: const InputDecoration(
+                        hintText: '예) kaistian@kaist.ac.kr',
+                      ),
+                      keyboardType: TextInputType.emailAddress,
+                    ),
+                    const SizedBox(height: 16),
+
+                    // 설명
+                    const Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 7.5, vertical: 4.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '설명',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w600),
+                          ),
+                          Text(
+                            '*',
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.red),
+                          )
+                        ],
+                      ),
+                    ),
+                    TextFormField(
+                      controller: _descriptionController,
+                      decoration: const InputDecoration(
+                        hintText: '(선택) 설명을 입력해주세요.\n'
+                            '예) "이 길은 막혀있어요."\n'
+                            '예) "이 건물은 1층에 편의점이 있어요."',
+                      ),
+                      maxLines: 15,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return '설명을 입력해주세요.';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 8),
+
+                    const Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 7.5, vertical: 4.0),
+                      child: Text(
+                        '이미지 선택',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600),
+                      ),
+                    ),
+
+                    Center(
+                      child: Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        runSpacing: 8,
+                        spacing: 8,
+                        children: [
+                          ..._selectedImages
+                              .asMap()
+                              .map((index, file) => MapEntry(
+                                  index,
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Stack(
+                                      alignment: Alignment.topRight,
+                                      children: [
+                                        SizedBox(
+                                          width: imageSize,
+                                          height: imageSize,
+                                          child: Image.file(
+                                            file,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            Navigator.of(context).push(
+                                              PageRouteBuilder(
+                                                  pageBuilder:
+                                                      (context, _, __) =>
+                                                          SubmitPhotoView(
+                                                              _selectedImages,
+                                                              index),
+                                                  opaque: false),
+                                            );
+                                          },
+                                          child: Container(
+                                            width: imageSize,
+                                            height: imageSize,
+                                            color: Colors.black38,
+                                          ),
+                                        ),
+                                        IconButton(
+                                          visualDensity: VisualDensity.compact,
+                                          onPressed: () {
+                                            setState(() {
+                                              _selectedImages.remove(file);
+                                            });
+                                          },
+                                          icon: const Icon(Icons.close,
+                                              color: Colors.white),
+                                        ),
+                                      ],
                                     ),
-                                    Positioned(
-                                      right: -12,
-                                      top: -12,
-                                      child: IconButton(
-                                        icon: const Icon(Icons.close,
-                                            color: Colors.red),
-                                        onPressed: _isSubmitting
-                                            ? null
-                                            : () {
-                                                setState(() {
-                                                  _selectedImages
-                                                      .removeAt(index);
-                                                });
-                                              },
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              }).toList(),
-                            ),
+                                  )))
+                              .values,
+                          GestureDetector(
+                            onTap: _isSubmitting
+                                ? null
+                                : _pickMultipleImages, // 제출 중일 때 비활성화
+                            child: Container(
+                                width: imageSize,
+                                height: imageSize,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  color: KMapColors.darkGray.shade400,
+                                  border: Border.all(
+                                      width: 2,
+                                      color: KMapColors.darkGray.shade500),
+                                ),
+                                child: const Center(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(Icons.add_a_photo),
+                                    ],
+                                  ),
+                                )),
                           ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 24),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 24),
 
-// 제출 버튼
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _isSubmitting ? null : _submitReport,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    backgroundColor: KMapColors.darkBlue.shade400,
-                  ),
-                  child: _isSubmitting
-                      ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.white),
+                    // 제출 버튼
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: _isSubmitting ? null : _submitReport,
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                        )
-                      : const Text(
-                          '제출하기',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          backgroundColor: KMapColors.darkBlue,
                         ),
-                ),
-              ),
-            ], // Column children 닫기
-          ), // Column 닫기
-        ), // Form 닫기
+                        child: _isSubmitting
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white),
+                                ),
+                              )
+                            : const Text(
+                                '제출하기',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                      ),
+                    ),
+                  ], // Column children 닫기
+                ), // Column 닫기
+              ), // Form 닫기
+            ),
+          ),
+        ],
       ), // SingleChildScrollView 닫기
     ); // Scaffold 닫기
   } // build 메서드 닫기

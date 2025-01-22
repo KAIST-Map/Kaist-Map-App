@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:kaist_map/api/building/data.dart';
 import 'package:kaist_map/constant/colors.dart';
@@ -31,6 +33,38 @@ class BuildingPhotoView extends StatelessWidget {
           ),
           backgroundDecoration: const BoxDecoration(color: Colors.transparent),
           pageController: PageController(initialPage: 0),
+        ),
+      ),
+    );
+  }
+}
+
+class SubmitPhotoView extends StatelessWidget {
+  final List<File> images;
+  final int index;
+
+  const SubmitPhotoView(this.images, this.index, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).pop();
+      },
+      child: Container(
+        color: Colors.black.withAlpha(150),
+        child: PhotoViewGallery.builder(
+          itemCount: images.length,
+          builder: (context, index) => PhotoViewGalleryPageOptions(
+              imageProvider: FileImage(images[index]),
+              initialScale: PhotoViewComputedScale.contained * 0.8,
+              heroAttributes: PhotoViewHeroAttributes(tag: 'submit${index}'),
+            ),
+          loadingBuilder: (context, event) => const Center(
+            child: CircularProgressIndicator(color: KMapColors.darkBlue),
+          ),
+          backgroundDecoration: const BoxDecoration(color: Colors.transparent),
+          pageController: PageController(initialPage: index),
         ),
       ),
     );
