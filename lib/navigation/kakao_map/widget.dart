@@ -50,7 +50,7 @@ class _KakaoMapWidgetState extends State<KakaoMapWidget> {
       })
       ..addJavaScriptChannel("OnMarkerClickedChannel",
           onMessageReceived: (message) {
-        final marker = kakaoMapContext.markers.firstWhere((marker) =>
+        final marker = kakaoMapContext.showingMarkers[kakaoMapContext.zoomLevel-1].firstWhere((marker) =>
             marker.name == jsonDecode(message.message)['name'].toString());
         marker.onTap();
         kakaoMapContext.lookAt(LatLng(marker.lat, marker.lng));
@@ -60,19 +60,22 @@ class _KakaoMapWidgetState extends State<KakaoMapWidget> {
         if (Navigator.canPop(context)) {
           Navigator.pop(context);
         }
+      })
+      ..addJavaScriptChannel("OnZoomChangedChannel",
+          onMessageReceived: (message) {
+        final int zoomLevel = jsonDecode(message.message)['zoom'];
+        kakaoMapContext.setZoomLevel(zoomLevel);
       });
 
-    final markers = [...kakaoMapContext.markers];
-    markers.sort((a, b) => b.importance.compareTo(a.importance));
-
     kakaoMapContext.controller?.runJavaScript('''
-      setMarkers(${[
-      ...markers.map((marker) => jsonEncode(marker.toJson())),
+        setMarkers(${[
+      ...kakaoMapContext.showingMarkers[kakaoMapContext.zoomLevel-1]
+          .map((marker) => jsonEncode(marker.toJson())),
       if (kakaoMapContext.myLocationMarker != null)
         jsonEncode(kakaoMapContext.myLocationMarker!.toJson()),
     ]});
-      setPolylines(${kakaoMapContext.polylines.map((polyline) => jsonEncode(polyline.toJson())).toList()});
-    ''');
+        setPolylines(${kakaoMapContext.polylines.map((polyline) => jsonEncode(polyline.toJson())).toList()});
+      ''');
 
     return Stack(
       children: [

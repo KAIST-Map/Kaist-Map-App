@@ -72,7 +72,7 @@ class _KMapRoutingPageState extends State<KMapRoutingPage> {
                       ? "https://kaist-map.github.io/Kaist-Map-App/map_pin_green.png"
                       : endBuildingData?.map((data) => data.id).getOrElse(-1) ==
                               buildingData.id
-                          ? "https://kaist-map.github.io/Kaist-Map-App/map_pin.png"
+                          ? "https://kaist-map.github.io/Kaist-Map-App/map_pin_red.png"
                           : "https://kaist-map.github.io/Kaist-Map-App/map_pin_blue.png",
                 )),
             if (startBuildingData == const None<BuildingData>() &&
@@ -95,7 +95,7 @@ class _KMapRoutingPageState extends State<KMapRoutingPage> {
                   importance: 128,
                   onTap: () {},
                   image:
-                      "https://kaist-map.github.io/Kaist-Map-App/map_pin.png"),
+                      "https://kaist-map.github.io/Kaist-Map-App/map_pin_red.png"),
           ]);
         });
       }
