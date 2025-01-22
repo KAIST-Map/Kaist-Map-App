@@ -320,6 +320,17 @@ class _ReportTabState extends State<ReportTab> {
                         hintText: '\'-\' 없이 입력해주세요. 예) 01012345678',
                       ),
                       keyboardType: TextInputType.phone,
+                      validator: (value) {
+                        if (value != null && value.isNotEmpty) {
+                          if (value.length < 9 || value.length > 11) {
+                            return '유효한 전화번호를 입력해주세요.';
+                          }
+                          if (!RegExp(r'^\d+$').hasMatch(value)) {
+                            return '전화번호는 숫자만 포함해야 합니다.';
+                          }
+                        }
+                        return null;
+                      },
                     ),
                     const SizedBox(height: 8),
 
@@ -340,6 +351,16 @@ class _ReportTabState extends State<ReportTab> {
                         hintText: '예) kaistian@kaist.ac.kr',
                       ),
                       keyboardType: TextInputType.emailAddress,
+                      validator: (value) {
+                        if (value != null && value.isNotEmpty) {
+                          if (!RegExp(
+                                  r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+                              .hasMatch(value)) {
+                            return '유효한 이메일 주소를 입력해주세요.';
+                          }
+                        }
+                        return null;
+                      },
                     ),
                     const SizedBox(height: 8),
 
