@@ -52,8 +52,10 @@ class _KakaoMapWidgetState extends State<KakaoMapWidget> {
       })
       ..addJavaScriptChannel("OnMarkerClickedChannel",
           onMessageReceived: (message) {
-        final marker = kakaoMapContext.showingMarkers[kakaoMapContext.zoomLevel-1].firstWhere((marker) =>
-            marker.name == jsonDecode(message.message)['name'].toString());
+        final marker = kakaoMapContext
+            .showingMarkers[kakaoMapContext.zoomLevel - 1]
+            .firstWhere((marker) =>
+                marker.name == jsonDecode(message.message)['name'].toString());
         marker.onTap();
         kakaoMapContext.lookAt(LatLng(marker.lat, marker.lng));
       })
@@ -71,7 +73,7 @@ class _KakaoMapWidgetState extends State<KakaoMapWidget> {
 
     kakaoMapContext.controller?.runJavaScript('''
         setMarkers(${[
-      ...kakaoMapContext.showingMarkers[kakaoMapContext.zoomLevel-1]
+      ...kakaoMapContext.showingMarkers[kakaoMapContext.zoomLevel - 1]
           .map((marker) => jsonEncode(marker.toJson())),
       if (kakaoMapContext.myLocationMarker != null)
         jsonEncode(kakaoMapContext.myLocationMarker!.toJson()),
@@ -91,7 +93,8 @@ class _KakaoMapWidgetState extends State<KakaoMapWidget> {
             mainAxisSize: MainAxisSize.min,
             children: [
               FloatingActionButton.small(
-                  backgroundColor: isSatellite ? KMapColors.darkBlue : Colors.white,
+                  backgroundColor:
+                      isSatellite ? KMapColors.darkBlue : Colors.white,
                   onPressed: () {
                     kakaoMapContext.controller?.runJavaScript("switchView();");
                     setState(() {

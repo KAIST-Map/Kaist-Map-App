@@ -27,10 +27,14 @@ class _ReportTabState extends State<ReportTab> {
   bool _isSubmitting = false; // 제보 전송 상태 추적
 
   // TextEditingController는 사용자의 입력값을 추적하기 위해 사용
-  final TextEditingController _titleController = TextEditingController(text: _title);
-  final TextEditingController _phoneController = TextEditingController(text: _phoneNumber);
-  final TextEditingController _emailController = TextEditingController(text: _email);
-  final TextEditingController _descriptionController = TextEditingController(text: _description);
+  final TextEditingController _titleController =
+      TextEditingController(text: _title);
+  final TextEditingController _phoneController =
+      TextEditingController(text: _phoneNumber);
+  final TextEditingController _emailController =
+      TextEditingController(text: _email);
+  final TextEditingController _descriptionController =
+      TextEditingController(text: _description);
 
   // 갤러리에서 여러 장 선택
   Future<void> _pickMultipleImages() async {
@@ -315,7 +319,8 @@ class _ReportTabState extends State<ReportTab> {
                     // 전화번호 (선택)
                     TextFormField(
                       controller: _phoneController,
-                      onChanged:(value) => setState(() => _phoneNumber = value),
+                      onChanged: (value) =>
+                          setState(() => _phoneNumber = value),
                       decoration: const InputDecoration(
                         hintText: '\'-\' 없이 입력해주세요. 예) 01012345678',
                       ),
@@ -395,7 +400,7 @@ class _ReportTabState extends State<ReportTab> {
                       },
                       decoration: const InputDecoration(
                         hintText: '예) "이 길은 막혀있어요."\n'
-                                  '예) "이 건물은 1층에 편의점이 있어요."',
+                            '예) "이 건물은 1층에 편의점이 있어요."',
                       ),
                       maxLines: 15,
                       validator: (value) {
@@ -447,8 +452,7 @@ class _ReportTabState extends State<ReportTab> {
                                                   pageBuilder:
                                                       (context, _, __) =>
                                                           SubmitPhotoView(
-                                                              _images,
-                                                              index),
+                                                              _images, index),
                                                   opaque: false),
                                             );
                                           },

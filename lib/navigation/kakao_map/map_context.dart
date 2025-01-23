@@ -123,7 +123,7 @@ class KakaoMapContext extends ChangeNotifier {
 
   Future<void> _computeShowingMarkers() async {
     const omitMarkersDistanceInMeters = [0, 10, 30, 60, 100, 200];
-    
+
     Future<List<Marker>> singleZoomLevelShowingMarkers(int zoomLevel) async {
       final isolateMarkers = await compute((message) {
         message.markers.sort((a, b) {
@@ -138,7 +138,9 @@ class KakaoMapContext extends ChangeNotifier {
           () {
             for (var j = 0; j < showingMarkers.length; j++) {
               if (message.markers[i].distanceToMeters(showingMarkers[j]) <
-                  (omitMarkersDistanceInMeters.elementAtOrNull(message.zoomLevel) ?? 0)) {
+                  (omitMarkersDistanceInMeters
+                          .elementAtOrNull(message.zoomLevel) ??
+                      0)) {
                 return;
               }
             }
@@ -149,18 +151,20 @@ class KakaoMapContext extends ChangeNotifier {
         return showingMarkers;
       }, ComputeMessage.fromMarkersZoom([...markers], zoomLevel));
 
-      return isolateMarkers.map((marker) => Marker(
-            name: marker.name,
-            lat: marker.lat,
-            lng: marker.lng,
-            importance: marker.importance,
-            width: marker.width,
-            height: marker.height,
-            offsetY: marker.offsetY,
-            image: marker.image,
-            draggable: marker.draggable,
-            onTap: markers.firstWhere((m) => m.name == marker.name).onTap,
-          )).toList();
+      return isolateMarkers
+          .map((marker) => Marker(
+                name: marker.name,
+                lat: marker.lat,
+                lng: marker.lng,
+                importance: marker.importance,
+                width: marker.width,
+                height: marker.height,
+                offsetY: marker.offsetY,
+                image: marker.image,
+                draggable: marker.draggable,
+                onTap: markers.firstWhere((m) => m.name == marker.name).onTap,
+              ))
+          .toList();
     }
 
     _showingMarkers = await Future.wait(
