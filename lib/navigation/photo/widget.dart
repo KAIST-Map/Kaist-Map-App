@@ -58,7 +58,7 @@ class SubmitPhotoView extends StatelessWidget {
           builder: (context, index) => PhotoViewGalleryPageOptions(
             imageProvider: FileImage(images[index]),
             initialScale: PhotoViewComputedScale.contained * 0.8,
-            heroAttributes: PhotoViewHeroAttributes(tag: 'submit$index'),
+            heroAttributes: PhotoViewHeroAttributes(tag: 'submit${index}'),
           ),
           loadingBuilder: (context, event) => const Center(
             child: CircularProgressIndicator(color: KMapColors.darkBlue),
