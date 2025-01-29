@@ -24,10 +24,10 @@ class BuildingPhotoView extends StatelessWidget {
         child: PhotoViewGallery.builder(
           itemCount: imageUrls.length,
           builder: (context, index) => PhotoViewGalleryPageOptions(
-              imageProvider: NetworkImage(imageUrls[index].trim()),
-              initialScale: PhotoViewComputedScale.contained * 0.8,
-              heroAttributes: PhotoViewHeroAttributes(tag: buildingData.name),
-            ),
+            imageProvider: NetworkImage(imageUrls[index].trim()),
+            initialScale: PhotoViewComputedScale.contained * 0.8,
+            heroAttributes: PhotoViewHeroAttributes(tag: buildingData.name),
+          ),
           loadingBuilder: (context, event) => const Center(
             child: CircularProgressIndicator(color: KMapColors.darkBlue),
           ),
@@ -56,10 +56,10 @@ class SubmitPhotoView extends StatelessWidget {
         child: PhotoViewGallery.builder(
           itemCount: images.length,
           builder: (context, index) => PhotoViewGalleryPageOptions(
-              imageProvider: FileImage(images[index]),
-              initialScale: PhotoViewComputedScale.contained * 0.8,
-              heroAttributes: PhotoViewHeroAttributes(tag: 'submit${index}'),
-            ),
+            imageProvider: FileImage(images[index]),
+            initialScale: PhotoViewComputedScale.contained * 0.8,
+            heroAttributes: PhotoViewHeroAttributes(tag: 'submit$index'),
+          ),
           loadingBuilder: (context, event) => const Center(
             child: CircularProgressIndicator(color: KMapColors.darkBlue),
           ),
