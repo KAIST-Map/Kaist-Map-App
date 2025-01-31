@@ -12,8 +12,9 @@ import 'package:provider/provider.dart';
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
-  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-  
+  await SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+
   runApp(MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => BuildingCategoryFilterContext()),
