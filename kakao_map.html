@@ -235,7 +235,14 @@
       OnZoomChangedChannel?.postMessage(JSON.stringify(message));
     });
 
-    OnMapCreatedChannel?.postMessage("Map is created");
+    OnMapCreatedChannel?.postMessage(
+      JSON.stringify({
+        southBound: southBound,
+        westBound: westBound,
+        northBound: northBound,
+        eastBound: eastBound,
+      })
+    );
   </script>
 </body>
 
