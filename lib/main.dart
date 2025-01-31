@@ -44,7 +44,7 @@ class KMapMain extends StatelessWidget {
         fontFamily: 'Pretendard',
         navigationBarTheme: NavigationBarThemeData(
           backgroundColor: KMapColors.darkBlue,
-          indicatorColor: KMapColors.lightBlue.withOpacity(0.2),
+            indicatorColor: KMapColors.lightBlue.withAlpha(51),
           iconTheme: WidgetStateProperty.resolveWith<IconThemeData>(
               (Set<WidgetState> states) {
             if (states.contains(WidgetState.selected)) {
