@@ -5,6 +5,7 @@ import 'package:kaist_map/component/building_filter.dart';
 import 'package:kaist_map/component/building_sheet_frame.dart';
 import 'package:kaist_map/component/search/widget.dart';
 import 'package:kaist_map/constant/colors.dart';
+import 'package:kaist_map/constant/map.dart';
 import 'package:kaist_map/navigation/kakao_map/core.dart';
 import 'package:kaist_map/navigation/kakao_map/map_context.dart';
 import 'package:kaist_map/navigation/routing/routing_context.dart';
@@ -21,7 +22,7 @@ class KMapRoutingPage extends StatefulWidget {
 class _KMapRoutingPageState extends State<KMapRoutingPage> {
   @override
   Widget build(BuildContext context) {
-    final mapContext = context.read<KakaoMapContext>();
+    final mapContext = context.watch<KakaoMapContext>();
     final buildingContext = context.read<BuildingContext>();
     final routingContext = context.watch<RoutingContext>();
     final startBuildingData = routingContext.startBuildingData;
@@ -29,6 +30,7 @@ class _KMapRoutingPageState extends State<KMapRoutingPage> {
     final startLatLng = routingContext.startLatLng;
     final endLatLng = routingContext.endLatLng;
     final pathData = routingContext.pathData;
+    final myLocation = mapContext.myLocation;
 
     Future.wait([startLatLng.future, endLatLng.future]).then((values) {
       final start = values[0];
@@ -116,7 +118,7 @@ class _KMapRoutingPageState extends State<KMapRoutingPage> {
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
+                            color: Colors.black.withAlpha(51),
                           spreadRadius: 2,
                           blurRadius: 4,
                           offset: const Offset(0, 2),
@@ -131,6 +133,7 @@ class _KMapRoutingPageState extends State<KMapRoutingPage> {
                           IconButton(
                             icon: const Icon(Icons.swap_vert,
                                 color: KMapColors.white),
+                            tooltip: "출발지/도착지 바꾸기",
                             onPressed: () {
                               final tmpStartBuildingData = startBuildingData;
                               routingContext
@@ -150,6 +153,7 @@ class _KMapRoutingPageState extends State<KMapRoutingPage> {
                                           .map((data) => data.name)
                                           .getOrElse("내 위치"),
                                   hintText: "출발지를 입력하세요",
+                                  myLocation: myLocation ?? KaistLocation.location,
                                   onBuildingDataChanged:
                                       (Option<BuildingData>? buildingData) {
                                     routingContext
@@ -163,6 +167,7 @@ class _KMapRoutingPageState extends State<KMapRoutingPage> {
                                           .map((data) => data.name)
                                           .getOrElse("내 위치"),
                                   hintText: "도착지를 입력하세요",
+                                  myLocation: myLocation ?? KaistLocation.location,
                                   onBuildingDataChanged:
                                       (Option<BuildingData>? buildingData) {
                                     routingContext
@@ -186,6 +191,7 @@ class _KMapRoutingPageState extends State<KMapRoutingPage> {
               children: [
                 FloatingActionButton.small(
                   onPressed: routingContext.toggleBeam,
+                  tooltip: "자전거/전동킥보드",
                   backgroundColor: routingContext.wantBeam
                       ? KMapColors.darkBlue
                       : KMapColors.white,
@@ -196,6 +202,7 @@ class _KMapRoutingPageState extends State<KMapRoutingPage> {
                 ),
                 FloatingActionButton.small(
                   onPressed: routingContext.toggleFreeOfRain,
+                  tooltip: "비",
                   backgroundColor: routingContext.wantFreeOfRain
                       ? KMapColors.darkBlue
                       : KMapColors.white,
@@ -216,12 +223,14 @@ class _KMapRoutingPageState extends State<KMapRoutingPage> {
 class DestinationSearch extends StatelessWidget {
   final String hintText;
   final String selectedName;
+  final LatLng myLocation;
   final void Function(Option<BuildingData>?) onBuildingDataChanged;
 
   const DestinationSearch({
     super.key,
     required this.hintText,
     required this.selectedName,
+    required this.myLocation,
     required this.onBuildingDataChanged,
   });
 
@@ -254,29 +263,34 @@ class DestinationSearch extends StatelessWidget {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.15),
+                        color: Colors.black.withAlpha(38),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Row(
-                      children: [
-                        Text(
-                          selectedName.isEmpty ? hintText : selectedName,
-                          style: TextStyle(
-                              color: selectedName.isEmpty
-                                  ? KMapColors.white.shade300
-                                  : KMapColors.white),
-                        ),
-                      ],
+                    child: Text(
+                      selectedName.isEmpty ? hintText : selectedName,
+                      style: TextStyle(
+                          color: selectedName.isEmpty
+                              ? KMapColors.white.shade300
+                              : KMapColors.white),
                     ),
                   ),
                 ),
               ),
+              selectedName.isEmpty && !myLocation.inBound(
+                southWestBound: KaistLocation.kaistSouthWestBound,
+                northEastBound: KaistLocation.kaistNorthEastBound
+              ) ? IconButton(onPressed: () {}, 
+              tooltip: "학교 밖에서는 내 위치로 검색할 수 없습니다",
+              icon: 
+                Icon(Icons.near_me_disabled, color: KMapColors.darkGray.shade800, size: 15)
+              ) :
               IconButton(
                   padding: EdgeInsets.zero,
                   onPressed: () {
                     onBuildingDataChanged(
                         selectedName.isEmpty ? const None() : null);
                   },
+                  tooltip: selectedName.isEmpty ? "내 위치" : "초기화",
                   icon: selectedName.isEmpty
                       ? const Icon(Icons.near_me,
                           color: KMapColors.white, size: 15)

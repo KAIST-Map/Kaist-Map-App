@@ -74,6 +74,9 @@ class KakaoMapContext extends ChangeNotifier {
     notifyListeners();
   }
 
+  LatLng? southWestBound;
+  LatLng? northEastBound;
+
   List<Marker> _markers = [];
   List<Marker> get markers => _markers;
   List<List<Marker>> _showingMarkers = [[], [], [], [], [], []];

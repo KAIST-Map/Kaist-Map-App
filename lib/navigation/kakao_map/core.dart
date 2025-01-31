@@ -18,6 +18,15 @@ class LatLng {
   LatLng.fromJson(Map<String, dynamic> json)
       : latitude = double.parse(json['lat']),
         longitude = double.parse(json['lng']);
+  
+  bool inBound({
+    required LatLng southWestBound,
+    required LatLng northEastBound,
+  }) =>
+      latitude >= southWestBound.latitude &&
+      latitude <= northEastBound.latitude &&
+      longitude >= southWestBound.longitude &&
+      longitude <= northEastBound.longitude;
 
   @override
   String toString() {

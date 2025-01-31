@@ -38,6 +38,9 @@ class _KakaoMapWidgetState extends State<KakaoMapWidget> {
     });
 
     final kakaoMapContext = context.watch<KakaoMapContext>();
+    final myLocation = kakaoMapContext.myLocation;
+    final southWestBound = kakaoMapContext.southWestBound;
+    final northEastBound = kakaoMapContext.northEastBound;
 
     _controller ??= WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
@@ -45,6 +48,12 @@ class _KakaoMapWidgetState extends State<KakaoMapWidget> {
       ..addJavaScriptChannel("OnMapCreatedChannel",
           onMessageReceived: (message) {
         kakaoMapContext.controller = _controller;
+        kakaoMapContext.southWestBound = LatLng(
+            jsonDecode(message.message)['southBound'],
+            jsonDecode(message.message)['westBound']);
+        kakaoMapContext.northEastBound = LatLng(
+            jsonDecode(message.message)['northBound'],
+            jsonDecode(message.message)['eastBound']);
         Future.delayed(const Duration(milliseconds: 300), () {
           kakaoMapContext.lookAt(KaistLocation.location);
         });
@@ -101,19 +110,32 @@ class _KakaoMapWidgetState extends State<KakaoMapWidget> {
                       isSatellite = !isSatellite;
                     });
                   },
+                  tooltip: '위성 지도 켜기/끄기',
                   child: Icon(Icons.satellite_alt,
                       color: isSatellite ? Colors.white : KMapColors.darkBlue)),
-              FloatingActionButton.small(
-                  onPressed: () {
-                    final myLocation = kakaoMapContext.myLocation;
-                    if (myLocation != null) {
-                      kakaoMapContext.lookAt(myLocation);
-                    }
-                  },
-                  child: const Icon(Icons.my_location)),
+              myLocation == null ||
+                      southWestBound == null ||
+                      northEastBound == null ||
+                      !myLocation.inBound(
+                          southWestBound: southWestBound,
+                          northEastBound: northEastBound)
+                  ? FloatingActionButton.small(
+                      onPressed: () {},
+                      tooltip: '카이스트 안에서만 사용 가능합니다.',
+                      backgroundColor: KMapColors.darkGray.shade800,
+                      child: const Icon(Icons.my_location),
+                    )
+                  : FloatingActionButton.small(
+                      onPressed: () {
+                        kakaoMapContext.lookAt(myLocation);
+                      },
+                      tooltip: "내 위치로 이동",
+                      child: const Icon(Icons.my_location),),
             ],
           ),
         ),
+        if (kakaoMapContext.controller == null) 
+          const Center(child: CircularProgressIndicator()),
       ],
     );
   }
