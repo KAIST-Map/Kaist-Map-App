@@ -131,6 +131,7 @@ class _KMapRoutingPageState extends State<KMapRoutingPage> {
                           IconButton(
                             icon: const Icon(Icons.swap_vert,
                                 color: KMapColors.white),
+                            tooltip: "출발지/도착지 바꾸기",
                             onPressed: () {
                               final tmpStartBuildingData = startBuildingData;
                               routingContext
@@ -186,6 +187,7 @@ class _KMapRoutingPageState extends State<KMapRoutingPage> {
               children: [
                 FloatingActionButton.small(
                   onPressed: routingContext.toggleBeam,
+                  tooltip: "자전거/전동킥보드",
                   backgroundColor: routingContext.wantBeam
                       ? KMapColors.darkBlue
                       : KMapColors.white,
@@ -196,6 +198,7 @@ class _KMapRoutingPageState extends State<KMapRoutingPage> {
                 ),
                 FloatingActionButton.small(
                   onPressed: routingContext.toggleFreeOfRain,
+                  tooltip: "비",
                   backgroundColor: routingContext.wantFreeOfRain
                       ? KMapColors.darkBlue
                       : KMapColors.white,
@@ -277,6 +280,7 @@ class DestinationSearch extends StatelessWidget {
                     onBuildingDataChanged(
                         selectedName.isEmpty ? const None() : null);
                   },
+                  tooltip: selectedName.isEmpty ? "내 위치" : "초기화",
                   icon: selectedName.isEmpty
                       ? const Icon(Icons.near_me,
                           color: KMapColors.white, size: 15)
