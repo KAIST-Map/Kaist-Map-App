@@ -120,8 +120,11 @@ class _KakaoMapWidgetState extends State<KakaoMapWidget> {
                           southWestBound: southWestBound,
                           northEastBound: northEastBound)
                   ? FloatingActionButton.small(
-                      onPressed: () {},
-                      tooltip: '카이스트 안에서만 사용 가능합니다.',
+                      onPressed: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('카이스트 안에서만 사용 가능합니다.')));
+                      },
+                      tooltip: '내 위치로 이동',
                       backgroundColor: KMapColors.darkGray.shade800,
                       child: const Icon(Icons.my_location),
                     )

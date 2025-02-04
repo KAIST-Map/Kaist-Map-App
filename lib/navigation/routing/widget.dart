@@ -22,7 +22,7 @@ class KMapRoutingPage extends StatefulWidget {
 class _KMapRoutingPageState extends State<KMapRoutingPage> {
   @override
   Widget build(BuildContext context) {
-    final mapContext = context.watch<KakaoMapContext>();
+    final mapContext = context.read<KakaoMapContext>();
     final buildingContext = context.read<BuildingContext>();
     final routingContext = context.watch<RoutingContext>();
     final startBuildingData = routingContext.startBuildingData;
@@ -279,8 +279,13 @@ class DestinationSearch extends StatelessWidget {
               selectedName.isEmpty && !myLocation.inBound(
                 southWestBound: KaistLocation.kaistSouthWestBound,
                 northEastBound: KaistLocation.kaistNorthEastBound
-              ) ? IconButton(onPressed: () {}, 
-              tooltip: "학교 밖에서는 내 위치로 검색할 수 없습니다",
+              ) ? IconButton(
+              padding: EdgeInsets.zero,
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('카이스트 안에서만 사용 가능합니다.')));
+                }, 
+              tooltip: "내 위치",
               icon: 
                 Icon(Icons.near_me_disabled, color: KMapColors.darkGray.shade800, size: 15)
               ) :

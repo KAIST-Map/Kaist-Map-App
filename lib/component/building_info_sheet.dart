@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:kaist_map/api/building/data.dart';
 import 'package:kaist_map/api/local/bookmarks.dart';
 import 'package:kaist_map/constant/colors.dart';
+import 'package:kaist_map/constant/map.dart';
+import 'package:kaist_map/navigation/kakao_map/map_context.dart';
 import 'package:kaist_map/navigation/layout.dart';
 import 'package:kaist_map/navigation/photo/widget.dart';
 import 'package:kaist_map/navigation/routing/routing_context.dart';
@@ -31,6 +33,7 @@ class _BuildingInfoSheetState extends State<BuildingInfoSheet> {
 
     final navigationContext = context.read<NavigationContext>();
     final routingContext = context.read<RoutingContext>();
+    final mapContext = context.read<KakaoMapContext>();
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -129,14 +132,30 @@ class _BuildingInfoSheetState extends State<BuildingInfoSheet> {
           const SizedBox(height: 8),
           Row(
             children: [
-              FilledButton.icon(
-                  onPressed: () {
-                    routingContext.setStartBuildingData(const None());
-                    routingContext.setEndBuildingData(Some(buildingData));
-                    navigationContext.setSelectedIndex(2);
-                  },
-                  icon: const Icon(Icons.directions),
-                  label: const Text("길찾기")),
+              ((bool enabled) {
+                return FilledButton.icon(
+                    onPressed: () {
+                      if (enabled) {
+                        routingContext.setStartBuildingData(const None());
+                        routingContext.setEndBuildingData(Some(buildingData));
+                        navigationContext.setSelectedIndex(2);
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('카이스트 안에서만 사용 가능합니다.')),
+                        );
+                      }
+                    },
+                    style: enabled
+                        ? null : ButtonStyle(
+                            backgroundColor: WidgetStateProperty.all(
+                                KMapColors.darkGray.shade800),
+                          ),
+                    icon: const Icon(Icons.directions),
+                    label: const Text("길찾기"));
+              })(mapContext.myLocation?.inBound(
+                      southWestBound: KaistLocation.kaistSouthWestBound,
+                      northEastBound: KaistLocation.kaistNorthEastBound) ==
+                  true),
               const SizedBox(width: 8),
               OutlinedButton(
                   onPressed: () {
