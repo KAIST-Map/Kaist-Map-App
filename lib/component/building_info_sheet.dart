@@ -146,7 +146,8 @@ class _BuildingInfoSheetState extends State<BuildingInfoSheet> {
                       }
                     },
                     style: enabled
-                        ? null : ButtonStyle(
+                        ? null
+                        : ButtonStyle(
                             backgroundColor: WidgetStateProperty.all(
                                 KMapColors.darkGray.shade800),
                           ),

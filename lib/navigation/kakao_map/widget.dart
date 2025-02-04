@@ -6,6 +6,7 @@ import 'package:kaist_map/constant/colors.dart';
 import 'package:kaist_map/constant/map.dart';
 import 'package:kaist_map/navigation/kakao_map/core.dart';
 import 'package:kaist_map/navigation/kakao_map/map_context.dart';
+import 'package:kaist_map/navigation/routing/routing_context.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -38,6 +39,7 @@ class _KakaoMapWidgetState extends State<KakaoMapWidget> {
     });
 
     final kakaoMapContext = context.watch<KakaoMapContext>();
+    final routingContext = context.watch<RoutingContext>();
     final myLocation = kakaoMapContext.myLocation;
     final southWestBound = kakaoMapContext.southWestBound;
     final northEastBound = kakaoMapContext.northEastBound;
@@ -122,7 +124,8 @@ class _KakaoMapWidgetState extends State<KakaoMapWidget> {
                   ? FloatingActionButton.small(
                       onPressed: () {
                         ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('카이스트 안에서만 사용 가능합니다.')));
+                            const SnackBar(
+                                content: Text('카이스트 안에서만 사용 가능합니다.')));
                       },
                       tooltip: '내 위치로 이동',
                       backgroundColor: KMapColors.darkGray.shade800,
@@ -133,12 +136,25 @@ class _KakaoMapWidgetState extends State<KakaoMapWidget> {
                         kakaoMapContext.lookAt(myLocation);
                       },
                       tooltip: "내 위치로 이동",
-                      child: const Icon(Icons.my_location),),
+                      child: const Icon(Icons.my_location),
+                    ),
             ],
           ),
         ),
-        if (kakaoMapContext.controller == null) 
-          const Center(child: CircularProgressIndicator()),
+        if (kakaoMapContext.pathETA != null &&
+            routingContext.startBuildingData != null &&
+            routingContext.endBuildingData != null)
+          Builder(
+              builder: (context) => Container(
+                    alignment: Alignment.bottomCenter,
+                    padding: const EdgeInsets.all(10),
+                    child: kakaoMapContext.pathETA!.toCard(),
+                  )),
+        if (kakaoMapContext.controller == null)
+          Container(
+              color: Colors.white,
+              alignment: Alignment.center,
+              child: const Center(child: CircularProgressIndicator())),
       ],
     );
   }

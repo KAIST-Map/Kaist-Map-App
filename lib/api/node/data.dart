@@ -1,3 +1,5 @@
+import 'package:kaist_map/navigation/kakao_map/core.dart';
+
 class NodeData {
   final int id;
   final String name;
@@ -19,4 +21,8 @@ class NodeData {
         latitude = json['latitude'],
         longitude = json['longitude'],
         buildingId = json['buildingId'];
+
+  LatLng toLatLng() {
+    return LatLng(latitude, longitude);
+  }
 }

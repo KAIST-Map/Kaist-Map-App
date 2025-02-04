@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/foundation.dart';
 import 'package:kaist_map/api/building/data.dart';
 import 'package:kaist_map/constant/network_assets.dart';
@@ -18,7 +20,7 @@ class LatLng {
   LatLng.fromJson(Map<String, dynamic> json)
       : latitude = double.parse(json['lat']),
         longitude = double.parse(json['lng']);
-  
+
   bool inBound({
     required LatLng southWestBound,
     required LatLng northEastBound,
@@ -31,6 +33,20 @@ class LatLng {
   @override
   String toString() {
     return 'LatLng{latitude: $latitude, longitude: $longitude}';
+  }
+
+  double distanceToMeters(LatLng other) {
+    const double earthRadius = 6371000; // Earth's radius in meters
+    final double lat1 = latitude * (pi / 180); // Convert to radians
+    final double lat2 = other.latitude * (pi / 180);
+    final double dLat = (other.latitude - latitude) * (pi / 180);
+    final double dLng = (other.longitude - longitude) * (pi / 180);
+
+    final double a = sin(dLat / 2) * sin(dLat / 2) +
+        cos(lat1) * cos(lat2) * sin(dLng / 2) * sin(dLng / 2);
+
+    final double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+    return earthRadius * c;
   }
 }
 
