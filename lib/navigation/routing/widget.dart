@@ -39,12 +39,9 @@ class _KMapRoutingPageState extends State<KMapRoutingPage> {
       if (startBuildingData != null && endBuildingData != null) {
         pathData.future.then((path) {
           if (start != null && end != null && start != end && path.isDefined) {
-            mapContext.showPath(
-                path.value.path
-                    .map((node) => LatLng(node.latitude, node.longitude))
-                    .toList(),
-                start,
-                end);
+            mapContext.showPath(path.value, start, end,
+                wantBeam: routingContext.wantBeam,
+                wantFreeOfRain: routingContext.wantFreeOfRain);
           }
         });
       } else {
@@ -118,7 +115,7 @@ class _KMapRoutingPageState extends State<KMapRoutingPage> {
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
-                            color: Colors.black.withAlpha(51),
+                          color: Colors.black.withAlpha(51),
                           spreadRadius: 2,
                           blurRadius: 4,
                           offset: const Offset(0, 2),
@@ -153,7 +150,8 @@ class _KMapRoutingPageState extends State<KMapRoutingPage> {
                                           .map((data) => data.name)
                                           .getOrElse("내 위치"),
                                   hintText: "출발지를 입력하세요",
-                                  myLocation: myLocation ?? KaistLocation.location,
+                                  myLocation:
+                                      myLocation ?? KaistLocation.location,
                                   onBuildingDataChanged:
                                       (Option<BuildingData>? buildingData) {
                                     routingContext
@@ -167,7 +165,8 @@ class _KMapRoutingPageState extends State<KMapRoutingPage> {
                                           .map((data) => data.name)
                                           .getOrElse("내 위치"),
                                   hintText: "도착지를 입력하세요",
-                                  myLocation: myLocation ?? KaistLocation.location,
+                                  myLocation:
+                                      myLocation ?? KaistLocation.location,
                                   onBuildingDataChanged:
                                       (Option<BuildingData>? buildingData) {
                                     routingContext
@@ -263,7 +262,7 @@ class DestinationSearch extends StatelessWidget {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
-                        color: Colors.black.withAlpha(38),
+                      color: Colors.black.withAlpha(38),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
@@ -276,31 +275,32 @@ class DestinationSearch extends StatelessWidget {
                   ),
                 ),
               ),
-              selectedName.isEmpty && !myLocation.inBound(
-                southWestBound: KaistLocation.kaistSouthWestBound,
-                northEastBound: KaistLocation.kaistNorthEastBound
-              ) ? IconButton(
-              padding: EdgeInsets.zero,
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('카이스트 안에서만 사용 가능합니다.')));
-                }, 
-              tooltip: "내 위치",
-              icon: 
-                Icon(Icons.near_me_disabled, color: KMapColors.darkGray.shade800, size: 15)
-              ) :
-              IconButton(
-                  padding: EdgeInsets.zero,
-                  onPressed: () {
-                    onBuildingDataChanged(
-                        selectedName.isEmpty ? const None() : null);
-                  },
-                  tooltip: selectedName.isEmpty ? "내 위치" : "초기화",
-                  icon: selectedName.isEmpty
-                      ? const Icon(Icons.near_me,
-                          color: KMapColors.white, size: 15)
-                      : const Icon(Icons.close,
-                          size: 15, color: KMapColors.white)),
+              selectedName.isEmpty &&
+                      !myLocation.inBound(
+                          southWestBound: KaistLocation.kaistSouthWestBound,
+                          northEastBound: KaistLocation.kaistNorthEastBound)
+                  ? IconButton(
+                      padding: EdgeInsets.zero,
+                      onPressed: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('카이스트 안에서만 사용 가능합니다.')));
+                      },
+                      tooltip: "내 위치",
+                      icon: Icon(Icons.near_me_disabled,
+                          color: KMapColors.darkGray.shade800, size: 15))
+                  : IconButton(
+                      padding: EdgeInsets.zero,
+                      onPressed: () {
+                        onBuildingDataChanged(
+                            selectedName.isEmpty ? const None() : null);
+                      },
+                      tooltip: selectedName.isEmpty ? "내 위치" : "초기화",
+                      icon: selectedName.isEmpty
+                          ? const Icon(Icons.near_me,
+                              color: KMapColors.white, size: 15)
+                          : const Icon(Icons.close,
+                              size: 15, color: KMapColors.white)),
             ],
           ),
         );

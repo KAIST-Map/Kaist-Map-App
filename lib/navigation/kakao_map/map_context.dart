@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:kaist_map/api/building/data.dart';
+import 'package:kaist_map/api/routes/data.dart';
 import 'package:kaist_map/navigation/kakao_map/core.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -85,6 +86,8 @@ class KakaoMapContext extends ChangeNotifier {
   List<Polyline> get polylines => _polylines;
   int _zoomLevel = 4;
   int get zoomLevel => _zoomLevel;
+  PathETA? _pathETA;
+  PathETA? get pathETA => _pathETA;
 
   LatLng? _myLocation;
   LatLng? get myLocation => _myLocation;
@@ -182,12 +185,17 @@ class KakaoMapContext extends ChangeNotifier {
     notifyListeners();
   }
 
-  void showPath(List<LatLng> path, LatLng start, LatLng end) {
+  void showPath(PathData pathData, LatLng start, LatLng end,
+      {required bool wantBeam, required bool wantFreeOfRain}) {
     if (controller == null) {
       return;
     }
 
     _showTwoLocations(start, end);
+
+    final path = pathData.path
+        .map((node) => LatLng(node.latitude, node.longitude))
+        .toList();
 
     const mediumBlue = "#1487C8";
     final pathPolyline = Polyline(
@@ -236,6 +244,12 @@ class KakaoMapContext extends ChangeNotifier {
 
     _polylines = [pathPolyline, startLine, endLine];
     setMarkers([startMarker, endMarker]);
+
+    _pathETA = pathData.getETA(
+      wantBeam: wantBeam,
+      wantFreeOfRain: wantFreeOfRain,
+    );
+    notifyListeners();
   }
 
   void _showTwoLocations(LatLng start, LatLng end) {
