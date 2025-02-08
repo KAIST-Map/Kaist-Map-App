@@ -23,7 +23,7 @@ class BuildingCategoryFilterContext extends ChangeNotifier {
       return buildings;
     }
     return buildings.where((building) =>
-        _filters.any((category) => building.categories.contains(category)));
+        _filters.every((category) => building.categories.contains(category)));
   }
 }
 
