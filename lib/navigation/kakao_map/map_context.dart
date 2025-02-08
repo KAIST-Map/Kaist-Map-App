@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter_compass/flutter_compass.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:kaist_map/api/building/data.dart';
 import 'package:kaist_map/api/routes/data.dart';
@@ -91,20 +92,36 @@ class KakaoMapContext extends ChangeNotifier {
 
   LatLng? _myLocation;
   LatLng? get myLocation => _myLocation;
+  double? _direction;
+  int? _lastMarkerDirection;
   Marker? get myLocationMarker => _myLocation != null
       ? Marker(
           name: "my-position",
           lat: _myLocation!.latitude,
           lng: _myLocation!.longitude,
-          width: 20,
-          height: 20,
-          offsetY: 10,
+          width: 30,
+          height: 30,
+          offsetY: 15,
           image:
+              _direction != null ?
+              "https://kaist-map.github.io/Kaist-Map-App/my_location_direction_pin/rotated_$_lastMarkerDirection.png" :
               "https://kaist-map.github.io/Kaist-Map-App/my_location_pin.png",
           draggable: false,
           importance: 99,
           onTap: () {})
       : null;
+
+  int _getMarkerDirection() {
+    if (_direction == null) {
+      return 0;
+    }
+
+    int fiveDegreeDirection = (_direction! / 5).round() * 5;
+    int positiveDirection = (fiveDegreeDirection + 720) % 360;
+    int adjustedDirection = (360 - positiveDirection) % 360;
+
+    return adjustedDirection;
+  }
 
   void startMyLocationService() {
     Geolocator.getPositionStream(
@@ -113,6 +130,16 @@ class KakaoMapContext extends ChangeNotifier {
         .listen((position) {
       _myLocation = LatLng(position.latitude, position.longitude);
       notifyListeners();
+    });
+
+    FlutterCompass.events?.listen((event) {
+      _direction = event.heading;
+
+      if (_lastMarkerDirection == null ||
+          _lastMarkerDirection != _getMarkerDirection()) {
+        _lastMarkerDirection = _getMarkerDirection();
+        notifyListeners();
+      }
     });
   }
 

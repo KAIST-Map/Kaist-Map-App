@@ -3,14 +3,14 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-feature android:name="android.hardware.sensor.compass"/>
+
     <application
         android:usesCleartextTraffic="true"
         android:label="KAIST Map"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
-
-        <meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDVntqebc1mAFfIdsj7wTaTjMm7I-phuJQ"/>
 
         <activity
             android:name=".MainActivity"
