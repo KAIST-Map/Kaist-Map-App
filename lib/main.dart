@@ -151,9 +151,7 @@ class KMapMain extends StatelessWidget {
           ),
         ),
       ),
-      home: const Scaffold(
-        body: KMapNavigation(),
-      ),
+      home: const KMapNavigation(),
     );
   }
 }

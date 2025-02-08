@@ -8,7 +8,7 @@ import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kaist_map/navigation/photo/widget.dart';
 
-PreferredSizeWidget reportTabAppBar() {
+PreferredSizeWidget reportTabAppBar(BuildContext context) {
   return AppBar(
         backgroundColor: KMapColors.darkBlue.shade50,
         centerTitle: true,
@@ -18,6 +18,18 @@ PreferredSizeWidget reportTabAppBar() {
           fontWeight: FontWeight.w600,
           color: KMapColors.darkBlue.shade900,
         ),
+        leading: IconButton(
+          onPressed: () {
+            showLicensePage(
+              context: context,
+                applicationName: 'KAIST Map',
+                applicationVersion: '1.0.0',
+                applicationIcon: Image.asset('assets/images/icon.png'),
+                applicationLegalese: '© 2025 KAIST Map Contributors',
+            );
+          },
+          tooltip: '오픈소스 라이선스',
+          icon: const Icon(Icons.info_outline, color: KMapColors.darkBlue,)),
         elevation: 0,
         scrolledUnderElevation: 0,
         systemOverlayStyle: SystemUiOverlayStyle.light.copyWith(

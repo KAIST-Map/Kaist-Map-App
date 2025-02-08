@@ -51,7 +51,7 @@ class _KMapNavigationState extends State<KMapNavigation> with RouteAware {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: _getSelectedAppBarWidget(navigationContext.selectedIndex),
+      appBar: _getSelectedAppBarWidget(navigationContext.selectedIndex, context),
       body: Stack(
         children: <Widget>[
           const KakaoMapWidget(),
@@ -86,7 +86,7 @@ class _KMapNavigationState extends State<KMapNavigation> with RouteAware {
     );
   }
 
-  PreferredSizeWidget? _getSelectedAppBarWidget(int index) {
+  PreferredSizeWidget? _getSelectedAppBarWidget(int index, BuildContext context) {
     switch (index) {
       case 0:
         return null;
@@ -95,7 +95,7 @@ class _KMapNavigationState extends State<KMapNavigation> with RouteAware {
       case 2:
         return null;
       default:
-        return reportTabAppBar();
+        return reportTabAppBar(context);
     }
   }
 
