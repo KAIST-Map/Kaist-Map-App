@@ -26,23 +26,27 @@ class _KakaoMapWidgetState extends State<KakaoMapWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final kakaoMapContext = context.watch<KakaoMapContext>();
+    final routingContext = context.watch<RoutingContext>();
+    final myLocation = kakaoMapContext.myLocation;
+    final southWestBound = kakaoMapContext.southWestBound;
+    final northEastBound = kakaoMapContext.northEastBound;
+
     Permission.location.isGranted.then((granted) {
       if (!granted) {
         Permission.location.request().then((status) {
           setState(() {
             if (!status.isGranted) {
               SystemNavigator.pop();
+            } else {
+              kakaoMapContext.startMyLocationService();
             }
           });
         });
+      } else {
+        kakaoMapContext.startMyLocationService();
       }
     });
-
-    final kakaoMapContext = context.watch<KakaoMapContext>();
-    final routingContext = context.watch<RoutingContext>();
-    final myLocation = kakaoMapContext.myLocation;
-    final southWestBound = kakaoMapContext.southWestBound;
-    final northEastBound = kakaoMapContext.northEastBound;
 
     _controller ??= WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
@@ -59,7 +63,6 @@ class _KakaoMapWidgetState extends State<KakaoMapWidget> {
         Future.delayed(const Duration(milliseconds: 300), () {
           kakaoMapContext.lookAt(KaistLocation.location);
         });
-        kakaoMapContext.startMyLocationService();
       })
       ..addJavaScriptChannel("OnMarkerClickedChannel",
           onMessageReceived: (message) {
