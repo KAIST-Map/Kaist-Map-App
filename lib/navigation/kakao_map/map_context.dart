@@ -102,10 +102,9 @@ class KakaoMapContext extends ChangeNotifier {
           width: 30,
           height: 30,
           offsetY: 15,
-          image:
-              _direction != null ?
-              "https://kaist-map.github.io/Kaist-Map-App/my_location_direction_pin/rotated_$_lastMarkerDirection.png" :
-              "https://kaist-map.github.io/Kaist-Map-App/my_location_pin.png",
+          image: _direction != null
+              ? "https://kaist-map.github.io/Kaist-Map-App/my_location_direction_pin/rotated_$_lastMarkerDirection.png"
+              : "https://kaist-map.github.io/Kaist-Map-App/my_location_pin.png",
           draggable: false,
           importance: 99,
           onTap: () {})

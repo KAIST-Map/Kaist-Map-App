@@ -89,19 +89,20 @@ class _KakaoMapWidgetState extends State<KakaoMapWidget> {
         setMarkers(${[
       ...kakaoMapContext.showingMarkers[kakaoMapContext.zoomLevel - 1]
           .map((marker) => jsonEncode(marker.toJson())),
-      ...List.generate((360/5).round(), (index) {
+      ...List.generate((360 / 5).round(), (index) {
         return jsonEncode(Marker(
-          name: "direction-marker-$index",
-          lat: 0,
-          lng: 0,
-          width: 30,
-          height: 30,
-          offsetY: 15,
-          image: "https://kaist-map.github.io/Kaist-Map-App/my_location_direction_pin/rotated_${index * 5}.png",
-          draggable: false,
-          importance: 98,
-          onTap: () {}
-        ).toJson());
+                name: "direction-marker-$index",
+                lat: 0,
+                lng: 0,
+                width: 30,
+                height: 30,
+                offsetY: 15,
+                image:
+                    "https://kaist-map.github.io/Kaist-Map-App/my_location_direction_pin/rotated_${index * 5}.png",
+                draggable: false,
+                importance: 98,
+                onTap: () {})
+            .toJson());
       }),
       if (kakaoMapContext.myLocationMarker != null)
         jsonEncode(kakaoMapContext.myLocationMarker!.toJson()),
