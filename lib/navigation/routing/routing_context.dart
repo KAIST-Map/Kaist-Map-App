@@ -19,7 +19,6 @@ class RoutingContext extends ChangeNotifier {
   Completer<LatLng?> _startLatLng = Completer();
   Completer<LatLng?> _endLatLng = Completer();
   Completer<Option<PathData>> _pathData = Completer();
-  bool _isRoutingActive = false;
 
   Option<BuildingData>? get startBuildingData => _startBuildingData;
   Option<BuildingData>? get endBuildingData => _endBuildingData;
@@ -28,23 +27,10 @@ class RoutingContext extends ChangeNotifier {
   Completer<LatLng?> get startLatLng => _startLatLng;
   Completer<LatLng?> get endLatLng => _endLatLng;
   Completer<Option<PathData>> get pathData => _pathData;
-  bool get isRoutingActive => _isRoutingActive;
   RoutingContext() {
     _startLatLng.complete(null);
     _endLatLng.complete(null);
     _pathData.complete(const None());
-  }
-
-  //플래그 켜기
-  void startRouting() {
-    _isRoutingActive = true;
-    notifyListeners();
-  }
-
-  //플래그 끄기
-  void stopRouting() {
-    _isRoutingActive = false;
-    notifyListeners();
   }
 
   void setStartBuildingData(Option<BuildingData>? data) {
@@ -59,10 +45,6 @@ class RoutingContext extends ChangeNotifier {
         _startLatLng.complete(null);
 
     _fetchPath();
-
-    if (_startBuildingData != null && _endBuildingData != null) {
-      _isRoutingActive = true;
-    }
 
     notifyListeners();
   }
@@ -96,7 +78,6 @@ class RoutingContext extends ChangeNotifier {
         startLatLng == null ||
         endLatLng == null) {
       _pathData.complete(const None());
-      _isRoutingActive = false;
       return;
     }
 

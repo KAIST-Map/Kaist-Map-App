@@ -161,8 +161,7 @@ class _KakaoMapWidgetState extends State<KakaoMapWidget> {
         ),
         if (kakaoMapContext.pathETA != null &&
             routingContext.startBuildingData != null &&
-            routingContext.endBuildingData != null &&
-            routingContext.isRoutingActive) // 길찾기 모드 활성화 확인
+            routingContext.endBuildingData != null)
           Builder(
               builder: (context) => Container(
                     alignment: Alignment.bottomCenter,
