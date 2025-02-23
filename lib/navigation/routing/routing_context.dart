@@ -27,7 +27,6 @@ class RoutingContext extends ChangeNotifier {
   Completer<LatLng?> get startLatLng => _startLatLng;
   Completer<LatLng?> get endLatLng => _endLatLng;
   Completer<Option<PathData>> get pathData => _pathData;
-
   RoutingContext() {
     _startLatLng.complete(null);
     _endLatLng.complete(null);
